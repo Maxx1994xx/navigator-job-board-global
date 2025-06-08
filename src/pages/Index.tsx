@@ -1,7 +1,6 @@
-
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, MapPin, Users, Briefcase, TrendingUp, Globe, Award, Clock } from 'lucide-react';
+import { Search, MapPin, Users, Briefcase, TrendingUp, Globe, Award, Clock, Star, CheckCircle, ArrowRight, Target, Zap, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -35,6 +34,48 @@ const Index = () => {
     { name: 'Finance', count: '950+', icon: '💰' },
     { name: 'Marketing', count: '750+', icon: '📈' },
     { name: 'Education', count: '600+', icon: '🎓' }
+  ];
+
+  const testimonials = [
+    {
+      name: "Sarah Ahmed",
+      role: "Software Engineer",
+      company: "Tech Corp Dubai",
+      content: "Found my dream job in just 2 weeks! The platform made it so easy to connect with top employers in the UAE.",
+      rating: 5
+    },
+    {
+      name: "Michael Johnson",
+      role: "Marketing Manager",
+      company: "Global Marketing UK",
+      content: "Excellent service and genuine opportunities. The job matching was spot-on for my skills and experience.",
+      rating: 5
+    },
+    {
+      name: "Priya Sharma",
+      role: "Healthcare Specialist",
+      company: "Medical Center Qatar",
+      content: "Professional platform with verified employers. Landed a great position in Qatar's healthcare sector.",
+      rating: 5
+    }
+  ];
+
+  const benefits = [
+    {
+      icon: <Target className="w-8 h-8 text-blue-600" />,
+      title: "Targeted Job Matching",
+      description: "Our advanced algorithm matches your skills with the perfect job opportunities across Gulf, USA, and UK markets."
+    },
+    {
+      icon: <Zap className="w-8 h-8 text-blue-600" />,
+      title: "Quick Applications",
+      description: "Apply to multiple jobs with just one click. No lengthy registration process or complicated forms to fill out."
+    },
+    {
+      icon: <Shield className="w-8 h-8 text-blue-600" />,
+      title: "Verified Employers",
+      description: "All our partner companies are thoroughly vetted to ensure legitimate opportunities and fair employment practices."
+    }
   ];
 
   return (
@@ -147,6 +188,30 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Benefits Section */}
+      <section className="py-20 bg-blue-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Professionals Choose Us</h2>
+            <p className="text-xl text-gray-600">Experience the difference with our premium job search platform</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            {benefits.map((benefit, index) => (
+              <div key={index} className="text-center group">
+                <div className="bg-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl transition-shadow">
+                  {benefit.icon}
+                </div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4">{benefit.title}</h3>
+                <p className="text-gray-600 leading-relaxed text-lg">
+                  {benefit.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Top Categories Section */}
       <section className="py-20 bg-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -196,6 +261,38 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Success Stories / Testimonials */}
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Success Stories</h2>
+            <p className="text-xl text-gray-600">Hear from professionals who found their dream careers</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <Card key={index} className="hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <CardContent className="p-8">
+                  <div className="flex items-center mb-4">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                    ))}
+                  </div>
+                  <p className="text-gray-700 mb-6 italic leading-relaxed">
+                    "{testimonial.content}"
+                  </p>
+                  <div className="border-t pt-4">
+                    <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
+                    <p className="text-blue-600 font-medium">{testimonial.role}</p>
+                    <p className="text-gray-500 text-sm">{testimonial.company}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Countries Section */}
       <section className="py-20 bg-gradient-to-br from-gray-900 to-gray-800 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -218,6 +315,79 @@ const Index = () => {
                 </Card>
               </Link>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">How It Works</h2>
+            <p className="text-xl text-gray-600">Your journey to a new career in just 3 simple steps</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div className="text-center relative">
+              <div className="bg-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold">
+                1
+              </div>
+              <h3 className="text-2xl font-semibold text-gray-900 mb-4">Search & Discover</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Browse thousands of verified job opportunities across Gulf countries, USA, and UK using our advanced search filters.
+              </p>
+              {/* Arrow for desktop */}
+              <div className="hidden md:block absolute top-8 left-full w-12">
+                <ArrowRight className="w-8 h-8 text-blue-300 mx-auto" />
+              </div>
+            </div>
+            
+            <div className="text-center relative">
+              <div className="bg-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold">
+                2
+              </div>
+              <h3 className="text-2xl font-semibold text-gray-900 mb-4">Apply Instantly</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Submit your application with just one click. No registration required - simply apply to jobs that match your profile.
+              </p>
+              {/* Arrow for desktop */}
+              <div className="hidden md:block absolute top-8 left-full w-12">
+                <ArrowRight className="w-8 h-8 text-blue-300 mx-auto" />
+              </div>
+            </div>
+            
+            <div className="text-center">
+              <div className="bg-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold">
+                3
+              </div>
+              <h3 className="text-2xl font-semibold text-gray-900 mb-4">Get Hired</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Connect directly with hiring managers and HR teams. Start your new career journey with confidence and support.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action Section */}
+      <section className="py-20 bg-gradient-to-r from-blue-600 to-blue-800 text-white">
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Find Your Dream Job?</h2>
+          <p className="text-xl text-blue-100 mb-8 leading-relaxed">
+            Join thousands of professionals who have successfully launched their careers with Online Career Navigator.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/jobs">
+              <Button size="lg" variant="secondary" className="px-8 py-4 text-lg font-semibold">
+                <Search className="w-5 h-5 mr-2" />
+                Browse All Jobs
+              </Button>
+            </Link>
+            <Link to="/about">
+              <Button size="lg" variant="outline" className="px-8 py-4 text-lg font-semibold bg-transparent border-white text-white hover:bg-white hover:text-blue-600">
+                Learn More About Us
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
