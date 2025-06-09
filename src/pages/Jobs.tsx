@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, Filter, MapPin, Briefcase, Clock, TrendingUp } from 'lucide-react';
@@ -24,7 +23,7 @@ interface Job {
   requirements: string[];
   benefits: string[];
   created_at: string;
-  postedDate?: string;
+  postedDate: string;  // Made required to match JobCardProps
   contactEmail?: string;
   country?: string;
 }
@@ -65,7 +64,7 @@ const Jobs = () => {
       // Transform data to match JobCard component expectations
       const transformedJobs = (data || []).map(job => ({
         ...job,
-        postedDate: new Date(job.created_at).toLocaleDateString(),
+        postedDate: new Date(job.created_at).toLocaleDateString(), // Always ensure postedDate is a string
         contactEmail: 'hr@' + job.company.toLowerCase().replace(/\s+/g, '') + '.com',
         country: job.location.split(',').pop()?.trim() || job.location,
       }));
