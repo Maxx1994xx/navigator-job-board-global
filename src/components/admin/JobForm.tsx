@@ -16,8 +16,19 @@ interface JobFormProps {
   onClose: () => void;
 }
 
+// Generate unique job ID in format xxx-xxxxxx-xxx-xxxx-xxx
+const generateJobId = (): string => {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const parts = [3, 6, 3, 4, 3];
+  
+  return parts.map(length => 
+    Array.from({ length }, () => chars.charAt(Math.floor(Math.random() * chars.length))).join('')
+  ).join('-');
+};
+
 const JobForm: React.FC<JobFormProps> = ({ job, onClose }) => {
   const [formData, setFormData] = useState({
+    job_id: '',
     title: '',
     company: '',
     location: '',
@@ -28,6 +39,7 @@ const JobForm: React.FC<JobFormProps> = ({ job, onClose }) => {
     requirements: '',
     benefits: '',
     is_active: true,
+    is_featured: false,
   });
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
@@ -35,6 +47,7 @@ const JobForm: React.FC<JobFormProps> = ({ job, onClose }) => {
   useEffect(() => {
     if (job) {
       setFormData({
+        job_id: job.job_id || '',
         title: job.title || '',
         company: job.company || '',
         location: job.location || '',
@@ -45,7 +58,11 @@ const JobForm: React.FC<JobFormProps> = ({ job, onClose }) => {
         requirements: Array.isArray(job.requirements) ? job.requirements.join('\n') : '',
         benefits: Array.isArray(job.benefits) ? job.benefits.join('\n') : '',
         is_active: job.is_active ?? true,
+        is_featured: job.is_featured ?? false,
       });
+    } else {
+      // Generate new job ID for new jobs
+      setFormData(prev => ({ ...prev, job_id: generateJobId() }));
     }
   }, [job]);
 
@@ -104,6 +121,16 @@ const JobForm: React.FC<JobFormProps> = ({ job, onClose }) => {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <Label htmlFor="job_id">Job ID</Label>
+              <Input
+                id="job_id"
+                value={formData.job_id}
+                onChange={(e) => setFormData({ ...formData, job_id: e.target.value })}
+                placeholder="e.g., ABC-123456-DEF-7890-GHI"
+                required
+              />
+            </div>
             <div>
               <Label htmlFor="title">Job Title</Label>
               <Input
@@ -206,13 +233,24 @@ const JobForm: React.FC<JobFormProps> = ({ job, onClose }) => {
             />
           </div>
 
-          <div className="flex items-center space-x-2">
-            <Switch
-              id="is_active"
-              checked={formData.is_active}
-              onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
-            />
-            <Label htmlFor="is_active">Active Job Posting</Label>
+          <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="is_active"
+                checked={formData.is_active}
+                onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
+              />
+              <Label htmlFor="is_active">Active Job Posting</Label>
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="is_featured"
+                checked={formData.is_featured}
+                onCheckedChange={(checked) => setFormData({ ...formData, is_featured: checked })}
+              />
+              <Label htmlFor="is_featured">Featured Job</Label>
+            </div>
           </div>
 
           <div className="flex gap-4">

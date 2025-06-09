@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, Edit, Trash2 } from 'lucide-react';
+import { Plus, Edit, Trash2, Star } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
@@ -11,6 +11,7 @@ import JobForm from './JobForm';
 
 interface Job {
   id: string;
+  job_id?: string;
   title: string;
   company: string;
   location: string;
@@ -18,6 +19,7 @@ interface Job {
   category: string;
   salary?: string;
   is_active: boolean;
+  is_featured?: boolean;
   created_at: string;
 }
 
@@ -84,6 +86,29 @@ const JobsManager = () => {
     fetchJobs();
   };
 
+  const toggleFeatured = async (job: Job) => {
+    try {
+      const { error } = await supabase
+        .from('jobs')
+        .update({ is_featured: !job.is_featured })
+        .eq('id', job.id);
+
+      if (error) throw error;
+
+      setJobs(jobs.map(j => j.id === job.id ? { ...j, is_featured: !j.is_featured } : j));
+      toast({
+        title: 'Success',
+        description: `Job ${job.is_featured ? 'removed from' : 'added to'} featured`,
+      });
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to update featured status',
+        variant: 'destructive',
+      });
+    }
+  };
+
   if (loading) {
     return <div className="text-center py-8">Loading jobs...</div>;
   }
@@ -113,11 +138,13 @@ const JobsManager = () => {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>Job ID</TableHead>
                 <TableHead>Title</TableHead>
                 <TableHead>Company</TableHead>
                 <TableHead>Location</TableHead>
                 <TableHead>Type</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Featured</TableHead>
                 <TableHead>Created</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -125,6 +152,7 @@ const JobsManager = () => {
             <TableBody>
               {jobs.map((job) => (
                 <TableRow key={job.id}>
+                  <TableCell className="font-mono text-sm">{job.job_id || 'N/A'}</TableCell>
                   <TableCell className="font-medium">{job.title}</TableCell>
                   <TableCell>{job.company}</TableCell>
                   <TableCell>{job.location}</TableCell>
@@ -133,6 +161,16 @@ const JobsManager = () => {
                     <Badge variant={job.is_active ? 'default' : 'secondary'}>
                       {job.is_active ? 'Active' : 'Inactive'}
                     </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => toggleFeatured(job)}
+                      className={job.is_featured ? 'text-yellow-600' : 'text-gray-400'}
+                    >
+                      <Star className={`w-4 h-4 ${job.is_featured ? 'fill-current' : ''}`} />
+                    </Button>
                   </TableCell>
                   <TableCell>
                     {new Date(job.created_at).toLocaleDateString()}

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, MapPin, Users, Briefcase, TrendingUp, Globe, Award, Clock, Star, CheckCircle, ArrowRight, Target, Zap, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,13 +10,109 @@ import { Badge } from '@/components/ui/badge';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import JobCard from '@/components/JobCard';
-import { jobsData, countries, categories } from '@/data/jobsData';
+import { supabase } from '@/integrations/supabase/client';
+
+interface Job {
+  id: string;
+  job_id?: string;
+  title: string;
+  company: string;
+  location: string;
+  type: string;
+  category: string;
+  salary?: string;
+  description: string;
+  requirements: string[];
+  benefits: string[];
+  created_at: string;
+  postedDate: string;
+  contactEmail?: string;
+  country?: string;
+  is_featured?: boolean;
+}
+
+interface CategoryCount {
+  category: string;
+  count: number;
+  icon: string;
+}
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [featuredJobs, setFeaturedJobs] = useState<Job[]>([]);
+  const [categoryStats, setCategoryStats] = useState<CategoryCount[]>([]);
+  const [countryStats, setCountryStats] = useState<{ [key: string]: number }>({});
+  const [totalJobs, setTotalJobs] = useState(0);
   const navigate = useNavigate();
+
+  const countries = ['UAE', 'Saudi Arabia', 'Qatar', 'Kuwait', 'USA', 'UK', 'Bahrain', 'Oman'];
+  const categories = ['Technology', 'Engineering', 'Healthcare', 'Finance', 'Marketing', 'Education'];
+
+  const categoryIcons: { [key: string]: string } = {
+    'Technology': '💻',
+    'Engineering': '⚙️',
+    'Healthcare': '🏥',
+    'Finance': '💰',
+    'Marketing': '📈',
+    'Education': '🎓'
+  };
+
+  useEffect(() => {
+    fetchJobData();
+  }, []);
+
+  const fetchJobData = async () => {
+    try {
+      // Fetch all active jobs
+      const { data: allJobs, error: allJobsError } = await supabase
+        .from('jobs')
+        .select('*')
+        .eq('is_active', true);
+
+      if (allJobsError) throw allJobsError;
+
+      // Transform jobs data
+      const transformedJobs = (allJobs || []).map(job => ({
+        ...job,
+        postedDate: new Date(job.created_at).toLocaleDateString(),
+        contactEmail: 'hr@' + job.company.toLowerCase().replace(/\s+/g, '') + '.com',
+        country: job.location.split(',').pop()?.trim() || job.location,
+      }));
+
+      setTotalJobs(transformedJobs.length);
+
+      // Get featured jobs (limit to 6)
+      const featured = transformedJobs.filter(job => job.is_featured).slice(0, 6);
+      setFeaturedJobs(featured);
+
+      // Calculate category statistics
+      const categoryCounts: { [key: string]: number } = {};
+      transformedJobs.forEach(job => {
+        categoryCounts[job.category] = (categoryCounts[job.category] || 0) + 1;
+      });
+
+      const categoryData = categories.map(category => ({
+        category,
+        count: categoryCounts[category] || 0,
+        icon: categoryIcons[category] || '📋'
+      }));
+
+      setCategoryStats(categoryData);
+
+      // Calculate country statistics
+      const countryCounts: { [key: string]: number } = {};
+      transformedJobs.forEach(job => {
+        countryCounts[job.country] = (countryCounts[job.country] || 0) + 1;
+      });
+
+      setCountryStats(countryCounts);
+
+    } catch (error) {
+      console.error('Error fetching job data:', error);
+    }
+  };
 
   const handleSearch = () => {
     const params = new URLSearchParams();
@@ -25,16 +122,6 @@ const Index = () => {
     
     navigate(`/jobs?${params.toString()}`);
   };
-
-  const featuredJobs = jobsData.slice(0, 6);
-  const topCategories = [
-    { name: 'Technology', count: '2,500+', icon: '💻' },
-    { name: 'Engineering', count: '1,800+', icon: '⚙️' },
-    { name: 'Healthcare', count: '1,200+', icon: '🏥' },
-    { name: 'Finance', count: '950+', icon: '💰' },
-    { name: 'Marketing', count: '750+', icon: '📈' },
-    { name: 'Education', count: '600+', icon: '🎓' }
-  ];
 
   const testimonials = [
     {
@@ -165,7 +252,7 @@ const Index = () => {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div className="p-6">
-              <div className="text-5xl font-bold text-blue-600 mb-3">10,000+</div>
+              <div className="text-5xl font-bold text-blue-600 mb-3">{totalJobs.toLocaleString()}+</div>
               <div className="text-gray-600 text-lg">Active Job Listings</div>
               <Briefcase className="w-8 h-8 text-blue-500 mx-auto mt-4" />
             </div>
@@ -221,12 +308,12 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-12">
-            {topCategories.map((category, index) => (
-              <Link key={index} to={`/jobs?category=${category.name}`}>
+            {categoryStats.map((category, index) => (
+              <Link key={index} to={`/jobs?category=${category.category}`}>
                 <Card className="hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1">
                   <CardContent className="p-8 text-center">
                     <div className="text-4xl mb-4">{category.icon}</div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{category.name}</h3>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{category.category}</h3>
                     <p className="text-blue-600 font-medium text-lg">{category.count} jobs</p>
                   </CardContent>
                 </Card>
@@ -244,11 +331,20 @@ const Index = () => {
             <p className="text-xl text-gray-600">Hand-picked premium positions from top employers</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {featuredJobs.map(job => (
-              <JobCard key={job.id} {...job} />
-            ))}
-          </div>
+          {featuredJobs.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+              {featuredJobs.map(job => (
+                <JobCard key={job.id} {...job} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-600 text-lg mb-4">No featured jobs available at the moment.</p>
+              <Link to="/jobs">
+                <Button variant="outline">Browse All Jobs</Button>
+              </Link>
+            </div>
+          )}
 
           <div className="text-center">
             <Link to="/jobs">
@@ -302,14 +398,14 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {["UAE", "Saudi Arabia", "Qatar", "Kuwait", "USA", "UK", "Bahrain", "Oman"].map(country => (
+            {countries.map(country => (
               <Link key={country} to={`/jobs?country=${country}`}>
                 <Card className="bg-gray-800 border-gray-700 hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:bg-gray-700">
                   <CardContent className="p-8 text-center">
                     <MapPin className="w-8 h-8 text-blue-400 mx-auto mb-4" />
                     <h3 className="font-semibold text-white text-lg mb-2">{country}</h3>
                     <p className="text-blue-300 font-medium">
-                      {Math.floor(Math.random() * 500) + 100}+ jobs
+                      {countryStats[country] || 0} jobs
                     </p>
                   </CardContent>
                 </Card>
