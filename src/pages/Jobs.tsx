@@ -10,7 +10,24 @@ import { Badge } from '@/components/ui/badge';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import JobCard from '@/components/JobCard';
-import { jobsData, countries, jobTypes, categories } from '@/data/jobsData';
+import { supabase } from '@/integrations/supabase/client';
+
+interface Job {
+  id: string;
+  title: string;
+  company: string;
+  location: string;
+  type: string;
+  category: string;
+  salary?: string;
+  description: string;
+  requirements: string[];
+  benefits: string[];
+  created_at: string;
+  postedDate?: string;
+  contactEmail?: string;
+  country?: string;
+}
 
 const Jobs = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -18,10 +35,51 @@ const Jobs = () => {
   const [selectedCountry, setSelectedCountry] = useState(searchParams.get('country') || 'All Countries');
   const [selectedType, setSelectedType] = useState(searchParams.get('type') || 'All Types');
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'All Categories');
-  const [filteredJobs, setFilteredJobs] = useState(jobsData);
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Static options for filters
+  const countries = ['All Countries', 'UAE', 'Saudi Arabia', 'Qatar', 'Kuwait', 'USA', 'UK'];
+  const jobTypes = ['All Types', 'Full-time', 'Part-time', 'Contract', 'Remote'];
+  const categories = ['All Categories', 'Technology', 'Healthcare', 'Finance', 'Education', 'Engineering', 'Marketing', 'Other'];
 
   useEffect(() => {
-    let filtered = jobsData;
+    fetchJobs();
+  }, []);
+
+  useEffect(() => {
+    filterJobs();
+  }, [searchTerm, selectedCountry, selectedType, selectedCategory, jobs]);
+
+  const fetchJobs = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('jobs')
+        .select('*')
+        .eq('is_active', true)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      // Transform data to match JobCard component expectations
+      const transformedJobs = (data || []).map(job => ({
+        ...job,
+        postedDate: new Date(job.created_at).toLocaleDateString(),
+        contactEmail: 'hr@' + job.company.toLowerCase().replace(/\s+/g, '') + '.com',
+        country: job.location.split(',').pop()?.trim() || job.location,
+      }));
+
+      setJobs(transformedJobs);
+    } catch (error) {
+      console.error('Error fetching jobs:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filterJobs = () => {
+    let filtered = jobs;
 
     if (searchTerm) {
       filtered = filtered.filter(job => 
@@ -44,7 +102,7 @@ const Jobs = () => {
     }
 
     setFilteredJobs(filtered);
-  }, [searchTerm, selectedCountry, selectedType, selectedCategory]);
+  };
 
   const handleSearch = () => {
     const params = new URLSearchParams();
@@ -62,6 +120,18 @@ const Jobs = () => {
     { label: 'Top Companies', value: Math.floor(filteredJobs.length * 0.3), icon: TrendingUp },
     { label: 'Locations', value: new Set(filteredJobs.map(job => job.country)).size, icon: MapPin }
   ];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center">Loading jobs...</div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -270,7 +340,7 @@ const Jobs = () => {
         {filteredJobs.length > 0 && (
           <div className="text-center mt-12">
             <p className="text-gray-600 mb-4">
-              Showing {filteredJobs.length} of {jobsData.length} total jobs
+              Showing {filteredJobs.length} of {jobs.length} total jobs
             </p>
             <Button variant="outline" size="lg">
               Load More Jobs

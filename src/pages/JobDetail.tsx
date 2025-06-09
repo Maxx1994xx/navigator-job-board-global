@@ -1,5 +1,6 @@
 
 import { useParams, Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { ArrowLeft, MapPin, Clock, DollarSign, Building, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -7,11 +8,63 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { jobsData } from '@/data/jobsData';
+import { supabase } from '@/integrations/supabase/client';
+
+interface Job {
+  id: string;
+  title: string;
+  company: string;
+  location: string;
+  type: string;
+  category: string;
+  salary?: string;
+  description: string;
+  requirements: string[];
+  benefits: string[];
+  created_at: string;
+}
 
 const JobDetail = () => {
   const { id } = useParams();
-  const job = jobsData.find(j => j.id === id);
+  const [job, setJob] = useState<Job | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (id) {
+      fetchJob(id);
+    }
+  }, [id]);
+
+  const fetchJob = async (jobId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('jobs')
+        .select('*')
+        .eq('id', jobId)
+        .eq('is_active', true)
+        .single();
+
+      if (error) throw error;
+      setJob(data);
+    } catch (error) {
+      console.error('Error fetching job:', error);
+      setJob(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center">Loading job details...</div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!job) {
     return (
@@ -32,6 +85,9 @@ const JobDetail = () => {
       </div>
     );
   }
+
+  const contactEmail = `hr@${job.company.toLowerCase().replace(/\s+/g, '')}.com`;
+  const postedDate = new Date(job.created_at).toLocaleDateString();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -75,7 +131,7 @@ const JobDetail = () => {
                 <div className="flex flex-wrap gap-2 mb-6">
                   <Badge>{job.category}</Badge>
                   <Badge variant="outline">{job.type}</Badge>
-                  <Badge variant="secondary">Posted {job.postedDate}</Badge>
+                  <Badge variant="secondary">Posted {postedDate}</Badge>
                 </div>
               </div>
 
@@ -85,7 +141,7 @@ const JobDetail = () => {
                   Apply Now
                 </Button>
                 <p className="text-sm text-gray-600 text-center md:text-right">
-                  Apply at: {job.contactEmail}
+                  Apply at: {contactEmail}
                 </p>
               </div>
             </div>
@@ -104,34 +160,38 @@ const JobDetail = () => {
             </Card>
 
             {/* Requirements */}
-            <Card>
-              <CardContent className="p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">Requirements</h2>
-                <ul className="space-y-2">
-                  {job.requirements.map((req, index) => (
-                    <li key={index} className="flex items-start">
-                      <span className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                      <span className="text-gray-700">{req}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
+            {job.requirements && job.requirements.length > 0 && (
+              <Card>
+                <CardContent className="p-6">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-4">Requirements</h2>
+                  <ul className="space-y-2">
+                    {job.requirements.map((req, index) => (
+                      <li key={index} className="flex items-start">
+                        <span className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <span className="text-gray-700">{req}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Benefits */}
-            <Card>
-              <CardContent className="p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">Benefits & Perks</h2>
-                <ul className="space-y-2">
-                  {job.benefits.map((benefit, index) => (
-                    <li key={index} className="flex items-start">
-                      <span className="w-2 h-2 bg-green-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                      <span className="text-gray-700">{benefit}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
+            {job.benefits && job.benefits.length > 0 && (
+              <Card>
+                <CardContent className="p-6">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-4">Benefits & Perks</h2>
+                  <ul className="space-y-2">
+                    {job.benefits.map((benefit, index) => (
+                      <li key={index} className="flex items-start">
+                        <span className="w-2 h-2 bg-green-600 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                        <span className="text-gray-700">{benefit}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            )}
           </div>
 
           {/* Sidebar */}
@@ -150,7 +210,7 @@ const JobDetail = () => {
                 <Separator className="my-3" />
                 <p className="text-sm text-gray-600 text-center">
                   Send your application to:<br />
-                  <strong>{job.contactEmail}</strong>
+                  <strong>{contactEmail}</strong>
                 </p>
               </CardContent>
             </Card>
