@@ -19,6 +19,8 @@ export type Database = {
           description: string
           id: string
           is_active: boolean
+          is_featured: boolean | null
+          job_id: string | null
           location: string
           requirements: string[] | null
           salary: string | null
@@ -35,6 +37,8 @@ export type Database = {
           description: string
           id?: string
           is_active?: boolean
+          is_featured?: boolean | null
+          job_id?: string | null
           location: string
           requirements?: string[] | null
           salary?: string | null
@@ -51,6 +55,8 @@ export type Database = {
           description?: string
           id?: string
           is_active?: boolean
+          is_featured?: boolean | null
+          job_id?: string | null
           location?: string
           requirements?: string[] | null
           salary?: string | null

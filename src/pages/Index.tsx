@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, MapPin, Users, Briefcase, TrendingUp, Globe, Award, Clock, Star, CheckCircle, ArrowRight, Target, Zap, Shield } from 'lucide-react';
