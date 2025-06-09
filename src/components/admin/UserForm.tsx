@@ -9,6 +9,8 @@ import { X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
+type UserRole = 'admin' | 'job_poster' | 'user';
+
 interface UserFormProps {
   user?: any;
   onClose: () => void;
@@ -19,7 +21,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, onClose }) => {
     email: '',
     password: '',
     full_name: '',
-    role: 'user',
+    role: 'user' as UserRole,
   });
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
@@ -30,7 +32,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, onClose }) => {
         email: user.email || '',
         password: '',
         full_name: user.full_name || '',
-        role: user.role || 'user',
+        role: (user.role || 'user') as UserRole,
       });
     }
   }, [user]);
@@ -96,6 +98,10 @@ const UserForm: React.FC<UserFormProps> = ({ user, onClose }) => {
     }
   };
 
+  const handleRoleChange = (value: string) => {
+    setFormData({ ...formData, role: value as UserRole });
+  };
+
   return (
     <Card className="max-w-2xl mx-auto">
       <CardHeader className="flex flex-row items-center justify-between">
@@ -146,7 +152,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, onClose }) => {
 
           <div>
             <Label htmlFor="role">Role</Label>
-            <Select value={formData.role} onValueChange={(value) => setFormData({ ...formData, role: value })}>
+            <Select value={formData.role} onValueChange={handleRoleChange}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
