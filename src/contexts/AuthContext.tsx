@@ -32,19 +32,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('Auth state changed:', event, session?.user?.email);
         setSession(session);
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Fetch user role
+          // Fetch user role with retry logic
           setTimeout(async () => {
-            const { data: profile } = await supabase
-              .from('profiles')
-              .select('role')
-              .eq('id', session.user.id)
-              .single();
-            setUserRole(profile?.role || null);
-          }, 0);
+            try {
+              const { data: profile, error } = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', session.user.id)
+                .single();
+              
+              if (error) {
+                console.error('Error fetching user role:', error);
+                setUserRole(null);
+              } else {
+                console.log('User role fetched:', profile?.role);
+                setUserRole(profile?.role || 'user');
+              }
+            } catch (err) {
+              console.error('Exception fetching user role:', err);
+              setUserRole(null);
+            }
+          }, 100);
         } else {
           setUserRole(null);
         }
@@ -52,20 +65,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     );
 
+    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      setLoading(false);
+      if (!session) {
+        setLoading(false);
+      }
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
   const signIn = async (email: string, password: string) => {
+    console.log('Attempting to sign in with:', email);
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
+    
+    if (data.user && !error) {
+      console.log('Sign in successful for:', email);
+    }
+    
     return { data, error };
   };
 
