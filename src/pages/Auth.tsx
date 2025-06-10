@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,15 +10,17 @@ import { useAuth } from '@/contexts/AuthContext';
 
 const Auth = () => {
   const { user, userRole, signIn, loading } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('admin@company.com');
+  const [password, setPassword] = useState('admin123');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   // Check if user is already authenticated and redirect appropriately
   useEffect(() => {
-    if (user && userRole) {
+    console.log('Auth page effect - user:', !!user, 'role:', userRole, 'loading:', loading);
+    
+    if (!loading && user && userRole) {
       console.log('User authenticated with role:', userRole);
       if (userRole === 'admin') {
         console.log('Redirecting admin to admin panel');
@@ -28,11 +30,15 @@ const Auth = () => {
         navigate('/', { replace: true });
       }
     }
-  }, [user, userRole, navigate]);
+  }, [user, userRole, loading, navigate]);
 
-  if (user && userRole) {
-    // Don't render anything while redirecting
-    return null;
+  // Don't render anything while loading or if user is authenticated
+  if (loading || (user && userRole)) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-lg">Loading...</div>
+      </div>
+    );
   }
 
   const handleSignIn = async (e: React.FormEvent) => {
@@ -42,30 +48,28 @@ const Auth = () => {
 
     console.log('Form submitted with email:', email);
 
-    const { data, error } = await signIn(email, password);
-    if (error) {
-      console.error('Sign in error:', error);
-      setError(error.message);
+    try {
+      const { data, error } = await signIn(email, password);
+      if (error) {
+        console.error('Sign in error:', error);
+        setError(error.message);
+        setIsLoading(false);
+      } else if (data.user) {
+        console.log('Sign in successful, waiting for role and redirect...');
+        // Don't set loading to false here, let the useEffect handle navigation
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      setError('An unexpected error occurred');
       setIsLoading(false);
-    } else if (data.user) {
-      console.log('Sign in successful, waiting for role...');
-      // Don't set loading to false here, let the useEffect handle navigation
     }
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-lg">Loading...</div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-16">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-2xl text-center">Sign In</CardTitle>
+          <CardTitle className="text-2xl text-center">Admin Login</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSignIn} className="space-y-4">
