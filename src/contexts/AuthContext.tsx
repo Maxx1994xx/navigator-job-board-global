@@ -37,25 +37,47 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Fetch user role with retry logic
+          // Fetch user role with retry logic and better error handling
           setTimeout(async () => {
             try {
               const { data: profile, error } = await supabase
                 .from('profiles')
                 .select('role')
                 .eq('id', session.user.id)
-                .single();
+                .maybeSingle();
               
               if (error) {
                 console.error('Error fetching user role:', error);
-                setUserRole(null);
+                // If no profile exists, create one
+                if (error.code === 'PGRST116') {
+                  console.log('No profile found, creating one...');
+                  const { data: newProfile, error: insertError } = await supabase
+                    .from('profiles')
+                    .insert({
+                      id: session.user.id,
+                      email: session.user.email || '',
+                      full_name: session.user.user_metadata?.full_name || '',
+                      role: session.user.email === 'admin@company.com' ? 'admin' : 'user'
+                    })
+                    .select('role')
+                    .single();
+                  
+                  if (insertError) {
+                    console.error('Error creating profile:', insertError);
+                    setUserRole('user');
+                  } else {
+                    setUserRole(newProfile?.role || 'user');
+                  }
+                } else {
+                  setUserRole('user');
+                }
               } else {
                 console.log('User role fetched:', profile?.role);
                 setUserRole(profile?.role || 'user');
               }
             } catch (err) {
               console.error('Exception fetching user role:', err);
-              setUserRole(null);
+              setUserRole('user');
             }
           }, 100);
         } else {
@@ -79,6 +101,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signIn = async (email: string, password: string) => {
     console.log('Attempting to sign in with:', email);
+    
+    // Try to sign in normally first
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
