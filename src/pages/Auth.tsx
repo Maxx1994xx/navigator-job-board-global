@@ -10,8 +10,8 @@ import { useAuth } from '@/contexts/AuthContext';
 
 const Auth = () => {
   const { user, userRole, signIn, loading } = useAuth();
-  const [email, setEmail] = useState('admin');
-  const [password, setPassword] = useState('Asdfghjkl123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -49,7 +49,10 @@ const Auth = () => {
     console.log('Form submitted with email:', email);
 
     try {
-      const { data, error } = await signIn(email, password);
+      // Convert username to email format for Supabase
+      const loginEmail = email === 'admin' ? 'admin@company.com' : email;
+      
+      const { data, error } = await signIn(loginEmail, password);
       if (error) {
         console.error('Sign in error:', error);
         setError(error.message);
@@ -104,11 +107,6 @@ const Auth = () => {
               {isLoading ? 'Signing In...' : 'Sign In'}
             </Button>
           </form>
-          <div className="mt-4 text-sm text-gray-600 text-center">
-            <p>Default credentials:</p>
-            <p>Username: admin</p>
-            <p>Password: Asdfghjkl123</p>
-          </div>
         </CardContent>
       </Card>
     </div>

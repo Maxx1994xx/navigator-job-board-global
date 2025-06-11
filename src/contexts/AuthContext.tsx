@@ -45,7 +45,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (error.code === 'PGRST116') {
           console.log('No profile found, creating one...');
           const userEmail = session?.user?.email;
-          const role = userEmail === 'admin' ? 'admin' : 'user';
+          const role = userEmail === 'admin@company.com' ? 'admin' : 'user';
           
           const { data: newProfile, error: insertError } = await supabase
             .from('profiles')
