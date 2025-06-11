@@ -42,7 +42,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (error) {
         console.error('Error fetching user role:', error);
         
-        // If no profile exists, create one with admin role for admin@company.com
         if (error.code === 'PGRST116') {
           console.log('No profile found, creating one...');
           const userEmail = session?.user?.email;
@@ -87,7 +86,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Fetch user role immediately
           await fetchUserRole(session.user.id);
         } else {
           setUserRole(null);
@@ -96,7 +94,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     );
 
-    // Get initial session
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       console.log('Initial session check:', session?.user?.email);
       setSession(session);
@@ -122,7 +119,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     if (data.user && !error) {
       console.log('Sign in successful for:', email);
-      // The onAuthStateChange will handle the role fetching
     } else {
       setLoading(false);
     }
