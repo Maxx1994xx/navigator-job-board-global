@@ -10,8 +10,8 @@ import { useAuth } from '@/contexts/AuthContext';
 
 const Auth = () => {
   const { user, userRole, signIn, loading } = useAuth();
-  const [email, setEmail] = useState('admin@company.com');
-  const [password, setPassword] = useState('admin123');
+  const [email, setEmail] = useState('admin');
+  const [password, setPassword] = useState('Asdfghjkl123');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -69,7 +69,7 @@ const Auth = () => {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-16">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-2xl text-center">Admin Login</CardTitle>
+          <CardTitle className="text-2xl text-center">Super Admin Login</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSignIn} className="space-y-4">
@@ -79,13 +79,13 @@ const Auth = () => {
               </Alert>
             )}
             <div>
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">Username</Label>
               <Input
                 id="email"
-                type="email"
+                type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
+                placeholder="Enter username"
                 required
               />
             </div>
@@ -96,7 +96,7 @@ const Auth = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
+                placeholder="Enter password"
                 required
               />
             </div>
@@ -104,6 +104,11 @@ const Auth = () => {
               {isLoading ? 'Signing In...' : 'Sign In'}
             </Button>
           </form>
+          <div className="mt-4 text-sm text-gray-600 text-center">
+            <p>Default credentials:</p>
+            <p>Username: admin</p>
+            <p>Password: Asdfghjkl123</p>
+          </div>
         </CardContent>
       </Card>
     </div>
