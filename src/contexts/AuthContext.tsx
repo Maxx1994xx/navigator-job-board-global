@@ -6,7 +6,6 @@ import { supabase } from '@/integrations/supabase/client';
 interface AuthContextType {
   user: User | null;
   session: Session | null;
-  userRole: string | null;
   signIn: (email: string, password: string) => Promise<any>;
   signUp: (email: string, password: string, fullName: string) => Promise<any>;
   signOut: () => Promise<void>;
@@ -26,57 +25,7 @@ export const useAuth = () => {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [userRole, setUserRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-
-  const fetchUserRole = async (userId: string) => {
-    try {
-      console.log('Fetching role for user:', userId);
-      
-      const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', userId)
-        .single();
-      
-      if (error) {
-        console.error('Error fetching user role:', error);
-        
-        if (error.code === 'PGRST116') {
-          console.log('No profile found, creating one...');
-          const userEmail = session?.user?.email;
-          const role = userEmail === 'admin@company.com' ? 'admin' : 'user';
-          
-          const { data: newProfile, error: insertError } = await supabase
-            .from('profiles')
-            .insert({
-              id: userId,
-              email: userEmail || '',
-              full_name: session?.user?.user_metadata?.full_name || 'Super Admin',
-              role: role
-            })
-            .select('role')
-            .single();
-          
-          if (insertError) {
-            console.error('Error creating profile:', insertError);
-            setUserRole('user');
-          } else {
-            console.log('Created profile with role:', newProfile?.role);
-            setUserRole(newProfile?.role || 'user');
-          }
-        } else {
-          setUserRole('user');
-        }
-      } else {
-        console.log('User role fetched successfully:', profile?.role);
-        setUserRole(profile?.role || 'user');
-      }
-    } catch (err) {
-      console.error('Exception fetching user role:', err);
-      setUserRole('user');
-    }
-  };
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -84,12 +33,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.log('Auth state changed:', event, session?.user?.email);
         setSession(session);
         setUser(session?.user ?? null);
-        
-        if (session?.user) {
-          await fetchUserRole(session.user.id);
-        } else {
-          setUserRole(null);
-        }
         setLoading(false);
       }
     );
@@ -98,10 +41,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log('Initial session check:', session?.user?.email);
       setSession(session);
       setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        await fetchUserRole(session.user.id);
-      }
       setLoading(false);
     });
 
@@ -144,14 +83,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await supabase.auth.signOut();
     setUser(null);
     setSession(null);
-    setUserRole(null);
     setLoading(false);
   };
 
   const value = {
     user,
     session,
-    userRole,
     signIn,
     signUp,
     signOut,
