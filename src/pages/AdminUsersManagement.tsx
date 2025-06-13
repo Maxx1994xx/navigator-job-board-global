@@ -267,7 +267,7 @@ const AdminUsersManagement = () => {
             </TableBody>
           </Table>
         </CardContent>
-      </Dialog>
+      </Card>
 
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="max-w-md">
