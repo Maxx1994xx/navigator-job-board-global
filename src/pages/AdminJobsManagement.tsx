@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
@@ -12,6 +11,8 @@ import { Plus, Edit, Trash2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import AdminLayout from '@/components/AdminLayout';
+import RichTextEditor from '@/components/RichTextEditor';
+import LocationSelect from '@/components/LocationSelect';
 
 interface Job {
   id: string;
@@ -191,11 +192,10 @@ const AdminJobsManagement = () => {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Label htmlFor="location">Location</Label>
-          <Input
-            id="location"
+          <LocationSelect
             value={jobForm.location}
-            onChange={(e) => setJobForm({ ...jobForm, location: e.target.value })}
-            placeholder="San Francisco, CA"
+            onChange={(value) => setJobForm({ ...jobForm, location: value })}
+            placeholder="Select Location"
           />
         </div>
         <div>
@@ -257,10 +257,10 @@ const AdminJobsManagement = () => {
 
       <div>
         <Label htmlFor="description">Job Description</Label>
-        <Textarea
+        <RichTextEditor
           id="description"
           value={jobForm.description}
-          onChange={(e) => setJobForm({ ...jobForm, description: e.target.value })}
+          onChange={(value) => setJobForm({ ...jobForm, description: value })}
           placeholder="Detailed job description..."
           rows={4}
         />
@@ -268,10 +268,10 @@ const AdminJobsManagement = () => {
 
       <div>
         <Label htmlFor="requirements">Requirements (comma-separated)</Label>
-        <Textarea
+        <RichTextEditor
           id="requirements"
           value={jobForm.requirements}
-          onChange={(e) => setJobForm({ ...jobForm, requirements: e.target.value })}
+          onChange={(value) => setJobForm({ ...jobForm, requirements: value })}
           placeholder="React, TypeScript, 5+ years experience"
           rows={2}
         />
@@ -279,10 +279,10 @@ const AdminJobsManagement = () => {
 
       <div>
         <Label htmlFor="benefits">Benefits (comma-separated)</Label>
-        <Textarea
+        <RichTextEditor
           id="benefits"
           value={jobForm.benefits}
-          onChange={(e) => setJobForm({ ...jobForm, benefits: e.target.value })}
+          onChange={(value) => setJobForm({ ...jobForm, benefits: value })}
           placeholder="Health insurance, Remote work, 401k"
           rows={2}
         />
