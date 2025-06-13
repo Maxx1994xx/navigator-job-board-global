@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import AdminLayout from '@/components/AdminLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
@@ -11,7 +11,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import AdminLayout from '@/components/AdminLayout';
+import RichTextEditor from '@/components/RichTextEditor';
+import LocationSelect from '@/components/LocationSelect';
 
 interface Job {
   id: string;
@@ -166,7 +167,7 @@ const AdminJobsManagement = () => {
   };
 
   const JobForm = ({ onSubmit, submitText }: { onSubmit: () => void; submitText: string }) => (
-    <div className="space-y-4">
+    <div className="space-y-4 max-h-[70vh] overflow-y-auto">
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Label htmlFor="title">Job Title</Label>
@@ -174,7 +175,7 @@ const AdminJobsManagement = () => {
             id="title"
             value={jobForm.title}
             onChange={(e) => setJobForm({ ...jobForm, title: e.target.value })}
-            placeholder="Senior Frontend Developer"
+            placeholder="Senior Software Engineer"
           />
         </div>
         <div>
@@ -183,7 +184,7 @@ const AdminJobsManagement = () => {
             id="company"
             value={jobForm.company}
             onChange={(e) => setJobForm({ ...jobForm, company: e.target.value })}
-            placeholder="TechCorp Inc."
+            placeholder="Tech Company Inc."
           />
         </div>
       </div>
@@ -191,20 +192,19 @@ const AdminJobsManagement = () => {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Label htmlFor="location">Location</Label>
-          <Input
-            id="location"
+          <LocationSelect
             value={jobForm.location}
-            onChange={(e) => setJobForm({ ...jobForm, location: e.target.value })}
-            placeholder="San Francisco, CA"
+            onChange={(value) => setJobForm({ ...jobForm, location: value })}
+            placeholder="Select location"
           />
         </div>
         <div>
-          <Label htmlFor="salary">Salary</Label>
+          <Label htmlFor="salary">Salary (Optional)</Label>
           <Input
             id="salary"
             value={jobForm.salary}
             onChange={(e) => setJobForm({ ...jobForm, salary: e.target.value })}
-            placeholder="$120,000 - $150,000"
+            placeholder="$80,000 - $120,000"
           />
         </div>
       </div>
@@ -233,10 +233,11 @@ const AdminJobsManagement = () => {
             <SelectContent>
               <SelectItem value="Technology">Technology</SelectItem>
               <SelectItem value="Marketing">Marketing</SelectItem>
-              <SelectItem value="Sales">Sales</SelectItem>
-              <SelectItem value="Design">Design</SelectItem>
               <SelectItem value="Finance">Finance</SelectItem>
+              <SelectItem value="Engineering">Engineering</SelectItem>
               <SelectItem value="Healthcare">Healthcare</SelectItem>
+              <SelectItem value="Education">Education</SelectItem>
+              <SelectItem value="Sales">Sales</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -257,34 +258,28 @@ const AdminJobsManagement = () => {
 
       <div>
         <Label htmlFor="description">Job Description</Label>
-        <Textarea
-          id="description"
+        <RichTextEditor
           value={jobForm.description}
-          onChange={(e) => setJobForm({ ...jobForm, description: e.target.value })}
-          placeholder="Detailed job description..."
-          rows={4}
+          onChange={(value) => setJobForm({ ...jobForm, description: value })}
+          placeholder="Describe the job role, responsibilities, and what makes this position exciting..."
         />
       </div>
 
       <div>
-        <Label htmlFor="requirements">Requirements (comma-separated)</Label>
-        <Textarea
-          id="requirements"
+        <Label htmlFor="requirements">Requirements</Label>
+        <RichTextEditor
           value={jobForm.requirements}
-          onChange={(e) => setJobForm({ ...jobForm, requirements: e.target.value })}
-          placeholder="React, TypeScript, 5+ years experience"
-          rows={2}
+          onChange={(value) => setJobForm({ ...jobForm, requirements: value })}
+          placeholder="List the required skills, experience, and qualifications..."
         />
       </div>
 
       <div>
-        <Label htmlFor="benefits">Benefits (comma-separated)</Label>
-        <Textarea
-          id="benefits"
+        <Label htmlFor="benefits">Benefits & Perks</Label>
+        <RichTextEditor
           value={jobForm.benefits}
-          onChange={(e) => setJobForm({ ...jobForm, benefits: e.target.value })}
-          placeholder="Health insurance, Remote work, 401k"
-          rows={2}
+          onChange={(value) => setJobForm({ ...jobForm, benefits: value })}
+          placeholder="Describe the benefits, perks, and what makes working here great..."
         />
       </div>
 
@@ -294,6 +289,7 @@ const AdminJobsManagement = () => {
           id="is_featured"
           checked={jobForm.is_featured}
           onChange={(e) => setJobForm({ ...jobForm, is_featured: e.target.checked })}
+          className="rounded border-gray-300"
         />
         <Label htmlFor="is_featured">Featured Job</Label>
       </div>
