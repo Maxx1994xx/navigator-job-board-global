@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Search, MapPin, Users, TrendingUp, Globe, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -177,7 +178,18 @@ const Index = () => {
               </div>
             ) : featuredJobs.length > 0 ? (
               featuredJobs.map((job) => (
-                <JobCard key={job.id} job={job} />
+                <JobCard 
+                  key={job.id}
+                  id={job.id}
+                  title={job.title}
+                  company={job.company}
+                  location={job.location}
+                  type={job.job_type}
+                  salary={job.salary}
+                  description={job.description}
+                  postedDate={new Date(job.created_at).toLocaleDateString()}
+                  category={job.category}
+                />
               ))
             ) : (
               <div className="text-center py-8 col-span-full">
