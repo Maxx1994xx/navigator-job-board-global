@@ -42,29 +42,11 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [featuredJobs, setFeaturedJobs] = useState<Job[]>([]);
   const [categoryStats, setCategoryStats] = useState<CategoryCount[]>([]);
-  const [locationStats, setLocationStats] = useState<{ [key: string]: number }>({});
+  const [countryStats, setCountryStats] = useState<{ [key: string]: number }>({});
   const [totalJobs, setTotalJobs] = useState(0);
   const navigate = useNavigate();
 
-  const targetedLocations = [
-    'Dubai, UAE',
-    'Abu Dhabi, UAE', 
-    'Sharjah, UAE',
-    'Riyadh, Saudi Arabia',
-    'Jeddah, Saudi Arabia',
-    'Dammam, Saudi Arabia',
-    'Doha, Qatar',
-    'Kuwait City, Kuwait',
-    'Manama, Bahrain',
-    'Muscat, Oman',
-    'New York, USA',
-    'Los Angeles, USA',
-    'Chicago, USA',
-    'London, UK',
-    'Manchester, UK',
-    'Birmingham, UK'
-  ];
-
+  const countries = ['UAE', 'Saudi Arabia', 'Qatar', 'Kuwait', 'USA', 'UK', 'Bahrain', 'Oman'];
   const categories = ['Technology', 'Engineering', 'Healthcare', 'Finance', 'Marketing', 'Education'];
 
   const categoryIcons: { [key: string]: string } = {
@@ -86,7 +68,7 @@ const Index = () => {
       const { data: allJobs, error: allJobsError } = await supabase
         .from('jobs')
         .select('*')
-        .eq('status', 'active');
+        .eq('is_active', true);
 
       if (allJobsError) throw allJobsError;
 
@@ -118,13 +100,13 @@ const Index = () => {
 
       setCategoryStats(categoryData);
 
-      // Calculate location statistics using the exact location format
-      const locationCounts: { [key: string]: number } = {};
+      // Calculate country statistics
+      const countryCounts: { [key: string]: number } = {};
       transformedJobs.forEach(job => {
-        locationCounts[job.location] = (locationCounts[job.location] || 0) + 1;
+        countryCounts[job.country] = (countryCounts[job.country] || 0) + 1;
       });
 
-      setLocationStats(locationCounts);
+      setCountryStats(countryCounts);
 
     } catch (error) {
       console.error('Error fetching job data:', error);
@@ -238,12 +220,9 @@ const Index = () => {
                         <SelectValue placeholder="Select Location" />
                       </SelectTrigger>
                       <SelectContent>
-                        {targetedLocations.map(location => {
-                          const country = location.split(',').pop()?.trim() || location;
-                          return (
-                            <SelectItem key={location} value={country}>{country}</SelectItem>
-                          );
-                        })}
+                        {countries.map(country => (
+                          <SelectItem key={country} value={country}>{country}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -418,24 +397,19 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {targetedLocations.map(location => {
-              const country = location.split(',').pop()?.trim() || location;
-              const jobCount = locationStats[location] || 0;
-              
-              return (
-                <Link key={location} to={`/jobs?country=${country}`}>
-                  <Card className="bg-gray-800 border-gray-700 hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:bg-gray-700">
-                    <CardContent className="p-8 text-center">
-                      <MapPin className="w-8 h-8 text-blue-400 mx-auto mb-4" />
-                      <h3 className="font-semibold text-white text-lg mb-2">{country}</h3>
-                      <p className="text-blue-300 font-medium">
-                        {jobCount} jobs
-                      </p>
-                    </CardContent>
-                  </Card>
-                </Link>
-              );
-            })}
+            {countries.map(country => (
+              <Link key={country} to={`/jobs?country=${country}`}>
+                <Card className="bg-gray-800 border-gray-700 hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:bg-gray-700">
+                  <CardContent className="p-8 text-center">
+                    <MapPin className="w-8 h-8 text-blue-400 mx-auto mb-4" />
+                    <h3 className="font-semibold text-white text-lg mb-2">{country}</h3>
+                    <p className="text-blue-300 font-medium">
+                      {countryStats[country] || 0} jobs
+                    </p>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
