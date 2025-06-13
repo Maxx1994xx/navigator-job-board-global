@@ -39,6 +39,50 @@ export type Database = {
         }
         Relationships: []
       }
+      app_users: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          email: string
+          full_name: string
+          id: string
+          phone: string | null
+          role: string | null
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          email: string
+          full_name: string
+          id?: string
+          phone?: string | null
+          role?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          phone?: string | null
+          role?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "app_users_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       jobs: {
         Row: {
           benefits: string[] | null
@@ -54,6 +98,7 @@ export type Database = {
           location: string
           requirements: string[] | null
           salary: string | null
+          status: string | null
           title: string
           type: string
           updated_at: string
@@ -72,6 +117,7 @@ export type Database = {
           location: string
           requirements?: string[] | null
           salary?: string | null
+          status?: string | null
           title: string
           type: string
           updated_at?: string
@@ -90,6 +136,7 @@ export type Database = {
           location?: string
           requirements?: string[] | null
           salary?: string | null
+          status?: string | null
           title?: string
           type?: string
           updated_at?: string
@@ -128,9 +175,27 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_job_stats: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          total_jobs: number
+          active_jobs: number
+          draft_jobs: number
+          inactive_jobs: number
+        }[]
+      }
       get_user_role: {
         Args: { user_id: string }
         Returns: Database["public"]["Enums"]["user_role"]
+      }
+      get_user_stats: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          total_users: number
+          active_users: number
+          inactive_users: number
+          suspended_users: number
+        }[]
       }
       verify_admin_credentials: {
         Args: { p_username: string; p_password: string }

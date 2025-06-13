@@ -19,6 +19,8 @@ import Terms from "./pages/Terms";
 import CookiePolicy from "./pages/CookiePolicy";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminJobsManagement from "./pages/AdminJobsManagement";
+import AdminUsersManagement from "./pages/AdminUsersManagement";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -45,6 +47,16 @@ const App = () => (
               <Route path="/admin/dashboard" element={
                 <AdminProtectedRoute>
                   <AdminDashboard />
+                </AdminProtectedRoute>
+              } />
+              <Route path="/admin/jobs" element={
+                <AdminProtectedRoute>
+                  <AdminJobsManagement />
+                </AdminProtectedRoute>
+              } />
+              <Route path="/admin/users" element={
+                <AdminProtectedRoute>
+                  <AdminUsersManagement />
                 </AdminProtectedRoute>
               } />
               <Route path="*" element={<NotFound />} />
