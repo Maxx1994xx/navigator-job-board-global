@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -57,15 +58,21 @@ const AdminJobsManagement = () => {
 
   const fetchJobs = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('jobs')
-      .select('*')
-      .order('created_at', { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from('jobs')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-    if (error) {
-      toast({ title: 'Error', description: 'Failed to fetch jobs', variant: 'destructive' });
-    } else {
-      setJobs(data || []);
+      if (error) {
+        console.error('Fetch jobs error:', error);
+        toast({ title: 'Error', description: 'Failed to fetch jobs: ' + error.message, variant: 'destructive' });
+      } else {
+        setJobs(data || []);
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      toast({ title: 'Error', description: 'An unexpected error occurred', variant: 'destructive' });
     }
     setLoading(false);
   };
@@ -86,65 +93,133 @@ const AdminJobsManagement = () => {
     });
   };
 
+  const validateForm = () => {
+    if (!jobForm.title.trim()) {
+      toast({ title: 'Validation Error', description: 'Job title is required', variant: 'destructive' });
+      return false;
+    }
+    if (!jobForm.company.trim()) {
+      toast({ title: 'Validation Error', description: 'Company name is required', variant: 'destructive' });
+      return false;
+    }
+    if (!jobForm.location.trim()) {
+      toast({ title: 'Validation Error', description: 'Location is required', variant: 'destructive' });
+      return false;
+    }
+    if (!jobForm.description.trim()) {
+      toast({ title: 'Validation Error', description: 'Job description is required', variant: 'destructive' });
+      return false;
+    }
+    return true;
+  };
+
   const handleCreateJob = async () => {
+    if (!validateForm()) return;
+
     setLoading(true);
-    const jobData = {
-      ...jobForm,
-      requirements: jobForm.requirements ? jobForm.requirements.split(',').map(r => r.trim()) : [],
-      benefits: jobForm.benefits ? jobForm.benefits.split(',').map(b => b.trim()) : []
-    };
+    try {
+      const jobData = {
+        title: jobForm.title.trim(),
+        company: jobForm.company.trim(),
+        location: jobForm.location.trim(),
+        type: jobForm.type,
+        category: jobForm.category,
+        description: jobForm.description.trim(),
+        salary: jobForm.salary.trim() || null,
+        requirements: jobForm.requirements ? jobForm.requirements.split(',').map(r => r.trim()).filter(r => r) : [],
+        benefits: jobForm.benefits ? jobForm.benefits.split(',').map(b => b.trim()).filter(b => b) : [],
+        status: jobForm.status,
+        is_featured: jobForm.is_featured
+      };
 
-    const { error } = await supabase.from('jobs').insert([jobData]);
+      console.log('Creating job with data:', jobData);
 
-    if (error) {
-      toast({ title: 'Error', description: 'Failed to create job', variant: 'destructive' });
-    } else {
-      toast({ title: 'Success', description: 'Job created successfully' });
-      setIsCreateDialogOpen(false);
-      resetForm();
-      fetchJobs();
+      const { data, error } = await supabase.from('jobs').insert([jobData]).select();
+
+      if (error) {
+        console.error('Create job error:', error);
+        toast({ title: 'Error', description: 'Failed to create job: ' + error.message, variant: 'destructive' });
+      } else {
+        console.log('Job created successfully:', data);
+        toast({ title: 'Success', description: 'Job created successfully' });
+        setIsCreateDialogOpen(false);
+        resetForm();
+        fetchJobs();
+      }
+    } catch (err) {
+      console.error('Unexpected error during job creation:', err);
+      toast({ title: 'Error', description: 'An unexpected error occurred while creating the job', variant: 'destructive' });
     }
     setLoading(false);
   };
 
   const handleEditJob = async () => {
-    if (!editingJob) return;
+    if (!editingJob || !validateForm()) return;
     
     setLoading(true);
-    const jobData = {
-      ...jobForm,
-      requirements: jobForm.requirements ? jobForm.requirements.split(',').map(r => r.trim()) : [],
-      benefits: jobForm.benefits ? jobForm.benefits.split(',').map(b => b.trim()) : []
-    };
+    try {
+      const jobData = {
+        title: jobForm.title.trim(),
+        company: jobForm.company.trim(),
+        location: jobForm.location.trim(),
+        type: jobForm.type,
+        category: jobForm.category,
+        description: jobForm.description.trim(),
+        salary: jobForm.salary.trim() || null,
+        requirements: jobForm.requirements ? jobForm.requirements.split(',').map(r => r.trim()).filter(r => r) : [],
+        benefits: jobForm.benefits ? jobForm.benefits.split(',').map(b => b.trim()).filter(b => b) : [],
+        status: jobForm.status,
+        is_featured: jobForm.is_featured
+      };
 
-    const { error } = await supabase
-      .from('jobs')
-      .update(jobData)
-      .eq('id', editingJob.id);
+      console.log('Updating job with data:', jobData);
 
-    if (error) {
-      toast({ title: 'Error', description: 'Failed to update job', variant: 'destructive' });
-    } else {
-      toast({ title: 'Success', description: 'Job updated successfully' });
-      setIsEditDialogOpen(false);
-      setEditingJob(null);
-      resetForm();
-      fetchJobs();
+      const { data, error } = await supabase
+        .from('jobs')
+        .update(jobData)
+        .eq('id', editingJob.id)
+        .select();
+
+      if (error) {
+        console.error('Update job error:', error);
+        toast({ title: 'Error', description: 'Failed to update job: ' + error.message, variant: 'destructive' });
+      } else {
+        console.log('Job updated successfully:', data);
+        toast({ title: 'Success', description: 'Job updated successfully' });
+        setIsEditDialogOpen(false);
+        setEditingJob(null);
+        resetForm();
+        fetchJobs();
+      }
+    } catch (err) {
+      console.error('Unexpected error during job update:', err);
+      toast({ title: 'Error', description: 'An unexpected error occurred while updating the job', variant: 'destructive' });
     }
     setLoading(false);
   };
 
   const handleDeleteJob = async (jobId: string) => {
-    if (!confirm('Are you sure you want to delete this job?')) return;
+    if (!window.confirm('Are you sure you want to delete this job? This action cannot be undone.')) return;
 
-    const { error } = await supabase.from('jobs').delete().eq('id', jobId);
+    setLoading(true);
+    try {
+      console.log('Deleting job with ID:', jobId);
+      
+      const { error } = await supabase.from('jobs').delete().eq('id', jobId);
 
-    if (error) {
-      toast({ title: 'Error', description: 'Failed to delete job', variant: 'destructive' });
-    } else {
-      toast({ title: 'Success', description: 'Job deleted successfully' });
-      fetchJobs();
+      if (error) {
+        console.error('Delete job error:', error);
+        toast({ title: 'Error', description: 'Failed to delete job: ' + error.message, variant: 'destructive' });
+      } else {
+        console.log('Job deleted successfully');
+        toast({ title: 'Success', description: 'Job deleted successfully' });
+        fetchJobs();
+      }
+    } catch (err) {
+      console.error('Unexpected error during job deletion:', err);
+      toast({ title: 'Error', description: 'An unexpected error occurred while deleting the job', variant: 'destructive' });
     }
+    setLoading(false);
   };
 
   const openEditDialog = (job: Job) => {
@@ -169,33 +244,36 @@ const AdminJobsManagement = () => {
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="title">Job Title</Label>
+          <Label htmlFor="title">Job Title *</Label>
           <Input
             id="title"
             value={jobForm.title}
             onChange={(e) => setJobForm({ ...jobForm, title: e.target.value })}
             placeholder="Senior Frontend Developer"
+            required
           />
         </div>
         <div>
-          <Label htmlFor="company">Company</Label>
+          <Label htmlFor="company">Company *</Label>
           <Input
             id="company"
             value={jobForm.company}
             onChange={(e) => setJobForm({ ...jobForm, company: e.target.value })}
             placeholder="TechCorp Inc."
+            required
           />
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="location">Location</Label>
+          <Label htmlFor="location">Location *</Label>
           <Input
             id="location"
             value={jobForm.location}
             onChange={(e) => setJobForm({ ...jobForm, location: e.target.value })}
             placeholder="San Francisco, CA"
+            required
           />
         </div>
         <div>
@@ -256,13 +334,14 @@ const AdminJobsManagement = () => {
       </div>
 
       <div>
-        <Label htmlFor="description">Job Description</Label>
+        <Label htmlFor="description">Job Description *</Label>
         <Textarea
           id="description"
           value={jobForm.description}
           onChange={(e) => setJobForm({ ...jobForm, description: e.target.value })}
           placeholder="Detailed job description..."
           rows={4}
+          required
         />
       </div>
 
@@ -327,52 +406,58 @@ const AdminJobsManagement = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>All Jobs</CardTitle>
+            <CardTitle>All Jobs ({jobs.length})</CardTitle>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Title</TableHead>
-                  <TableHead>Company</TableHead>
-                  <TableHead>Location</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Featured</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {jobs.map((job) => (
-                  <TableRow key={job.id}>
-                    <TableCell className="font-medium">{job.title}</TableCell>
-                    <TableCell>{job.company}</TableCell>
-                    <TableCell>{job.location}</TableCell>
-                    <TableCell>{job.type}</TableCell>
-                    <TableCell>{job.category}</TableCell>
-                    <TableCell>
-                      <Badge variant={job.status === 'active' ? 'default' : job.status === 'draft' ? 'secondary' : 'destructive'}>
-                        {job.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {job.is_featured && <Badge variant="outline">Featured</Badge>}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex space-x-2">
-                        <Button variant="outline" size="sm" onClick={() => openEditDialog(job)}>
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button variant="outline" size="sm" onClick={() => handleDeleteJob(job.id)}>
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
+            {loading && jobs.length === 0 ? (
+              <div className="text-center py-8">Loading jobs...</div>
+            ) : jobs.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">No jobs found. Create your first job!</div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Company</TableHead>
+                    <TableHead>Location</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Featured</TableHead>
+                    <TableHead>Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {jobs.map((job) => (
+                    <TableRow key={job.id}>
+                      <TableCell className="font-medium">{job.title}</TableCell>
+                      <TableCell>{job.company}</TableCell>
+                      <TableCell>{job.location}</TableCell>
+                      <TableCell>{job.type}</TableCell>
+                      <TableCell>{job.category}</TableCell>
+                      <TableCell>
+                        <Badge variant={job.status === 'active' ? 'default' : job.status === 'draft' ? 'secondary' : 'destructive'}>
+                          {job.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        {job.is_featured && <Badge variant="outline">Featured</Badge>}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex space-x-2">
+                          <Button variant="outline" size="sm" onClick={() => openEditDialog(job)} disabled={loading}>
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button variant="outline" size="sm" onClick={() => handleDeleteJob(job.id)} disabled={loading}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
           </CardContent>
         </Card>
 
