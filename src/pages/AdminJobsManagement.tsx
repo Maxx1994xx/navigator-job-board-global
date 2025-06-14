@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -304,14 +303,15 @@ const AdminJobsManagement = () => {
       const { data, error } = await supabase.from('jobs').insert([jobData]).select();
 
       if (error) {
-        console.error('Create job error:', error);
-        toast({ title: 'Error', description: 'Failed to create job: ' + error.message, variant: 'destructive' });
+        console.error('Create job error (full object):', error);
+        toast({ title: 'Error', description: 'Failed to create job: ' + (error.message || JSON.stringify(error)), variant: 'destructive' });
       } else {
         console.log('Job created successfully:', data);
         toast({ title: 'Success', description: 'Job created successfully' });
         setIsCreateDialogOpen(false);
         resetForm();
-        fetchJobs();
+        await fetchJobs();
+        window.location.reload(); // Hard reload to force state if jobs still missing
       }
     } catch (err) {
       console.error('Unexpected error during job creation:', err);
@@ -322,7 +322,7 @@ const AdminJobsManagement = () => {
 
   const handleEditJob = async () => {
     if (!editingJob || !validateForm()) return;
-    
+
     setLoading(true);
     try {
       const jobData = {
@@ -348,15 +348,16 @@ const AdminJobsManagement = () => {
         .select();
 
       if (error) {
-        console.error('Update job error:', error);
-        toast({ title: 'Error', description: 'Failed to update job: ' + error.message, variant: 'destructive' });
+        console.error('Update job error (full object):', error);
+        toast({ title: 'Error', description: 'Failed to update job: ' + (error.message || JSON.stringify(error)), variant: 'destructive' });
       } else {
         console.log('Job updated successfully:', data);
         toast({ title: 'Success', description: 'Job updated successfully' });
         setIsEditDialogOpen(false);
         setEditingJob(null);
         resetForm();
-        fetchJobs();
+        await fetchJobs();
+        window.location.reload();
       }
     } catch (err) {
       console.error('Unexpected error during job update:', err);
@@ -371,16 +372,17 @@ const AdminJobsManagement = () => {
     setLoading(true);
     try {
       console.log('Deleting job with ID:', jobId);
-      
+
       const { error } = await supabase.from('jobs').delete().eq('id', jobId);
 
       if (error) {
-        console.error('Delete job error:', error);
-        toast({ title: 'Error', description: 'Failed to delete job: ' + error.message, variant: 'destructive' });
+        console.error('Delete job error (full object):', error);
+        toast({ title: 'Error', description: 'Failed to delete job: ' + (error.message || JSON.stringify(error)), variant: 'destructive' });
       } else {
         console.log('Job deleted successfully');
         toast({ title: 'Success', description: 'Job deleted successfully' });
-        fetchJobs();
+        await fetchJobs();
+        window.location.reload();
       }
     } catch (err) {
       console.error('Unexpected error during job deletion:', err);
