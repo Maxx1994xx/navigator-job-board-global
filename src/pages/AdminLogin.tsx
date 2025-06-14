@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -19,15 +19,7 @@ const AdminLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // If already logged in, redirect to dashboard
-  useEffect(() => {
-    let isMounted = true;
-    const cached = localStorage.getItem(ADMIN_STORAGE_KEY);
-    if (cached) {
-      navigate('/admin/dashboard', { replace: true });
-    }
-    return () => { isMounted = false; };
-  }, [navigate]);
+  // Removed useEffect that triggers navigation based on localStorage
 
   // Helper: try username first, then email
   const handleSignIn = async (e: React.FormEvent) => {
