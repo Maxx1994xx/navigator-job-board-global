@@ -1,4 +1,3 @@
-
 import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { ArrowLeft, MapPin, Clock, DollarSign, Building, Mail } from 'lucide-react';
@@ -88,6 +87,7 @@ const JobDetail = () => {
 
   const contactEmail = `hr@${job.company.toLowerCase().replace(/\s+/g, '')}.com`;
   const postedDate = new Date(job.created_at).toLocaleDateString();
+  const applyPath = `/job/${job.id}/apply`;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -136,10 +136,12 @@ const JobDetail = () => {
               </div>
 
               <div className="flex flex-col gap-3">
-                <Button size="lg" className="w-full md:w-auto">
-                  <Mail className="w-4 h-4 mr-2" />
-                  Apply Now
-                </Button>
+                <Link to={applyPath}>
+                  <Button size="lg" className="w-full md:w-auto">
+                    <Mail className="w-4 h-4 mr-2" />
+                    Apply Now
+                  </Button>
+                </Link>
                 <p className="text-sm text-gray-600 text-center md:text-right">
                   Apply at: {contactEmail}
                 </p>
@@ -203,10 +205,12 @@ const JobDetail = () => {
                 <p className="text-gray-600 mb-4">
                   Ready to take the next step in your career? Apply now and join our team!
                 </p>
-                <Button className="w-full mb-3">
-                  <Mail className="w-4 h-4 mr-2" />
-                  Apply Now
-                </Button>
+                <Link to={applyPath}>
+                  <Button className="w-full mb-3">
+                    <Mail className="w-4 h-4 mr-2" />
+                    Apply Now
+                  </Button>
+                </Link>
                 <Separator className="my-3" />
                 <p className="text-sm text-gray-600 text-center">
                   Send your application to:<br />

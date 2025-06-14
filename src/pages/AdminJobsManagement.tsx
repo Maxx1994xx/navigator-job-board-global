@@ -41,6 +41,7 @@ interface JobFormData {
   benefits: string;
   status: string;
   is_featured: boolean;
+  listing_url: string;
 }
 
 interface JobFormProps {
@@ -178,6 +179,18 @@ const JobForm: React.FC<JobFormProps> = ({ jobForm, setJobForm, onSubmit, submit
       />
     </div>
 
+    <div>
+      <Label htmlFor="listing_url">Job Listing URL *</Label>
+      <Input
+        id="listing_url"
+        value={jobForm.listing_url}
+        onChange={(e) => setJobForm({ ...jobForm, listing_url: e.target.value })}
+        placeholder="https://jobs.indeed.com/..."
+        required
+        type="url"
+      />
+    </div>
+
     <div className="flex items-center space-x-2">
       <input
         type="checkbox"
@@ -213,7 +226,8 @@ const AdminJobsManagement = () => {
     requirements: '',
     benefits: '',
     status: 'active',
-    is_featured: false
+    is_featured: false,
+    listing_url: ''
   });
 
   useEffect(() => {
@@ -255,7 +269,8 @@ const AdminJobsManagement = () => {
       requirements: '',
       benefits: '',
       status: 'active',
-      is_featured: false
+      is_featured: false,
+      listing_url: ''
     });
   };
 
@@ -274,6 +289,10 @@ const AdminJobsManagement = () => {
     }
     if (!jobForm.description.trim()) {
       toast({ title: 'Validation Error', description: 'Job description is required', variant: 'destructive' });
+      return false;
+    }
+    if (!jobForm.listing_url.trim()) {
+      toast({ title: 'Validation Error', description: 'Job Listing URL is required', variant: 'destructive' });
       return false;
     }
     return true;
@@ -295,7 +314,8 @@ const AdminJobsManagement = () => {
         requirements: jobForm.requirements ? jobForm.requirements.split(',').map(r => r.trim()).filter(r => r) : [],
         benefits: jobForm.benefits ? jobForm.benefits.split(',').map(b => b.trim()).filter(b => b) : [],
         status: jobForm.status,
-        is_featured: jobForm.is_featured
+        is_featured: jobForm.is_featured,
+        listing_url: jobForm.listing_url.trim(),
       };
 
       console.log('Creating job with data:', jobData);
@@ -336,7 +356,8 @@ const AdminJobsManagement = () => {
         requirements: jobForm.requirements ? jobForm.requirements.split(',').map(r => r.trim()).filter(r => r) : [],
         benefits: jobForm.benefits ? jobForm.benefits.split(',').map(b => b.trim()).filter(b => b) : [],
         status: jobForm.status,
-        is_featured: jobForm.is_featured
+        is_featured: jobForm.is_featured,
+        listing_url: jobForm.listing_url.trim(),
       };
 
       console.log('Updating job with data:', jobData);
@@ -404,7 +425,8 @@ const AdminJobsManagement = () => {
       requirements: job.requirements?.join(', ') || '',
       benefits: job.benefits?.join(', ') || '',
       status: job.status,
-      is_featured: job.is_featured
+      is_featured: job.is_featured,
+      listing_url: (job as any).listing_url || '',
     });
     setIsEditDialogOpen(true);
   };

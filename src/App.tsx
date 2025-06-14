@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -38,6 +37,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/jobs" element={<Jobs />} />
               <Route path="/job/:id" element={<JobDetail />} />
+              <Route path="/job/:id/apply" element={<(await import('./pages/JobApply')).default />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/privacy" element={<Privacy />} />
