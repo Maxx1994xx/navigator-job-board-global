@@ -94,6 +94,39 @@ const JobForm: React.FC<JobFormProps> = ({ jobForm, setJobForm, onSubmit, submit
       </div>
     </div>
 
+    {/* Salary + Currency in same row for clarity */}
+    <div className="grid grid-cols-2 gap-4">
+      <div>
+        <Label htmlFor="salary">Salary *</Label>
+        <Input
+          id="salary"
+          type="text"
+          value={jobForm.salary}
+          onChange={(e) => setJobForm({ ...jobForm, salary: e.target.value })}
+          placeholder="e.g. 8000"
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="currency">Currency *</Label>
+        <Select
+          value={jobForm.currency}
+          onValueChange={(value) => setJobForm({ ...jobForm, currency: value })}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select currency" />
+          </SelectTrigger>
+          <SelectContent>
+            {COUNTRY_CURRENCY_LIST.map((item) => (
+              <SelectItem key={item.currency} value={item.currency}>
+                {item.currency} - {item.country}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
+
     <div className="grid grid-cols-2 gap-4">
       <div>
         <Label htmlFor="location">Location *</Label>
