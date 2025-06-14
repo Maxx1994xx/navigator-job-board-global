@@ -84,7 +84,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setLoading(true);
 
     try {
-      // First, verify admin credentials using the database function
+      // Only check via Supabase RPC with the provided username and password
       const { data: adminData, error: credentialError } = await supabase
         .rpc('verify_admin_credentials', {
           p_username: username,
@@ -97,29 +97,21 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         return { success: false, error: 'Invalid username or password' };
       }
 
-      // Get the admin user data
+      // Use the first result from the database
       const admin = adminData[0];
-      
-      // Sign in with Supabase Auth using email and a session token
-      // Since we're using a custom admin system, we'll create a custom session
-      // For now, we'll use the hardcoded approach but store it properly
-      if (username === 'admin' && password === 'admin123') {
-        const adminUser: AdminUser = {
-          id: admin.admin_id,
-          username: admin.username,
-          email: admin.email,
-          full_name: admin.full_name
-        };
-        
-        setAdminUser(adminUser);
-        console.log('Admin sign in successful for:', username);
-        setLoading(false);
-        return { success: true };
-      } else {
-        console.log('Invalid admin credentials for:', username);
-        setLoading(false);
-        return { success: false, error: 'Invalid username or password' };
-      }
+
+      const adminUser: AdminUser = {
+        id: admin.admin_id,
+        username: admin.username,
+        email: admin.email,
+        full_name: admin.full_name
+      };
+
+      setAdminUser(adminUser);
+      console.log('Admin sign in successful for:', username);
+      setLoading(false);
+      return { success: true };
+
     } catch (err) {
       console.error('Unexpected admin sign in error:', err);
       setLoading(false);
