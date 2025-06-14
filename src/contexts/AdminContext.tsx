@@ -31,6 +31,14 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Check if admin info exists in localStorage
+    const storedAdmin = localStorage.getItem('adminUser');
+    if (storedAdmin) {
+      setAdminUser(JSON.parse(storedAdmin));
+      setLoading(false);
+      return;
+    }
+
     // Check current session and verify if user is admin
     const checkAdminSession = async () => {
       try {
@@ -92,6 +100,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           full_name: "Admin User",
         };
         setAdminUser(adminUser);
+        localStorage.setItem('adminUser', JSON.stringify(adminUser));
         console.log("Admin sign in successful for:", username);
         setLoading(false);
         return { success: true };
@@ -108,6 +117,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const signOut = async () => {
     setAdminUser(null);
+    localStorage.removeItem('adminUser');
     // Also sign out from Supabase if signed in
     await supabase.auth.signOut();
     console.log('Admin signed out');
