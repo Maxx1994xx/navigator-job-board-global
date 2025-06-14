@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -97,9 +96,6 @@ const AdminLogin = () => {
               {isLoading ? 'Signing In...' : 'Sign In'}
             </Button>
           </form>
-          <div className="mt-4 text-center text-sm text-gray-600">
-            Default credentials: admin / admin123
-          </div>
         </CardContent>
       </Card>
     </div>

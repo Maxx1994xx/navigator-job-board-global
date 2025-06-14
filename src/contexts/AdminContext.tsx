@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { User } from '@supabase/supabase-js';
@@ -84,34 +83,22 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setLoading(true);
 
     try {
-      // Only check via Supabase RPC with the provided username and password
-      const { data: adminData, error: credentialError } = await supabase
-        .rpc('verify_admin_credentials', {
-          p_username: username,
-          p_password: password
-        });
-
-      if (credentialError || !adminData || adminData.length === 0) {
-        console.log('Invalid admin credentials for:', username);
+      // Only allow login with username "admin" and password "admin123"
+      if (username === "admin" && password === "admin123") {
+        const adminUser: AdminUser = {
+          id: "hardcoded-id-admin",
+          username: "admin",
+          email: "admin@example.com",
+          full_name: "Admin User",
+        };
+        setAdminUser(adminUser);
+        console.log("Admin sign in successful for:", username);
         setLoading(false);
-        return { success: false, error: 'Invalid username or password' };
+        return { success: true };
+      } else {
+        setLoading(false);
+        return { success: false, error: "Invalid username or password" };
       }
-
-      // Use the first result from the database
-      const admin = adminData[0];
-
-      const adminUser: AdminUser = {
-        id: admin.admin_id,
-        username: admin.username,
-        email: admin.email,
-        full_name: admin.full_name
-      };
-
-      setAdminUser(adminUser);
-      console.log('Admin sign in successful for:', username);
-      setLoading(false);
-      return { success: true };
-
     } catch (err) {
       console.error('Unexpected admin sign in error:', err);
       setLoading(false);
