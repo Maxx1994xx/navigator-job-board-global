@@ -14,13 +14,15 @@ import { useToast } from '@/hooks/use-toast';
 import AdminLayout from '@/components/AdminLayout';
 
 const ALLOWED_LOCATIONS = [
-  // Update this array to match the exact list of locations used on the homepage's Explore Global Opportunities
-  "New York, USA",
-  "London, UK",
-  "Berlin, Germany",
-  "Sydney, Australia",
-  "Toronto, Canada",
-  "Remote",
+  // Updated to match homepage job search countries only
+  "UAE",
+  "Saudi Arabia",
+  "Qatar",
+  "Kuwait",
+  "USA",
+  "UK",
+  "Bahrain",
+  "Oman",
 ];
 
 interface Job {
