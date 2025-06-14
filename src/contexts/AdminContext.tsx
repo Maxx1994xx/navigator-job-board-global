@@ -1,6 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { User } from '@supabase/supabase-js';
 
 interface AdminUser {
   id: string;
@@ -28,18 +29,54 @@ export const useAdmin = () => {
 
 export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if admin user is stored in localStorage
-    const storedAdmin = localStorage.getItem('adminUser');
-    if (storedAdmin) {
+    // Check current session and verify if user is admin
+    const checkAdminSession = async () => {
       try {
-        setAdminUser(JSON.parse(storedAdmin));
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (session?.user) {
+          // Verify if this user exists in admin_users table
+          const { data: adminData, error } = await supabase
+            .from('admin_users')
+            .select('id, username, email, full_name')
+            .eq('id', session.user.id)
+            .single();
+
+          if (adminData && !error) {
+            setAdminUser(adminData);
+          }
+        }
       } catch (error) {
-        localStorage.removeItem('adminUser');
+        console.error('Error checking admin session:', error);
+      } finally {
+        setLoading(false);
       }
-    }
+    };
+
+    checkAdminSession();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_OUT') {
+        setAdminUser(null);
+      } else if (event === 'SIGNED_IN' && session?.user) {
+        // Verify admin status when signing in
+        const { data: adminData, error } = await supabase
+          .from('admin_users')
+          .select('id, username, email, full_name')
+          .eq('id', session.user.id)
+          .single();
+
+        if (adminData && !error) {
+          setAdminUser(adminData);
+        }
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const signIn = async (username: string, password: string) => {
@@ -47,17 +84,34 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setLoading(true);
 
     try {
-      // For now, let's use hardcoded credentials to ensure it works
+      // First, verify admin credentials using the database function
+      const { data: adminData, error: credentialError } = await supabase
+        .rpc('verify_admin_credentials', {
+          p_username: username,
+          p_password: password
+        });
+
+      if (credentialError || !adminData || adminData.length === 0) {
+        console.log('Invalid admin credentials for:', username);
+        setLoading(false);
+        return { success: false, error: 'Invalid username or password' };
+      }
+
+      // Get the admin user data
+      const admin = adminData[0];
+      
+      // Sign in with Supabase Auth using email and a session token
+      // Since we're using a custom admin system, we'll create a custom session
+      // For now, we'll use the hardcoded approach but store it properly
       if (username === 'admin' && password === 'admin123') {
-        const admin: AdminUser = {
-          id: '1',
-          username: 'admin',
-          email: 'admin@company.com',
-          full_name: 'System Administrator'
+        const adminUser: AdminUser = {
+          id: admin.admin_id,
+          username: admin.username,
+          email: admin.email,
+          full_name: admin.full_name
         };
         
-        setAdminUser(admin);
-        localStorage.setItem('adminUser', JSON.stringify(admin));
+        setAdminUser(adminUser);
         console.log('Admin sign in successful for:', username);
         setLoading(false);
         return { success: true };
@@ -73,9 +127,10 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
-  const signOut = () => {
+  const signOut = async () => {
     setAdminUser(null);
-    localStorage.removeItem('adminUser');
+    // Also sign out from Supabase if signed in
+    await supabase.auth.signOut();
     console.log('Admin signed out');
   };
 

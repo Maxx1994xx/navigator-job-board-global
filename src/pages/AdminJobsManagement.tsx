@@ -30,33 +30,23 @@ interface Job {
   created_at: string;
 }
 
+interface JobFormData {
+  title: string;
+  company: string;
+  location: string;
+  type: string;
+  category: string;
+  description: string;
+  salary: string;
+  requirements: string;
+  benefits: string;
+  status: string;
+  is_featured: boolean;
+}
+
 interface JobFormProps {
-  jobForm: {
-    title: string;
-    company: string;
-    location: string;
-    type: string;
-    category: string;
-    description: string;
-    salary: string;
-    requirements: string;
-    benefits: string;
-    status: string;
-    is_featured: boolean;
-  };
-  setJobForm: React.Dispatch<React.SetStateAction<{
-    title: string;
-    company: string;
-    location: string;
-    type: string;
-    category: string;
-    description: string;
-    salary: string;
-    requirements: string;
-    benefits: string;
-    status: string;
-    is_featured: boolean;
-  }>>;
+  jobForm: JobFormData;
+  setJobForm: React.Dispatch<React.SetStateAction<JobFormData>>;
   onSubmit: () => void;
   submitText: string;
   loading: boolean;
@@ -213,7 +203,7 @@ const AdminJobsManagement = () => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
-  const [jobForm, setJobForm] = useState({
+  const [jobForm, setJobForm] = useState<JobFormData>({
     title: '',
     company: '',
     location: '',
@@ -234,6 +224,7 @@ const AdminJobsManagement = () => {
   const fetchJobs = async () => {
     setLoading(true);
     try {
+      console.log('Fetching jobs...');
       const { data, error } = await supabase
         .from('jobs')
         .select('*')
@@ -243,6 +234,7 @@ const AdminJobsManagement = () => {
         console.error('Fetch jobs error:', error);
         toast({ title: 'Error', description: 'Failed to fetch jobs: ' + error.message, variant: 'destructive' });
       } else {
+        console.log('Jobs fetched successfully:', data?.length);
         setJobs(data || []);
       }
     } catch (err) {
