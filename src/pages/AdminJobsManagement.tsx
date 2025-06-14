@@ -13,6 +13,16 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import AdminLayout from '@/components/AdminLayout';
 
+const ALLOWED_LOCATIONS = [
+  // Update this array to match the exact list of locations used on the homepage's Explore Global Opportunities
+  "New York, USA",
+  "London, UK",
+  "Berlin, Germany",
+  "Sydney, Australia",
+  "Toronto, Canada",
+  "Remote",
+];
+
 interface Job {
   id: string;
   title: string;
@@ -80,13 +90,19 @@ const JobForm: React.FC<JobFormProps> = ({ jobForm, setJobForm, onSubmit, submit
     <div className="grid grid-cols-2 gap-4">
       <div>
         <Label htmlFor="location">Location *</Label>
-        <Input
-          id="location"
+        <Select
           value={jobForm.location}
-          onChange={(e) => setJobForm({ ...jobForm, location: e.target.value })}
-          placeholder="San Francisco, CA"
-          required
-        />
+          onValueChange={(value) => setJobForm({ ...jobForm, location: value })}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select location" />
+          </SelectTrigger>
+          <SelectContent>
+            {ALLOWED_LOCATIONS.map(loc => (
+              <SelectItem key={loc} value={loc}>{loc}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       <div>
         <Label htmlFor="salary">Salary</Label>
