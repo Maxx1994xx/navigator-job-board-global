@@ -30,6 +30,181 @@ interface Job {
   created_at: string;
 }
 
+interface JobFormProps {
+  jobForm: {
+    title: string;
+    company: string;
+    location: string;
+    type: string;
+    category: string;
+    description: string;
+    salary: string;
+    requirements: string;
+    benefits: string;
+    status: string;
+    is_featured: boolean;
+  };
+  setJobForm: React.Dispatch<React.SetStateAction<{
+    title: string;
+    company: string;
+    location: string;
+    type: string;
+    category: string;
+    description: string;
+    salary: string;
+    requirements: string;
+    benefits: string;
+    status: string;
+    is_featured: boolean;
+  }>>;
+  onSubmit: () => void;
+  submitText: string;
+  loading: boolean;
+}
+
+const JobForm: React.FC<JobFormProps> = ({ jobForm, setJobForm, onSubmit, submitText, loading }) => (
+  <div className="space-y-4">
+    <div className="grid grid-cols-2 gap-4">
+      <div>
+        <Label htmlFor="title">Job Title *</Label>
+        <Input
+          id="title"
+          value={jobForm.title}
+          onChange={(e) => setJobForm({ ...jobForm, title: e.target.value })}
+          placeholder="Senior Frontend Developer"
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="company">Company *</Label>
+        <Input
+          id="company"
+          value={jobForm.company}
+          onChange={(e) => setJobForm({ ...jobForm, company: e.target.value })}
+          placeholder="TechCorp Inc."
+          required
+        />
+      </div>
+    </div>
+
+    <div className="grid grid-cols-2 gap-4">
+      <div>
+        <Label htmlFor="location">Location *</Label>
+        <Input
+          id="location"
+          value={jobForm.location}
+          onChange={(e) => setJobForm({ ...jobForm, location: e.target.value })}
+          placeholder="San Francisco, CA"
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="salary">Salary</Label>
+        <Input
+          id="salary"
+          value={jobForm.salary}
+          onChange={(e) => setJobForm({ ...jobForm, salary: e.target.value })}
+          placeholder="$120,000 - $150,000"
+        />
+      </div>
+    </div>
+
+    <div className="grid grid-cols-3 gap-4">
+      <div>
+        <Label htmlFor="type">Job Type</Label>
+        <Select value={jobForm.type} onValueChange={(value) => setJobForm({ ...jobForm, type: value })}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Full-time">Full-time</SelectItem>
+            <SelectItem value="Part-time">Part-time</SelectItem>
+            <SelectItem value="Contract">Contract</SelectItem>
+            <SelectItem value="Internship">Internship</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div>
+        <Label htmlFor="category">Category</Label>
+        <Select value={jobForm.category} onValueChange={(value) => setJobForm({ ...jobForm, category: value })}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Technology">Technology</SelectItem>
+            <SelectItem value="Marketing">Marketing</SelectItem>
+            <SelectItem value="Sales">Sales</SelectItem>
+            <SelectItem value="Design">Design</SelectItem>
+            <SelectItem value="Finance">Finance</SelectItem>
+            <SelectItem value="Healthcare">Healthcare</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div>
+        <Label htmlFor="status">Status</Label>
+        <Select value={jobForm.status} onValueChange={(value) => setJobForm({ ...jobForm, status: value })}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="active">Active</SelectItem>
+            <SelectItem value="draft">Draft</SelectItem>
+            <SelectItem value="inactive">Inactive</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
+
+    <div>
+      <Label htmlFor="description">Job Description *</Label>
+      <Textarea
+        id="description"
+        value={jobForm.description}
+        onChange={(e) => setJobForm({ ...jobForm, description: e.target.value })}
+        placeholder="Detailed job description..."
+        rows={4}
+        required
+      />
+    </div>
+
+    <div>
+      <Label htmlFor="requirements">Requirements (comma-separated)</Label>
+      <Textarea
+        id="requirements"
+        value={jobForm.requirements}
+        onChange={(e) => setJobForm({ ...jobForm, requirements: e.target.value })}
+        placeholder="React, TypeScript, 5+ years experience"
+        rows={2}
+      />
+    </div>
+
+    <div>
+      <Label htmlFor="benefits">Benefits (comma-separated)</Label>
+      <Textarea
+        id="benefits"
+        value={jobForm.benefits}
+        onChange={(e) => setJobForm({ ...jobForm, benefits: e.target.value })}
+        placeholder="Health insurance, Remote work, 401k"
+        rows={2}
+      />
+    </div>
+
+    <div className="flex items-center space-x-2">
+      <input
+        type="checkbox"
+        id="is_featured"
+        checked={jobForm.is_featured}
+        onChange={(e) => setJobForm({ ...jobForm, is_featured: e.target.checked })}
+      />
+      <Label htmlFor="is_featured">Featured Job</Label>
+    </div>
+
+    <Button onClick={onSubmit} disabled={loading} className="w-full">
+      {loading ? 'Processing...' : submitText}
+    </Button>
+  </div>
+);
+
 const AdminJobsManagement = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -399,7 +574,13 @@ const AdminJobsManagement = () => {
               <DialogHeader>
                 <DialogTitle>Create New Job</DialogTitle>
               </DialogHeader>
-              <JobForm onSubmit={handleCreateJob} submitText="Create Job" />
+              <JobForm 
+                jobForm={jobForm}
+                setJobForm={setJobForm}
+                onSubmit={handleCreateJob} 
+                submitText="Create Job"
+                loading={loading}
+              />
             </DialogContent>
           </Dialog>
         </div>
@@ -466,7 +647,13 @@ const AdminJobsManagement = () => {
             <DialogHeader>
               <DialogTitle>Edit Job</DialogTitle>
             </DialogHeader>
-            <JobForm onSubmit={handleEditJob} submitText="Update Job" />
+            <JobForm 
+              jobForm={jobForm}
+              setJobForm={setJobForm}
+              onSubmit={handleEditJob} 
+              submitText="Update Job"
+              loading={loading}
+            />
           </DialogContent>
         </Dialog>
       </div>

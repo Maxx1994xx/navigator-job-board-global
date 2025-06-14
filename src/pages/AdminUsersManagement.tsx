@@ -22,6 +22,94 @@ interface User {
   created_at: string;
 }
 
+interface UserFormProps {
+  userForm: {
+    email: string;
+    full_name: string;
+    phone: string;
+    role: string;
+    status: string;
+  };
+  setUserForm: React.Dispatch<React.SetStateAction<{
+    email: string;
+    full_name: string;
+    phone: string;
+    role: string;
+    status: string;
+  }>>;
+  onSubmit: () => void;
+  submitText: string;
+  loading: boolean;
+}
+
+const UserForm: React.FC<UserFormProps> = ({ userForm, setUserForm, onSubmit, submitText, loading }) => (
+  <div className="space-y-4">
+    <div>
+      <Label htmlFor="email">Email</Label>
+      <Input
+        id="email"
+        type="email"
+        value={userForm.email}
+        onChange={(e) => setUserForm({ ...userForm, email: e.target.value })}
+        placeholder="user@example.com"
+      />
+    </div>
+
+    <div>
+      <Label htmlFor="full_name">Full Name</Label>
+      <Input
+        id="full_name"
+        value={userForm.full_name}
+        onChange={(e) => setUserForm({ ...userForm, full_name: e.target.value })}
+        placeholder="John Doe"
+      />
+    </div>
+
+    <div>
+      <Label htmlFor="phone">Phone (Optional)</Label>
+      <Input
+        id="phone"
+        value={userForm.phone}
+        onChange={(e) => setUserForm({ ...userForm, phone: e.target.value })}
+        placeholder="+1-555-0123"
+      />
+    </div>
+
+    <div className="grid grid-cols-2 gap-4">
+      <div>
+        <Label htmlFor="role">Role</Label>
+        <Select value={userForm.role} onValueChange={(value) => setUserForm({ ...userForm, role: value })}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="user">User</SelectItem>
+            <SelectItem value="employer">Employer</SelectItem>
+            <SelectItem value="admin">Admin</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div>
+        <Label htmlFor="status">Status</Label>
+        <Select value={userForm.status} onValueChange={(value) => setUserForm({ ...userForm, status: value })}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="active">Active</SelectItem>
+            <SelectItem value="inactive">Inactive</SelectItem>
+            <SelectItem value="suspended">Suspended</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
+
+    <Button onClick={onSubmit} disabled={loading} className="w-full">
+      {loading ? 'Processing...' : submitText}
+    </Button>
+  </div>
+);
+
 const AdminUsersManagement = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -130,74 +218,6 @@ const AdminUsersManagement = () => {
     setIsEditDialogOpen(true);
   };
 
-  const UserForm = ({ onSubmit, submitText }: { onSubmit: () => void; submitText: string }) => (
-    <div className="space-y-4">
-      <div>
-        <Label htmlFor="email">Email</Label>
-        <Input
-          id="email"
-          type="email"
-          value={userForm.email}
-          onChange={(e) => setUserForm({ ...userForm, email: e.target.value })}
-          placeholder="user@example.com"
-        />
-      </div>
-
-      <div>
-        <Label htmlFor="full_name">Full Name</Label>
-        <Input
-          id="full_name"
-          value={userForm.full_name}
-          onChange={(e) => setUserForm({ ...userForm, full_name: e.target.value })}
-          placeholder="John Doe"
-        />
-      </div>
-
-      <div>
-        <Label htmlFor="phone">Phone (Optional)</Label>
-        <Input
-          id="phone"
-          value={userForm.phone}
-          onChange={(e) => setUserForm({ ...userForm, phone: e.target.value })}
-          placeholder="+1-555-0123"
-        />
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="role">Role</Label>
-          <Select value={userForm.role} onValueChange={(value) => setUserForm({ ...userForm, role: value })}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="user">User</SelectItem>
-              <SelectItem value="employer">Employer</SelectItem>
-              <SelectItem value="admin">Admin</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div>
-          <Label htmlFor="status">Status</Label>
-          <Select value={userForm.status} onValueChange={(value) => setUserForm({ ...userForm, status: value })}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="inactive">Inactive</SelectItem>
-              <SelectItem value="suspended">Suspended</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      <Button onClick={onSubmit} disabled={loading} className="w-full">
-        {loading ? 'Processing...' : submitText}
-      </Button>
-    </div>
-  );
-
   return (
     <AdminLayout title="Users Management">
       <div className="space-y-6">
@@ -214,7 +234,13 @@ const AdminUsersManagement = () => {
               <DialogHeader>
                 <DialogTitle>Create New User</DialogTitle>
               </DialogHeader>
-              <UserForm onSubmit={handleCreateUser} submitText="Create User" />
+              <UserForm 
+                userForm={userForm}
+                setUserForm={setUserForm}
+                onSubmit={handleCreateUser} 
+                submitText="Create User"
+                loading={loading}
+              />
             </DialogContent>
           </Dialog>
         </div>
@@ -275,7 +301,13 @@ const AdminUsersManagement = () => {
             <DialogHeader>
               <DialogTitle>Edit User</DialogTitle>
             </DialogHeader>
-            <UserForm onSubmit={handleEditUser} submitText="Update User" />
+            <UserForm 
+              userForm={userForm}
+              setUserForm={setUserForm}
+              onSubmit={handleEditUser} 
+              submitText="Update User"
+              loading={loading}
+            />
           </DialogContent>
         </Dialog>
       </div>
