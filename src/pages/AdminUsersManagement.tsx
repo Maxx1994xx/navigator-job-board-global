@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,7 @@ import AdminLayout from '@/components/AdminLayout';
 interface User {
   id: string;
   email: string;
+  username: string;
   full_name: string;
   phone?: string;
   role: string;
@@ -25,14 +27,16 @@ interface User {
 interface UserFormProps {
   userForm: {
     email: string;
+    username: string;
     full_name: string;
     phone: string;
     role: string;
     status: string;
-    password?: string; // Only used on creation, not edit
+    password?: string;
   };
   setUserForm: React.Dispatch<React.SetStateAction<{
     email: string;
+    username: string;
     full_name: string;
     phone: string;
     role: string;
@@ -62,6 +66,16 @@ const UserForm: React.FC<UserFormProps> = ({
         value={userForm.email}
         onChange={(e) => setUserForm({ ...userForm, email: e.target.value })}
         placeholder="user@example.com"
+      />
+    </div>
+    <div>
+      <Label htmlFor="username">Username</Label>
+      <Input
+        id="username"
+        type="text"
+        value={userForm.username}
+        onChange={(e) => setUserForm({ ...userForm, username: e.target.value })}
+        placeholder="username"
       />
     </div>
     <div>
@@ -139,6 +153,7 @@ const AdminUsersManagement = () => {
 
   const [userForm, setUserForm] = useState({
     email: '',
+    username: '',
     full_name: '',
     phone: '',
     role: 'user',
@@ -168,6 +183,7 @@ const AdminUsersManagement = () => {
   const resetForm = () => {
     setUserForm({
       email: '',
+      username: '',
       full_name: '',
       phone: '',
       role: 'user',
@@ -181,8 +197,8 @@ const AdminUsersManagement = () => {
     setLoading(true);
 
     // Basic validation
-    if (!userForm.email || !userForm.full_name || !userForm.password) {
-      toast({ title: 'Error', description: 'Email, Full Name, and Password are required', variant: 'destructive' });
+    if (!userForm.email || !userForm.username || !userForm.full_name || !userForm.password) {
+      toast({ title: 'Error', description: 'Email, Username, Full Name, and Password are required', variant: 'destructive' });
       setLoading(false);
       return;
     }
@@ -192,7 +208,9 @@ const AdminUsersManagement = () => {
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email: userForm.email,
         password: userForm.password,
-        options: { data: { full_name: userForm.full_name, role: userForm.role } }
+        options: { 
+          data: { full_name: userForm.full_name, role: userForm.role, username: userForm.username }
+        }
       });
 
       if (signUpError || !signUpData.user) {
@@ -210,6 +228,7 @@ const AdminUsersManagement = () => {
         .from('app_users')
         .insert([{
           email: userForm.email,
+          username: userForm.username,
           full_name: userForm.full_name,
           phone: userForm.phone,
           role: userForm.role,
@@ -243,7 +262,14 @@ const AdminUsersManagement = () => {
 
     const { error } = await supabase
       .from('app_users')
-      .update(userForm)
+      .update({
+        email: userForm.email,
+        username: userForm.username,
+        full_name: userForm.full_name,
+        phone: userForm.phone,
+        role: userForm.role,
+        status: userForm.status
+      })
       .eq('id', editingUser.id);
 
     if (error) {
@@ -275,11 +301,12 @@ const AdminUsersManagement = () => {
     setEditingUser(user);
     setUserForm({
       email: user.email,
+      username: user.username || '',
       full_name: user.full_name,
       phone: user.phone || '',
       role: user.role,
       status: user.status,
-      password: '', // Add this line to resolve the type error
+      password: '',
     });
     setIsEditDialogOpen(true);
   };
