@@ -29,6 +29,7 @@ interface UserFormProps {
     phone: string;
     role: string;
     status: string;
+    password?: string; // Only used on creation, not edit
   };
   setUserForm: React.Dispatch<React.SetStateAction<{
     email: string;
@@ -36,13 +37,22 @@ interface UserFormProps {
     phone: string;
     role: string;
     status: string;
+    password?: string;
   }>>;
   onSubmit: () => void;
   submitText: string;
   loading: boolean;
+  isCreate?: boolean;
 }
 
-const UserForm: React.FC<UserFormProps> = ({ userForm, setUserForm, onSubmit, submitText, loading }) => (
+const UserForm: React.FC<UserFormProps> = ({
+  userForm,
+  setUserForm,
+  onSubmit,
+  submitText,
+  loading,
+  isCreate = false
+}) => (
   <div className="space-y-4">
     <div>
       <Label htmlFor="email">Email</Label>
@@ -54,7 +64,6 @@ const UserForm: React.FC<UserFormProps> = ({ userForm, setUserForm, onSubmit, su
         placeholder="user@example.com"
       />
     </div>
-
     <div>
       <Label htmlFor="full_name">Full Name</Label>
       <Input
@@ -64,7 +73,6 @@ const UserForm: React.FC<UserFormProps> = ({ userForm, setUserForm, onSubmit, su
         placeholder="John Doe"
       />
     </div>
-
     <div>
       <Label htmlFor="phone">Phone (Optional)</Label>
       <Input
@@ -74,7 +82,6 @@ const UserForm: React.FC<UserFormProps> = ({ userForm, setUserForm, onSubmit, su
         placeholder="+1-555-0123"
       />
     </div>
-
     <div className="grid grid-cols-2 gap-4">
       <div>
         <Label htmlFor="role">Role</Label>
@@ -103,7 +110,19 @@ const UserForm: React.FC<UserFormProps> = ({ userForm, setUserForm, onSubmit, su
         </Select>
       </div>
     </div>
-
+    {/* Only show password on create */}
+    {isCreate && (
+      <div>
+        <Label htmlFor="password">Password</Label>
+        <Input
+          id="password"
+          type="password"
+          value={userForm.password || ''}
+          onChange={(e) => setUserForm({ ...userForm, password: e.target.value })}
+          placeholder="Password"
+        />
+      </div>
+    )}
     <Button onClick={onSubmit} disabled={loading} className="w-full">
       {loading ? 'Processing...' : submitText}
     </Button>
@@ -123,7 +142,8 @@ const AdminUsersManagement = () => {
     full_name: '',
     phone: '',
     role: 'user',
-    status: 'active'
+    status: 'active',
+    password: ''
   });
 
   useEffect(() => {
@@ -151,22 +171,67 @@ const AdminUsersManagement = () => {
       full_name: '',
       phone: '',
       role: 'user',
-      status: 'active'
+      status: 'active',
+      password: ''
     });
   };
 
+  // User creation will now use Supabase Auth and then insert into app_users
   const handleCreateUser = async () => {
     setLoading(true);
 
-    const { error } = await supabase.from('app_users').insert([userForm]);
+    // Basic validation
+    if (!userForm.email || !userForm.full_name || !userForm.password) {
+      toast({ title: 'Error', description: 'Email, Full Name, and Password are required', variant: 'destructive' });
+      setLoading(false);
+      return;
+    }
 
-    if (error) {
-      toast({ title: 'Error', description: 'Failed to create user', variant: 'destructive' });
-    } else {
+    try {
+      // 1. Create the user with Supabase Auth
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email: userForm.email,
+        password: userForm.password,
+        options: { data: { full_name: userForm.full_name, role: userForm.role } }
+      });
+
+      if (signUpError || !signUpData.user) {
+        toast({
+          title: 'Error',
+          description: signUpError?.message || 'Failed to sign up user (Auth).',
+          variant: 'destructive'
+        });
+        setLoading(false);
+        return;
+      }
+
+      // 2. Create app_users profile
+      const { error: dbError } = await supabase
+        .from('app_users')
+        .insert([{
+          email: userForm.email,
+          full_name: userForm.full_name,
+          phone: userForm.phone,
+          role: userForm.role,
+          status: userForm.status
+        }]);
+
+      if (dbError) {
+        toast({
+          title: 'Error',
+          description: dbError.message || 'Failed to create user profile.',
+          variant: 'destructive'
+        });
+        setLoading(false);
+        return;
+      }
+
       toast({ title: 'Success', description: 'User created successfully' });
       setIsCreateDialogOpen(false);
       resetForm();
       fetchUsers();
+    } catch (err: any) {
+      toast({ title: 'Error', description: err.message || 'Unexpected error', variant: 'destructive' });
     }
     setLoading(false);
   };
@@ -240,6 +305,7 @@ const AdminUsersManagement = () => {
                 onSubmit={handleCreateUser} 
                 submitText="Create User"
                 loading={loading}
+                isCreate
               />
             </DialogContent>
           </Dialog>
