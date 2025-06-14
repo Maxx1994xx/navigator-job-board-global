@@ -27,6 +27,20 @@ interface Job {
 
 const WAIT_SECONDS = 15;
 
+// Country to Currency mapping
+const countryToCurrency: Record<string, string> = {
+  "UAE": "AED",
+  "Saudi Arabia": "SAR",
+  "Qatar": "QAR",
+  "Kuwait": "KWD",
+  "USA": "USD",
+  "UK": "GBP",
+  "Bahrain": "BHD",
+  "Oman": "OMR"
+};
+const getCurrencyForCountry = (country: string | undefined) =>
+  country ? (countryToCurrency[country] || "USD") : "USD";
+
 const JobApply = () => {
   const { id } = useParams();
   const [job, setJob] = useState<Job | null>(null);
@@ -97,6 +111,9 @@ const JobApply = () => {
     );
   }
 
+  // DETERMINE CURRENCY for current job
+  const currency = getCurrencyForCountry(job.location);
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -109,7 +126,13 @@ const JobApply = () => {
               <Badge variant="outline">{job.location}</Badge>
               <Badge variant="secondary">{job.type}</Badge>
               {job.salary && (
-                <Badge variant="outline">{job.salary}</Badge>
+                <div className="flex items-center gap-x-2">
+                  <Badge variant="outline">{job.salary}</Badge>
+                  <span className="text-xs text-gray-500">
+                    Currency:&nbsp;
+                    <Badge variant="secondary">{currency}</Badge>
+                  </span>
+                </div>
               )}
             </div>
             <Separator className="my-4" />
@@ -134,7 +157,13 @@ const JobApply = () => {
                 </ul>
               </>
             )}
-            <div className="mt-10 flex flex-col items-center">
+            <div className="mt-10 flex flex-col items-center gap-2">
+              {job.salary && (
+                <div className="flex items-center gap-x-2">
+                  <span className="text-sm text-gray-700">Salary Currency:</span>
+                  <Badge className="bg-gray-200 text-gray-700">{currency}</Badge>
+                </div>
+              )}
               {!canApply ? (
                 <div className="flex flex-col items-center">
                   <Timer className="w-10 h-10 mb-2 text-blue-600 animate-pulse" />
