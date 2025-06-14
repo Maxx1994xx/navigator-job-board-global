@@ -1,6 +1,5 @@
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,8 +7,26 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Eye, EyeOff } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
 
 const ADMIN_STORAGE_KEY = 'adminUser';
+
+// Utility: Clean out all admin/auth state before login
+function cleanupAuthState() {
+  // Remove adminUser info
+  localStorage.removeItem(ADMIN_STORAGE_KEY);
+  // Remove all Supabase auth keys from localStorage/sessionStorage
+  Object.keys(localStorage).forEach((key) => {
+    if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
+      localStorage.removeItem(key);
+    }
+  });
+  Object.keys(sessionStorage).forEach((key) => {
+    if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
+      sessionStorage.removeItem(key);
+    }
+  });
+}
 
 const AdminLogin = () => {
   const [identifier, setIdentifier] = useState('');
@@ -17,15 +34,17 @@ const AdminLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
 
-  // Removed useEffect that triggers navigation based on localStorage
+  // No automatic redirects; let the user stay here until a real login
 
-  // Helper: try username first, then email
+  // Helper: try username, then email
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
+
+    // Clean out all old admin/auth state before login
+    cleanupAuthState();
 
     let usernameOrEmail = identifier.trim();
     if (!usernameOrEmail || !password) {
@@ -37,13 +56,12 @@ const AdminLogin = () => {
     // Try username first
     let { data: creds, error: rpcError } = await supabase.rpc('verify_admin_credentials', {
       p_username: usernameOrEmail,
-      p_password: password
+      p_password: password,
     });
 
-    // If nothing found and it looks like email, try lookup username from email, then try again
+    // If nothing found and it looks like email, try by email->username lookup
     if ((!creds || creds.length === 0) && usernameOrEmail.includes('@')) {
-      // Look up username by email
-      const { data: userRow, error: queryErr } = await supabase
+      const { data: userRow } = await supabase
         .from('admin_users')
         .select('username')
         .eq('email', usernameOrEmail)
@@ -51,13 +69,19 @@ const AdminLogin = () => {
       if (userRow?.username) {
         ({ data: creds, error: rpcError } = await supabase.rpc('verify_admin_credentials', {
           p_username: userRow.username,
-          p_password: password
+          p_password: password,
         }));
       }
     }
 
     if (rpcError) {
+      // Unexpected backend/RPC error
       setError("Unexpected error. Please try again.");
+      toast({
+        title: "Login failed",
+        description: "Unexpected server error during login.",
+        variant: "destructive",
+      });
       setIsLoading(false);
       return;
     }
@@ -65,6 +89,7 @@ const AdminLogin = () => {
     if (!creds || creds.length === 0) {
       setError('Invalid username/email or password.');
       setIsLoading(false);
+      // Inputs stay as entered so user can fix and submit again!
       return;
     }
 
@@ -77,7 +102,9 @@ const AdminLogin = () => {
     };
     localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(admin));
     setIsLoading(false);
-    navigate('/admin/dashboard', { replace: true });
+
+    // Redirect: force full page reload for state sync
+    window.location.replace('/admin/dashboard');
   };
 
   return (
@@ -104,6 +131,7 @@ const AdminLogin = () => {
                 required
                 autoComplete="username"
                 spellCheck={false}
+                disabled={isLoading}
               />
             </div>
             <div className="relative">
@@ -116,6 +144,7 @@ const AdminLogin = () => {
                 placeholder="Enter password"
                 required
                 autoComplete="current-password"
+                disabled={isLoading}
               />
               <button
                 type="button"
@@ -123,6 +152,7 @@ const AdminLogin = () => {
                 className="absolute right-3 top-8 p-1 text-gray-500 hover:text-gray-700"
                 onClick={() => setShowPassword((prev) => !prev)}
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
+                disabled={isLoading}
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
