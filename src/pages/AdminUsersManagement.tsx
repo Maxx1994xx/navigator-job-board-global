@@ -278,7 +278,8 @@ const AdminUsersManagement = () => {
       full_name: user.full_name,
       phone: user.phone || '',
       role: user.role,
-      status: user.status
+      status: user.status,
+      password: '', // Add this line to resolve the type error
     });
     setIsEditDialogOpen(true);
   };
