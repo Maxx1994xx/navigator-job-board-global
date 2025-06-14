@@ -93,6 +93,7 @@ export type Database = {
           company: string
           created_at: string
           created_by: string | null
+          currency: string | null
           description: string
           id: string
           is_active: boolean
@@ -113,6 +114,7 @@ export type Database = {
           company: string
           created_at?: string
           created_by?: string | null
+          currency?: string | null
           description: string
           id?: string
           is_active?: boolean
@@ -133,6 +135,7 @@ export type Database = {
           company?: string
           created_at?: string
           created_by?: string | null
+          currency?: string | null
           description?: string
           id?: string
           is_active?: boolean

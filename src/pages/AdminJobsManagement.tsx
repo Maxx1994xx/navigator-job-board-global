@@ -13,17 +13,19 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import AdminLayout from '@/components/AdminLayout';
 
-const ALLOWED_LOCATIONS = [
-  // Updated to match homepage job search countries only
-  "UAE",
-  "Saudi Arabia",
-  "Qatar",
-  "Kuwait",
-  "USA",
-  "UK",
-  "Bahrain",
-  "Oman",
+// Country and currency pairings
+const COUNTRY_CURRENCY_LIST = [
+  { country: "UAE", currency: "AED" },
+  { country: "Saudi Arabia", currency: "SAR" },
+  { country: "Qatar", currency: "QAR" },
+  { country: "Kuwait", currency: "KWD" },
+  { country: "USA", currency: "USD" },
+  { country: "UK", currency: "GBP" },
+  { country: "Bahrain", currency: "BHD" },
+  { country: "Oman", currency: "OMR" },
 ];
+
+const ALLOWED_LOCATIONS = COUNTRY_CURRENCY_LIST.map((pair) => pair.country);
 
 interface Job {
   id: string;
@@ -39,6 +41,8 @@ interface Job {
   status: string;
   is_featured: boolean;
   created_at: string;
+  listing_url?: string;
+  currency?: string | null;
 }
 
 interface JobFormData {
@@ -54,6 +58,7 @@ interface JobFormData {
   status: string;
   is_featured: boolean;
   listing_url: string;
+  currency: string;
 }
 
 interface JobFormProps {
@@ -107,13 +112,22 @@ const JobForm: React.FC<JobFormProps> = ({ jobForm, setJobForm, onSubmit, submit
         </Select>
       </div>
       <div>
-        <Label htmlFor="salary">Salary</Label>
-        <Input
-          id="salary"
-          value={jobForm.salary}
-          onChange={(e) => setJobForm({ ...jobForm, salary: e.target.value })}
-          placeholder="$120,000 - $150,000"
-        />
+        <Label htmlFor="currency">Currency *</Label>
+        <Select
+          value={jobForm.currency}
+          onValueChange={(value) => setJobForm({ ...jobForm, currency: value })}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select currency" />
+          </SelectTrigger>
+          <SelectContent>
+            {COUNTRY_CURRENCY_LIST.map((item) => (
+              <SelectItem key={item.currency} value={item.currency}>
+                {item.currency} - {item.country}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
     </div>
 
@@ -245,7 +259,8 @@ const AdminJobsManagement = () => {
     benefits: '',
     status: 'active',
     is_featured: false,
-    listing_url: ''
+    listing_url: '',
+    currency: '',
   });
 
   useEffect(() => {
@@ -288,7 +303,8 @@ const AdminJobsManagement = () => {
       benefits: '',
       status: 'active',
       is_featured: false,
-      listing_url: ''
+      listing_url: '',
+      currency: '',
     });
   };
 
@@ -303,6 +319,10 @@ const AdminJobsManagement = () => {
     }
     if (!jobForm.location.trim()) {
       toast({ title: 'Validation Error', description: 'Location is required', variant: 'destructive' });
+      return false;
+    }
+    if (!jobForm.currency.trim()) {
+      toast({ title: 'Validation Error', description: 'Currency is required', variant: 'destructive' });
       return false;
     }
     if (!jobForm.description.trim()) {
@@ -334,6 +354,7 @@ const AdminJobsManagement = () => {
         status: jobForm.status,
         is_featured: jobForm.is_featured,
         listing_url: jobForm.listing_url.trim(),
+        currency: jobForm.currency.trim(),
       };
 
       console.log('Creating job with data:', jobData);
@@ -376,6 +397,7 @@ const AdminJobsManagement = () => {
         status: jobForm.status,
         is_featured: jobForm.is_featured,
         listing_url: jobForm.listing_url.trim(),
+        currency: jobForm.currency.trim(),
       };
 
       console.log('Updating job with data:', jobData);
@@ -445,6 +467,7 @@ const AdminJobsManagement = () => {
       status: job.status,
       is_featured: job.is_featured,
       listing_url: (job as any).listing_url || '',
+      currency: job.currency || '',
     });
     setIsEditDialogOpen(true);
   };
