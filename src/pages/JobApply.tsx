@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -98,6 +97,10 @@ const JobApply = () => {
     );
   }
 
+  // Get the currency from the job, if set (no more auto-mapping)
+  const displaySalary = job.salary;
+  const displayCurrency = job.currency;
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -109,14 +112,13 @@ const JobApply = () => {
               <Badge>{job.company}</Badge>
               <Badge variant="outline">{job.location}</Badge>
               <Badge variant="secondary">{job.type}</Badge>
-              {job.salary && (
-                <Badge variant="outline">{job.salary}</Badge>
-              )}
-              {job.currency && (
-                <span className="text-xs text-gray-500">
-                  Currency:&nbsp;
-                  <Badge variant="secondary">{job.currency}</Badge>
-                </span>
+              {displaySalary && (
+                <Badge variant="outline">
+                  {displaySalary}
+                  {displayCurrency && (
+                    <span className="ml-1 text-xs text-gray-600">{displayCurrency}</span>
+                  )}
+                </Badge>
               )}
             </div>
             <Separator className="my-4" />

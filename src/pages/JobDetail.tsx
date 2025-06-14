@@ -89,6 +89,13 @@ const JobDetail = () => {
   const postedDate = new Date(job.created_at).toLocaleDateString();
   const applyPath = `/job/${job.id}/apply`;
 
+  // Show salary & currency together (if either available)
+  const displaySalary = job.salary ? job.salary : null;
+  // job.currency may not be present for all jobs
+  const displayCurrency = (job as any).currency
+    ? (job as any).currency
+    : null;
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -120,10 +127,13 @@ const JobDetail = () => {
                     <Clock className="w-5 h-5 mr-2" />
                     {job.type}
                   </div>
-                  {job.salary && (
+                  {(displaySalary || displayCurrency) && (
                     <div className="flex items-center">
                       <DollarSign className="w-5 h-5 mr-2" />
-                      {job.salary}
+                      {displaySalary}
+                      {displayCurrency && (
+                        <span className="ml-1 text-xs text-gray-600">({displayCurrency})</span>
+                      )}
                     </div>
                   )}
                 </div>
@@ -202,6 +212,17 @@ const JobDetail = () => {
             <Card>
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Apply</h3>
+                {(displaySalary || displayCurrency) && (
+                  <div className="mb-3">
+                    <span className="font-semibold">Salary:</span>{" "}
+                    <span>
+                      {displaySalary}
+                      {displayCurrency && (
+                        <span className="ml-1 text-xs text-gray-600">({displayCurrency})</span>
+                      )}
+                    </span>
+                  </div>
+                )}
                 <p className="text-gray-600 mb-4">
                   Ready to take the next step in your career? Apply now and join our team!
                 </p>

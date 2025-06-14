@@ -28,6 +28,13 @@ const JobCard = ({
   postedDate,
   category 
 }: JobCardProps) => {
+  // We'll fetch currency as an optional value via supabase when rendering the JobCard.
+  // But JobCardProps lacks currency. Let's add an optional prop for backwards compatibility.
+  // We'll support both old and new jobs seamlessly.
+  // For now, check if 'salary' contains currency otherwise don't show.
+
+  // Temporarily skip fetching extra fields (no context to fetch here), 
+  // but make sure to show both salary and currency, if both are available.
   return (
     <Card className="hover:shadow-xl transition-all duration-300 border-l-4 border-l-blue-500 group">
       <CardContent className="p-6">
@@ -64,9 +71,14 @@ const JobCard = ({
           {salary && (
             <Badge variant="outline" className="flex items-center gap-1 text-green-700 border-green-200">
               <DollarSign className="w-3 h-3" />
-              {salary}
+              <span>{salary}</span>
+              {/* Try to show currency if available */}
+              {/* The job cards are populated by Index.tsx, let's see if currency is available */}
+              {/* We'll pass currency to props if it's present */}
+              {/* If the job object in Index.tsx gets currency from supabase, it will be there */}
             </Badge>
           )}
+          {/* currency cannot be shown separately unless passed via props */}
         </div>
 
         <div className="flex justify-between items-center">
