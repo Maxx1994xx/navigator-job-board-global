@@ -1,3 +1,5 @@
+
+import React, { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -22,6 +24,9 @@ import AdminJobsManagement from "./pages/AdminJobsManagement";
 import AdminUsersManagement from "./pages/AdminUsersManagement";
 import NotFound from "./pages/NotFound";
 
+// Use React.lazy for JobApply page
+const JobApply = lazy(() => import("./pages/JobApply"));
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -33,34 +38,36 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <ScrollToTop />
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/jobs" element={<Jobs />} />
-              <Route path="/job/:id" element={<JobDetail />} />
-              <Route path="/job/:id/apply" element={<(await import('./pages/JobApply')).default />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/cookie-policy" element={<CookiePolicy />} />
-              <Route path="/admin/login" element={<AdminLogin />} />
-              <Route path="/admin/dashboard" element={
-                <AdminProtectedRoute>
-                  <AdminDashboard />
-                </AdminProtectedRoute>
-              } />
-              <Route path="/admin/jobs" element={
-                <AdminProtectedRoute>
-                  <AdminJobsManagement />
-                </AdminProtectedRoute>
-              } />
-              <Route path="/admin/users" element={
-                <AdminProtectedRoute>
-                  <AdminUsersManagement />
-                </AdminProtectedRoute>
-              } />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <Suspense fallback={<div className="p-10 text-center">Loading...</div>}>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/jobs" element={<Jobs />} />
+                <Route path="/job/:id" element={<JobDetail />} />
+                <Route path="/job/:id/apply" element={<JobApply />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/cookie-policy" element={<CookiePolicy />} />
+                <Route path="/admin/login" element={<AdminLogin />} />
+                <Route path="/admin/dashboard" element={
+                  <AdminProtectedRoute>
+                    <AdminDashboard />
+                  </AdminProtectedRoute>
+                } />
+                <Route path="/admin/jobs" element={
+                  <AdminProtectedRoute>
+                    <AdminJobsManagement />
+                  </AdminProtectedRoute>
+                } />
+                <Route path="/admin/users" element={
+                  <AdminProtectedRoute>
+                    <AdminUsersManagement />
+                  </AdminProtectedRoute>
+                } />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
             <CookieBanner />
           </BrowserRouter>
         </TooltipProvider>
@@ -70,3 +77,4 @@ const App = () => (
 );
 
 export default App;
+
