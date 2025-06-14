@@ -142,6 +142,9 @@ const UserForm: React.FC<UserFormProps> = ({
   </div>
 );
 
+const SUPER_ADMIN_USERNAME = "admin";
+const SUPER_ADMIN_EMAIL = "abdul@onlinecareernavigator.com";
+
 const AdminUsersManagement = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -315,27 +318,30 @@ const AdminUsersManagement = () => {
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold">Users Management</h1>
-          <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="flex items-center gap-2">
-                <Plus className="h-4 w-4" />
-                Create User
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-md">
-              <DialogHeader>
-                <DialogTitle>Create New User</DialogTitle>
-              </DialogHeader>
-              <UserForm 
-                userForm={userForm}
-                setUserForm={setUserForm}
-                onSubmit={handleCreateUser} 
-                submitText="Create User"
-                loading={loading}
-                isCreate
-              />
-            </DialogContent>
-          </Dialog>
+          {/* Only show Create User button for super admin */}
+          {userForm.email === SUPER_ADMIN_EMAIL && userForm.username === SUPER_ADMIN_USERNAME ? (
+            <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="flex items-center gap-2">
+                  <Plus className="h-4 w-4" />
+                  Create User
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Create New User</DialogTitle>
+                </DialogHeader>
+                <UserForm 
+                  userForm={userForm}
+                  setUserForm={setUserForm}
+                  onSubmit={handleCreateUser} 
+                  submitText="Create User"
+                  loading={loading}
+                  isCreate
+                />
+              </DialogContent>
+            </Dialog>
+          ) : null}
         </div>
 
         <Card>

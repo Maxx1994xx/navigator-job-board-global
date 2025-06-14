@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -5,56 +6,71 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useAdmin } from '@/contexts/AdminContext';
+import { supabase } from '@/integrations/supabase/client';
+
+const SUPER_ADMIN_USERNAME = 'admin';
+const SUPER_ADMIN_EMAIL = 'abdul@onlinecareernavigator.com';
 
 const AdminLogin = () => {
-  const { adminUser, signIn, loading } = useAdmin();
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Redirect if already logged in as admin
+  // If already logged in, redirect to dashboard
   useEffect(() => {
-    console.log('AdminLogin effect - adminUser:', !!adminUser, 'loading:', loading);
-    
-    if (!loading && adminUser) {
-      console.log('Admin already authenticated, redirecting to dashboard');
-      navigate('/admin/dashboard', { replace: true });
-    }
-  }, [adminUser, loading, navigate]);
+    let isMounted = true;
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!isMounted) return;
+      if (session?.user) {
+        navigate('/admin/dashboard', { replace: true });
+      }
+    });
+    return () => { isMounted = false; };
+  }, [navigate]);
 
-  // Don't render if admin is already authenticated
-  if (loading || adminUser) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-lg">Loading...</div>
-      </div>
-    );
-  }
-
+  // Only allow logins for users who are in app_users and have a status of 'active'
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
 
-    console.log('Admin login form submitted with username:', username);
+    const { data, error: authError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-    try {
-      const result = await signIn(username, password);
-      if (result.success) {
-        console.log('Admin login successful, redirecting to dashboard...');
-        navigate('/admin/dashboard', { replace: true });
-      } else {
-        setError(result.error || 'Login failed');
-        setIsLoading(false);
-      }
-    } catch (err) {
-      console.error('Unexpected admin login error:', err);
-      setError('An unexpected error occurred');
+    if (authError || !data.user) {
+      setError('Invalid email or password.');
       setIsLoading(false);
+      return;
     }
+
+    // Check their role and status from app_users
+    const { data: appUser, error: userError } = await supabase
+      .from('app_users')
+      .select('*')
+      .eq('email', email)
+      .single();
+
+    if (userError || !appUser) {
+      setError('Your account is not authorized to access the admin dashboard.');
+      setIsLoading(false);
+      // sign out because the session doesn't belong to an admin user
+      await supabase.auth.signOut();
+      return;
+    }
+
+    if (appUser.status !== 'active') {
+      setError('Your account is not currently active.');
+      setIsLoading(false);
+      await supabase.auth.signOut();
+      return;
+    }
+
+    // On success
+    navigate('/admin/dashboard', { replace: true });
   };
 
   return (
@@ -71,13 +87,13 @@ const AdminLogin = () => {
               </Alert>
             )}
             <div>
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="email">Email</Label>
               <Input
-                id="username"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter admin username"
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter admin email"
                 required
               />
             </div>
@@ -88,7 +104,7 @@ const AdminLogin = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter admin password"
+                placeholder="Enter password"
                 required
               />
             </div>
