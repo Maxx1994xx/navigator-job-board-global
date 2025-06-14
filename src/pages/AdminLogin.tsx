@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,6 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Eye, EyeOff } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+
+const ADMIN_STORAGE_KEY = 'adminUser';
 
 const AdminLogin = () => {
   const [identifier, setIdentifier] = useState('');
@@ -19,73 +22,69 @@ const AdminLogin = () => {
   // If already logged in, redirect to dashboard
   useEffect(() => {
     let isMounted = true;
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!isMounted) return;
-      if (session?.user) {
-        navigate('/admin/dashboard', { replace: true });
-      }
-    });
+    const cached = localStorage.getItem(ADMIN_STORAGE_KEY);
+    if (cached) {
+      navigate('/admin/dashboard', { replace: true });
+    }
     return () => { isMounted = false; };
   }, [navigate]);
 
-  // Helper function to resolve identifier to email (if username used)
-  const resolveEmail = async (identifier: string) => {
-    // If it's likely an email, just return it
-    if (identifier.includes('@')) return identifier;
-
-    // Otherwise, resolve as username
-    const { data, error } = await supabase
-      .from('admin_users')
-      .select('email')
-      .eq('username', identifier)
-      .maybeSingle();
-
-    if (error || !data?.email) return null;
-    return data.email;
-  };
-
-  // Only allow logins for users in admin_users and validate password
+  // Helper: try username first, then email
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
 
-    // 1. Resolve identifier to email
-    const email = await resolveEmail(identifier.trim());
-    if (!email) {
-      setError('No admin user found with provided email or username.');
+    let usernameOrEmail = identifier.trim();
+    if (!usernameOrEmail || !password) {
+      setError('Please enter a username/email and password.');
       setIsLoading(false);
       return;
     }
 
-    // 2. Sign in using Supabase Auth with email/password
-    const { data, error: authError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
+    // Try username first
+    let { data: creds, error: rpcError } = await supabase.rpc('verify_admin_credentials', {
+      p_username: usernameOrEmail,
+      p_password: password
     });
 
-    if (authError || !data.user) {
+    // If nothing found and it looks like email, try lookup username from email, then try again
+    if ((!creds || creds.length === 0) && usernameOrEmail.includes('@')) {
+      // Look up username by email
+      const { data: userRow, error: queryErr } = await supabase
+        .from('admin_users')
+        .select('username')
+        .eq('email', usernameOrEmail)
+        .maybeSingle();
+      if (userRow?.username) {
+        ({ data: creds, error: rpcError } = await supabase.rpc('verify_admin_credentials', {
+          p_username: userRow.username,
+          p_password: password
+        }));
+      }
+    }
+
+    if (rpcError) {
+      setError("Unexpected error. Please try again.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!creds || creds.length === 0) {
       setError('Invalid username/email or password.');
       setIsLoading(false);
       return;
     }
 
-    // 3. Check that user is a valid admin (from admin_users)
-    const { data: adminUser, error: userError } = await supabase
-      .from('admin_users')
-      .select('*')
-      .eq('email', email)
-      .maybeSingle();
-
-    if (userError || !adminUser) {
-      setError('Your account is not authorized as admin.');
-      setIsLoading(false);
-      // sign out just in case
-      await supabase.auth.signOut();
-      return;
-    }
-
-    // On success
+    // Login success: store admin info locally
+    const admin = {
+      id: creds[0].admin_id,
+      username: creds[0].username,
+      email: creds[0].email,
+      full_name: creds[0].full_name,
+    };
+    localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(admin));
+    setIsLoading(false);
     navigate('/admin/dashboard', { replace: true });
   };
 
