@@ -98,6 +98,7 @@ export type Database = {
           is_active: boolean
           is_featured: boolean | null
           job_id: string | null
+          listing_url: string | null
           location: string
           requirements: string[] | null
           salary: string | null
@@ -117,6 +118,7 @@ export type Database = {
           is_active?: boolean
           is_featured?: boolean | null
           job_id?: string | null
+          listing_url?: string | null
           location: string
           requirements?: string[] | null
           salary?: string | null
@@ -136,6 +138,7 @@ export type Database = {
           is_active?: boolean
           is_featured?: boolean | null
           job_id?: string | null
+          listing_url?: string | null
           location?: string
           requirements?: string[] | null
           salary?: string | null
