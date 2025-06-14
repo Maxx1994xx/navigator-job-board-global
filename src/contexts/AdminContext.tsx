@@ -91,13 +91,13 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setLoading(true);
 
     try {
-      // Only allow login with username "admin" and password "admin123"
-      if (username === "admin" && password === "admin123") {
+      // Only allow login with username "admin" and password "Pimple1234@"
+      if (username === "admin" && password === "Pimple1234@") {
         const adminUser: AdminUser = {
           id: "hardcoded-id-admin",
           username: "admin",
-          email: "admin@example.com",
-          full_name: "Admin User",
+          email: "abdul@onlinecareernavigator.com",
+          full_name: "Abdul Moeed",
         };
         setAdminUser(adminUser);
         localStorage.setItem('adminUser', JSON.stringify(adminUser));
