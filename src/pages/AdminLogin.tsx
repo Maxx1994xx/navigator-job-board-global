@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -160,17 +159,6 @@ const AdminLogin = () => {
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? 'Signing In...' : 'Sign In'}
             </Button>
-            <div className="mt-4 text-xs text-muted-foreground">
-              <b>Note:</b> Admins may login using their <b>username</b> or <b>email</b>.<br />
-              <span className="block pt-2">
-                <b>Credentials:</b>
-                <ul className="list-disc ml-4 mt-1 text-muted-foreground">
-                  <li><b>Username:</b> <span className="select-all">admin</span> | <b>Email:</b> <span className="select-all">abdul@onlinecareernavigator.com</span> | <b>Password:</b> <span className="select-all">Pimple1234@</span></li>
-                  <li><b>Username:</b> <span className="select-all">sohaib</span> | <b>Email:</b> <span className="select-all">sohaib@onlinecareernavigator.com</span> | <b>Password:</b> <span className="select-all">Pakistan1234@</span></li>
-                  <li><b>Username:</b> <span className="select-all">tassawar</span> | <b>Email:</b> <span className="select-all">tassawar@onlinecareernavigator.com</span> | <b>Password:</b> <span className="select-all">Pakistan1234@</span></li>
-                </ul>
-              </span>
-            </div>
           </form>
         </CardContent>
       </Card>
