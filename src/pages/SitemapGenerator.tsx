@@ -84,12 +84,9 @@ const SitemapGenerator = () => {
     }
   };
 
-  // Set content type for XML response and replace page content
+  // Replace page content with XML sitemap
   useEffect(() => {
     if (sitemap) {
-      // Set the content type to XML
-      document.contentType = 'application/xml';
-      
       // Replace the entire page content with the XML sitemap
       document.open();
       document.write(sitemap);
