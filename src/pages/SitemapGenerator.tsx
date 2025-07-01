@@ -8,14 +8,13 @@ interface Job {
 }
 
 const SitemapGenerator = () => {
-  const [sitemap, setSitemap] = useState<string>('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    generateSitemap();
+    generateAndServeSitemap();
   }, []);
 
-  const generateSitemap = async () => {
+  const generateAndServeSitemap = async () => {
     try {
       // Fetch all active jobs
       const { data: jobs, error } = await supabase
@@ -78,23 +77,23 @@ const SitemapGenerator = () => {
       sitemapXml += `
 </urlset>`;
 
-      setSitemap(sitemapXml);
+      // Create a response with proper XML content type and serve it
+      const response = new Response(sitemapXml, {
+        headers: {
+          'Content-Type': 'application/xml',
+          'Cache-Control': 'public, max-age=3600'
+        }
+      });
+
+      // Replace the current page with the XML response
+      window.location.replace(`data:application/xml;charset=utf-8,${encodeURIComponent(sitemapXml)}`);
+      
     } catch (error) {
       console.error('Error generating sitemap:', error);
     } finally {
       setLoading(false);
     }
   };
-
-  // Replace page content with XML sitemap
-  useEffect(() => {
-    if (sitemap) {
-      // Replace the entire page content with the XML sitemap
-      document.open();
-      document.write(sitemap);
-      document.close();
-    }
-  }, [sitemap]);
 
   if (loading) {
     return (
@@ -106,7 +105,7 @@ const SitemapGenerator = () => {
     );
   }
 
-  return null; // Component returns null as XML is written directly
+  return null;
 };
 
 export default SitemapGenerator;
