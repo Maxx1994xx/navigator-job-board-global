@@ -29,7 +29,7 @@ const SitemapGenerator = () => {
         return;
       }
 
-      const baseUrl = 'http://onlinecareernavigator.com';
+      const baseUrl = 'https://onlinecareernavigator.com';
       const currentDate = new Date().toISOString().split('T')[0];
 
       // Static pages
@@ -82,6 +82,23 @@ const SitemapGenerator = () => {
     }
   };
 
+  // Set content type for XML response
+  useEffect(() => {
+    if (sitemap) {
+      // For proper XML response
+      const response = new Response(sitemap, {
+        headers: {
+          'Content-Type': 'application/xml',
+        },
+      });
+      
+      // Replace the page content with raw XML
+      document.open();
+      document.write(sitemap);
+      document.close();
+    }
+  }, [sitemap]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -92,18 +109,7 @@ const SitemapGenerator = () => {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h1 className="text-2xl font-bold mb-4">XML Sitemap</h1>
-          <pre className="bg-gray-100 p-4 rounded-lg overflow-auto text-sm">
-            {sitemap}
-          </pre>
-        </div>
-      </div>
-    </div>
-  );
+  return null; // Component returns null as XML is written directly
 };
 
 export default SitemapGenerator;

@@ -50,7 +50,7 @@ const App = () => (
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/cookie-policy" element={<CookiePolicy />} />
-                <Route path="/sitemap.xml" element={<SitemapGenerator />} />
+                <Route path="/api/sitemap" element={<SitemapGenerator />} />
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin/dashboard" element={
                   <AdminProtectedRoute>
