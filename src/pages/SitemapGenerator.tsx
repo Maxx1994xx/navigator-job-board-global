@@ -32,7 +32,7 @@ const SitemapGenerator = () => {
       const baseUrl = 'https://onlinecareernavigator.com';
       const currentDate = new Date().toISOString().split('T')[0];
 
-      // Static pages with their priorities and change frequencies
+      // Static pages with their priorities and last modified dates
       const staticPages = [
         { url: '/', lastmod: currentDate, priority: '1.00' },
         { url: '/jobs', lastmod: currentDate, priority: '0.90' },
@@ -43,6 +43,7 @@ const SitemapGenerator = () => {
         { url: '/cookie-policy', lastmod: currentDate, priority: '0.50' },
       ];
 
+      // Start building the XML sitemap with proper Google format
       let sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset 
   xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -73,6 +74,7 @@ const SitemapGenerator = () => {
         });
       }
 
+      // Close the XML sitemap
       sitemapXml += `
 </urlset>`;
 
