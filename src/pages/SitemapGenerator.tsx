@@ -32,29 +32,31 @@ const SitemapGenerator = () => {
       const baseUrl = 'https://onlinecareernavigator.com';
       const currentDate = new Date().toISOString().split('T')[0];
 
-      // Static pages
+      // Static pages with their priorities and change frequencies
       const staticPages = [
-        { url: '/', priority: '1.0', changefreq: 'daily' },
-        { url: '/jobs', priority: '0.9', changefreq: 'daily' },
-        { url: '/about', priority: '0.7', changefreq: 'monthly' },
-        { url: '/contact', priority: '0.7', changefreq: 'monthly' },
-        { url: '/privacy', priority: '0.5', changefreq: 'yearly' },
-        { url: '/terms', priority: '0.5', changefreq: 'yearly' },
-        { url: '/cookie-policy', priority: '0.5', changefreq: 'yearly' },
+        { url: '/', lastmod: currentDate, priority: '1.00' },
+        { url: '/jobs', lastmod: currentDate, priority: '0.90' },
+        { url: '/about', lastmod: currentDate, priority: '0.80' },
+        { url: '/contact', lastmod: currentDate, priority: '0.75' },
+        { url: '/privacy', lastmod: currentDate, priority: '0.50' },
+        { url: '/terms', lastmod: currentDate, priority: '0.50' },
+        { url: '/cookie-policy', lastmod: currentDate, priority: '0.50' },
       ];
 
       let sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
+<urlset 
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+`;
 
       // Add static pages
       staticPages.forEach(page => {
         sitemapXml += `
   <url>
     <loc>${baseUrl}${page.url}</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>${page.changefreq}</changefreq>
+    <lastmod>${page.lastmod}</lastmod>
     <priority>${page.priority}</priority>
-  </url>`;
+  </url>
+`;
       });
 
       // Add job pages
@@ -65,9 +67,9 @@ const SitemapGenerator = () => {
   <url>
     <loc>${baseUrl}/job/${job.id}</loc>
     <lastmod>${lastmod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>`;
+    <priority>0.80</priority>
+  </url>
+`;
         });
       }
 
@@ -82,17 +84,13 @@ const SitemapGenerator = () => {
     }
   };
 
-  // Set content type for XML response
+  // Set content type for XML response and replace page content
   useEffect(() => {
     if (sitemap) {
-      // For proper XML response
-      const response = new Response(sitemap, {
-        headers: {
-          'Content-Type': 'application/xml',
-        },
-      });
+      // Set the content type to XML
+      document.contentType = 'application/xml';
       
-      // Replace the page content with raw XML
+      // Replace the entire page content with the XML sitemap
       document.open();
       document.write(sitemap);
       document.close();
