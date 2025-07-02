@@ -23,7 +23,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminJobsManagement from "./pages/AdminJobsManagement";
 import AdminUsersManagement from "./pages/AdminUsersManagement";
 import NotFound from "./pages/NotFound";
-import SitemapGenerator from "./pages/SitemapGenerator";
+
 
 // Use React.lazy for JobApply page
 const JobApply = lazy(() => import("./pages/JobApply"));
@@ -50,7 +50,7 @@ const App = () => (
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/cookie-policy" element={<CookiePolicy />} />
-                <Route path="/sitemap.xml" element={<SitemapGenerator />} />
+                
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin/dashboard" element={
                   <AdminProtectedRoute>
