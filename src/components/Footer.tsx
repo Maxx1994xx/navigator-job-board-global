@@ -1,10 +1,7 @@
-
 import { Link } from 'react-router-dom';
 import { Search } from 'lucide-react';
-
 const Footer = () => {
-  return (
-    <footer className="bg-gray-900 text-white">
+  return <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
@@ -19,7 +16,7 @@ const Footer = () => {
               Navigate your career journey with confidence.
             </p>
             <div className="text-sm text-gray-400">
-              <p>© 2024 Online Career Navigator. All rights reserved.</p>
+              <p>© 2025 Online Career Navigator. All rights reserved.</p>
               <p>onlinecareernavigator.com</p>
             </div>
           </div>
@@ -78,8 +75,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
