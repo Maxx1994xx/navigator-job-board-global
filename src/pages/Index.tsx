@@ -47,15 +47,15 @@ const Index = () => {
   const navigate = useNavigate();
 
   const countries = ['UAE', 'Saudi Arabia', 'Qatar', 'Kuwait', 'USA', 'UK', 'Bahrain', 'Oman'];
-  const categories = ['Technology', 'Engineering', 'Healthcare', 'Finance', 'Marketing', 'Education'];
+  const categories = ['Technology', 'Sales', 'Healthcare', 'Finance', 'Marketing', 'Design'];
 
   const categoryIcons: { [key: string]: string } = {
     'Technology': '💻',
-    'Engineering': '⚙️',
+    'Sales': '💼',
     'Healthcare': '🏥',
     'Finance': '💰',
     'Marketing': '📈',
-    'Education': '🎓'
+    'Design': '🎨'
   };
 
   useEffect(() => {
