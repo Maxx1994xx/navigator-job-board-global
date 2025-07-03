@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -23,6 +24,7 @@ interface Job {
 }
 
 const Jobs = () => {
+  const [searchParams] = useSearchParams();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -30,6 +32,19 @@ const Jobs = () => {
   const [typeFilter, setTypeFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [loading, setLoading] = useState(true);
+
+  // Initialize filters from URL parameters
+  useEffect(() => {
+    const search = searchParams.get('search');
+    const country = searchParams.get('country'); 
+    const category = searchParams.get('category');
+    const type = searchParams.get('type');
+
+    if (search) setSearchTerm(search);
+    if (country) setLocationFilter(country);
+    if (category) setCategoryFilter(category);
+    if (type) setTypeFilter(type);
+  }, [searchParams]);
 
   useEffect(() => {
     fetchJobs();
