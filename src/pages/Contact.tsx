@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Mail, MapPin, Clock } from 'lucide-react';
+import { Mail, MapPin, Clock, Youtube, Instagram, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const Contact = () => {
@@ -89,6 +89,42 @@ const Contact = () => {
                 <p className="text-gray-700">
                   We typically respond to all inquiries within 24-48 hours during business days.
                 </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Connect With Us</h3>
+                <p className="text-gray-700 mb-4">Follow us on social media for job updates and career tips:</p>
+                <div className="flex space-x-4">
+                  <a 
+                    href="https://www.youtube.com/@OnlineCareerNavigator" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-800 transition-colors"
+                    aria-label="Follow us on YouTube"
+                  >
+                    <Youtube className="w-6 h-6" />
+                  </a>
+                  <a 
+                    href="https://x.com/OnlineCareerNav" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-800 transition-colors"
+                    aria-label="Follow us on X"
+                  >
+                    <X className="w-6 h-6" />
+                  </a>
+                  <a 
+                    href="https://www.instagram.com/onlinecareernavigator/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-800 transition-colors"
+                    aria-label="Follow us on Instagram"
+                  >
+                    <Instagram className="w-6 h-6" />
+                  </a>
+                </div>
               </CardContent>
             </Card>
           </div>
