@@ -9,6 +9,7 @@ import { Search, MapPin, Briefcase, Filter } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import JobCard from '@/components/JobCard';
+import SEO from '@/components/SEO';
 import { supabase } from '@/integrations/supabase/client';
 
 interface Job {
@@ -119,6 +120,10 @@ const Jobs = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <SEO 
+        title="Find Jobs in Gulf, USA & UK - Online Career Navigator"
+        description="Browse thousands of job opportunities across Gulf countries, USA, and UK. Filter by location, category, and job type to find your perfect career match."
+      />
       <Header />
       
       {/* Hero Section */}

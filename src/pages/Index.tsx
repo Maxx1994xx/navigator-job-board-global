@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import JobCard from '@/components/JobCard';
+import SEO from '@/components/SEO';
 import { supabase } from '@/integrations/supabase/client';
 
 interface Job {
@@ -166,6 +167,10 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <SEO 
+        title="Online Career Navigator - Find Jobs in Gulf, USA & UK"
+        description="Discover job opportunities across Gulf countries, USA, and UK. Navigate your career journey with Online Career Navigator - your trusted job search partner."
+      />
       <Header />
       
       {/* Hero Section */}
