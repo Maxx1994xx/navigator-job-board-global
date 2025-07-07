@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -8,7 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Search, MapPin, Briefcase, Filter } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import JobCard from '@/components/JobCard';
+import OptimizedJobCard from '@/components/OptimizedJobCard';
+import JobCardSkeleton from '@/components/JobCardSkeleton';
 import SEO from '@/components/SEO';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -27,7 +28,6 @@ interface Job {
 const Jobs = () => {
   const [searchParams] = useSearchParams();
   const [jobs, setJobs] = useState<Job[]>([]);
-  const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
@@ -47,44 +47,47 @@ const Jobs = () => {
     if (type) setTypeFilter(type);
   }, [searchParams]);
 
-  useEffect(() => {
-    fetchJobs();
+  const fetchJobs = useCallback(async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('jobs')
+        .select('*')
+        .eq('status', 'active')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching jobs:', error);
+      } else {
+        setJobs(data || []);
+      }
+    } catch (error) {
+      console.error('Error fetching jobs:', error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
-    filterJobs();
-  }, [jobs, searchTerm, locationFilter, typeFilter, categoryFilter]);
+    fetchJobs();
+  }, [fetchJobs]);
 
-  const fetchJobs = async () => {
-    setLoading(true);
-    const { data, error } = await supabase
-      .from('jobs')
-      .select('*')
-      .eq('status', 'active')
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('Error fetching jobs:', error);
-    } else {
-      setJobs(data || []);
-    }
-    setLoading(false);
-  };
-
-  const filterJobs = () => {
+  const filteredJobs = useMemo(() => {
     let filtered = jobs;
 
     if (searchTerm) {
+      const searchLower = searchTerm.toLowerCase();
       filtered = filtered.filter(job =>
-        job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        job.description.toLowerCase().includes(searchTerm.toLowerCase())
+        job.title.toLowerCase().includes(searchLower) ||
+        job.company.toLowerCase().includes(searchLower) ||
+        job.description.toLowerCase().includes(searchLower)
       );
     }
 
     if (locationFilter) {
+      const locationLower = locationFilter.toLowerCase();
       filtered = filtered.filter(job =>
-        job.location.toLowerCase().includes(locationFilter.toLowerCase())
+        job.location.toLowerCase().includes(locationLower)
       );
     }
 
@@ -96,17 +99,17 @@ const Jobs = () => {
       filtered = filtered.filter(job => job.category === categoryFilter);
     }
 
-    setFilteredJobs(filtered);
-  };
+    return filtered;
+  }, [jobs, searchTerm, locationFilter, typeFilter, categoryFilter]);
 
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     setSearchTerm('');
     setLocationFilter('');
     setTypeFilter('');
     setCategoryFilter('');
-  };
+  }, []);
 
-  const formatPostedDate = (dateString: string) => {
+  const formatPostedDate = useCallback((dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
     const diffTime = Math.abs(now.getTime() - date.getTime());
@@ -116,7 +119,7 @@ const Jobs = () => {
     if (diffDays < 7) return `${diffDays} days ago`;
     if (diffDays < 30) return `${Math.ceil(diffDays / 7)} weeks ago`;
     return `${Math.ceil(diffDays / 30)} months ago`;
-  };
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -208,8 +211,10 @@ const Jobs = () => {
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {loading ? (
-            <div className="text-center">
-              <div className="text-lg">Loading jobs...</div>
+            <div className="grid gap-6">
+              {Array(6).fill(0).map((_, index) => (
+                <JobCardSkeleton key={index} />
+              ))}
             </div>
           ) : filteredJobs.length === 0 ? (
             <div className="text-center py-12">
@@ -220,7 +225,7 @@ const Jobs = () => {
           ) : (
             <div className="grid gap-6">
               {filteredJobs.map((job) => (
-                <JobCard
+                <OptimizedJobCard
                   key={job.id}
                   id={job.id}
                   title={job.title}

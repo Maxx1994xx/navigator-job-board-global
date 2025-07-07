@@ -2,18 +2,58 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8R1RVEQHQM"></script>
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com">
+    <link rel="preconnect" href="https://zmrfykssfejouiqrzbcj.supabase.co">
+
+    <!-- Critical CSS will be inlined here -->
+    <style>
+      /* Critical above-the-fold styles */
+      html, body { margin: 0; padding: 0; }
+      body { font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; }
+      .loading-placeholder { 
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        min-height: 50vh;
+        font-size: 1.1rem;
+        color: #6b7280;
+      }
+    </style>
+
+    <!-- Google Fonts - optimized loading -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
+
+    <!-- Google tag (gtag.js) - Deferred -->
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-8R1RVEQHQM');
+      // Defer analytics loading until after page load
+      window.addEventListener('load', function() {
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-8R1RVEQHQM';
+        document.head.appendChild(script);
+        
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-8R1RVEQHQM');
+      });
     </script>
 
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1859700033861650"
-         crossorigin="anonymous"></script>
+    <!-- Google AdSense - Deferred -->
+    <script>
+      window.addEventListener('load', function() {
+        var adsScript = document.createElement('script');
+        adsScript.async = true;
+        adsScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1859700033861650';
+        adsScript.crossOrigin = 'anonymous';
+        document.head.appendChild(adsScript);
+      });
+    </script>
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -37,7 +77,8 @@
     <!-- Canonical URL - will be set dynamically by React -->
     <link rel="canonical" href="https://onlinecareernavigator.com" id="canonical-url" />
 
-    <!-- Favicon -->
+    <!-- Favicon - Preload -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/lucide@latest/icons/briefcase.svg" as="image">
     <link rel="icon" href="https://cdn.jsdelivr.net/npm/lucide@latest/icons/briefcase.svg" type="image/svg+xml">
 
     <!-- Additional SEO Meta Tags -->
@@ -107,7 +148,11 @@
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="loading-placeholder">
+        <div>Loading...</div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

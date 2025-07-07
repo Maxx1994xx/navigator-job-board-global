@@ -10,25 +10,35 @@ import { AdminProvider } from "./contexts/AdminContext";
 import ScrollToTop from "./components/ScrollToTop";
 import CookieBanner from "./components/CookieBanner";
 import AdminProtectedRoute from "./components/AdminProtectedRoute";
-import Index from "./pages/Index";
-import Jobs from "./pages/Jobs";
-import JobDetail from "./pages/JobDetail";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import Privacy from "./pages/Privacy";
-import Terms from "./pages/Terms";
-import CookiePolicy from "./pages/CookiePolicy";
-import AdminLogin from "./pages/AdminLogin";
-import AdminDashboard from "./pages/AdminDashboard";
-import AdminJobsManagement from "./pages/AdminJobsManagement";
-import AdminUsersManagement from "./pages/AdminUsersManagement";
-import NotFound from "./pages/NotFound";
+import LoadingSpinner from "./components/LoadingSpinner";
 
-
-// Use React.lazy for JobApply page
+// Lazy load all page components for better performance
+const Index = lazy(() => import("./pages/Index"));
+const Jobs = lazy(() => import("./pages/Jobs"));
+const JobDetail = lazy(() => import("./pages/JobDetail"));
 const JobApply = lazy(() => import("./pages/JobApply"));
+const About = lazy(() => import("./pages/About"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Privacy = lazy(() => import("./pages/Privacy"));
+const Terms = lazy(() => import("./pages/Terms"));
+const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
+const AdminLogin = lazy(() => import("./pages/AdminLogin"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const AdminJobsManagement = lazy(() => import("./pages/AdminJobsManagement"));
+const AdminUsersManagement = lazy(() => import("./pages/AdminUsersManagement"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
-const queryClient = new QueryClient();
+// Optimize QueryClient for better performance
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -39,7 +49,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <ScrollToTop />
-            <Suspense fallback={<div className="p-10 text-center">Loading...</div>}>
+            <Suspense fallback={<LoadingSpinner size="large" />}>
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/jobs" element={<Jobs />} />
