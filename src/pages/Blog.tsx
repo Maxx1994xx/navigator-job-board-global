@@ -35,12 +35,20 @@ const Blog = () => {
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Featured Article</h2>
               <Card className="overflow-hidden hover:shadow-lg transition-shadow">
                 <div className="md:flex">
-                  <div className="md:w-1/3 bg-gradient-to-br from-blue-500 to-purple-600 p-8 flex items-center justify-center">
-                    <div className="text-white text-center">
-                      <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span className="text-2xl font-bold">📚</span>
+                  <div className="md:w-1/3 relative overflow-hidden">
+                    <img 
+                      src={blogPosts[0].featuredImage} 
+                      alt={blogPosts[0].imageAlt}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/80 to-purple-600/80 p-8 flex items-center justify-center">
+                      <div className="text-white text-center">
+                        <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <span className="text-2xl font-bold">📚</span>
+                        </div>
+                        <p className="text-white/90 font-medium">Featured Guide</p>
                       </div>
-                      <p className="text-white/90 font-medium">Featured Guide</p>
                     </div>
                   </div>
                   <div className="md:w-2/3 p-8">
@@ -92,12 +100,18 @@ const Blog = () => {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {blogPosts.map((post) => (
                 <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-shadow group">
-                  <div className="h-48 bg-gradient-to-br from-blue-500 to-purple-600 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-black/20"></div>
+                  <div className="h-48 relative overflow-hidden">
+                    <img 
+                      src={post.featuredImage} 
+                      alt={post.imageAlt}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                     <div className="absolute bottom-4 left-4 right-4">
                       <div className="flex flex-wrap gap-1">
                         {post.tags.slice(0, 2).map((tag) => (
-                          <Badge key={tag} variant="secondary" className="text-xs bg-white/20 text-white border-white/30">
+                          <Badge key={tag} variant="secondary" className="text-xs bg-white/90 text-gray-800 border-white/30">
                             {tag}
                           </Badge>
                         ))}

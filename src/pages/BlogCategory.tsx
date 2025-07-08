@@ -60,12 +60,18 @@ const BlogCategory = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map((post) => (
               <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-shadow group">
-                <div className="h-48 bg-gradient-to-br from-blue-500 to-purple-600 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-black/20"></div>
+                <div className="h-48 relative overflow-hidden">
+                  <img 
+                    src={post.featuredImage} 
+                    alt={post.imageAlt}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                   <div className="absolute bottom-4 left-4 right-4">
                     <div className="flex flex-wrap gap-1">
                       {post.tags.slice(0, 2).map((tag) => (
-                        <Badge key={tag} variant="secondary" className="text-xs bg-white/20 text-white border-white/30">
+                        <Badge key={tag} variant="secondary" className="text-xs bg-white/90 text-gray-800 border-white/30">
                           {tag}
                         </Badge>
                       ))}

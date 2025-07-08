@@ -63,6 +63,16 @@ const BlogPost = () => {
 
           {/* Article Header */}
           <article className="bg-white rounded-lg shadow-sm overflow-hidden">
+            {/* Featured Image */}
+            <div className="h-64 md:h-80 overflow-hidden">
+              <img 
+                src={post.featuredImage} 
+                alt={post.imageAlt}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+            
             <div className="p-8 lg:p-12">
               <div className="flex flex-wrap gap-2 mb-6">
                 {post.tags.map((tag) => (
@@ -153,8 +163,15 @@ const BlogPost = () => {
               <h2 className="text-2xl font-bold text-gray-900 mb-8">Related Articles</h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {relatedPosts.map((relatedPost) => (
-                  <Card key={relatedPost.id} className="hover:shadow-lg transition-shadow group">
-                    <div className="h-32 bg-gradient-to-br from-blue-500 to-purple-600"></div>
+                  <Card key={relatedPost.id} className="hover:shadow-lg transition-shadow group overflow-hidden">
+                    <div className="h-32 relative overflow-hidden">
+                      <img 
+                        src={relatedPost.featuredImage} 
+                        alt={relatedPost.imageAlt}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        loading="lazy"
+                      />
+                    </div>
                     <CardContent className="p-6">
                       <h3 className="font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors line-clamp-2">
                         <Link to={`/blog/${relatedPost.slug}`}>

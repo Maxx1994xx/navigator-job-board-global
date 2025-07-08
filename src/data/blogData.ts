@@ -10,7 +10,8 @@ export interface BlogPost {
   tags: string[];
   keywords: string[];
   metaDescription: string;
-  featuredImage?: string;
+  featuredImage: string;
+  imageAlt: string;
 }
 
 export const blogPosts: BlogPost[] = [
@@ -19,74 +20,154 @@ export const blogPosts: BlogPost[] = [
     slug: "ultimate-guide-job-search-2024",
     title: "The Ultimate Guide to Job Searching in 2024: Expert Tips and Strategies",
     excerpt: "Discover proven job search strategies, resume optimization techniques, and interview tips that will help you land your dream job in today's competitive market.",
-    content: `
-# The Ultimate Guide to Job Searching in 2024: Expert Tips and Strategies
+    featuredImage: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7",
+    imageAlt: "Professional woman working on job search using laptop",
+    content: `## Introduction: The Modern Job Search Landscape
 
-Finding the right job in today's competitive market requires more than just submitting applications. Success comes from strategic planning, personal branding, and leveraging the right tools and platforms.
+The job market in 2024 has evolved dramatically, with technology reshaping how employers find candidates and how job seekers connect with opportunities. Today's successful job search requires a strategic, multi-channel approach that combines traditional networking with digital optimization.
 
-## 1. Optimize Your Resume for ATS Systems
+## Chapter 1: Mastering ATS-Optimized Resumes
 
-Modern employers use Applicant Tracking Systems (ATS) to filter resumes. Here's how to optimize yours:
+### Understanding Applicant Tracking Systems
 
-- **Use relevant keywords** from the job description
-- **Choose a clean, simple format** that ATS can easily parse
-- **Include quantifiable achievements** with specific metrics
-- **Tailor each resume** to the specific position
+Over 98% of Fortune 500 companies use Applicant Tracking Systems (ATS) to screen resumes before human eyes ever see them. Your resume must be both ATS-friendly and compelling to human readers.
 
-## 2. Build Your Professional Network
+**Key ATS Optimization Strategies:**
+- Use standard section headings (Experience, Education, Skills)
+- Include exact keywords from job descriptions
+- Avoid images, graphics, and complex formatting
+- Save your resume as both .docx and .pdf formats
+- Use standard fonts like Arial, Calibri, or Times New Roman
 
-Networking remains one of the most effective job search strategies:
+### Quantifying Your Achievements
 
-- **Update your LinkedIn profile** with current skills and experiences
-- **Engage with industry content** by commenting and sharing insights
-- **Attend virtual and in-person networking events**
-- **Reach out to former colleagues** and maintain professional relationships
+Transform weak bullet points into powerful achievement statements:
 
-## 3. Leverage Multiple Job Search Platforms
+**Before:** "Managed a team of sales representatives"
+**After:** "Led a team of 8 sales representatives, achieving 125% of quarterly targets and generating $2.3M in revenue"
 
-Don't limit yourself to one platform:
+## Chapter 2: Strategic Networking in the Digital Age
 
-- **Company websites** for direct applications
-- **LinkedIn Jobs** for professional opportunities
-- **Industry-specific job boards** for specialized roles
-- **Recruitment agencies** for personalized assistance
+### LinkedIn Optimization for Job Seekers
 
-## 4. Prepare for Modern Interview Formats
+Your LinkedIn profile is your digital business card. Optimize it with:
 
-Today's interviews often include multiple formats:
+- A professional headshot with good lighting
+- A compelling headline that includes your target role
+- A summary that tells your career story
+- Regular content sharing to demonstrate expertise
+- Strategic connections with industry professionals
 
-- **Video interviews**: Test your technology and practice virtual communication
-- **Panel interviews**: Prepare to engage with multiple interviewers
-- **Behavioral questions**: Use the STAR method (Situation, Task, Action, Result)
-- **Technical assessments**: Practice relevant skills and problem-solving
+### Building Authentic Professional Relationships
 
-## 5. Research Company Culture
+Networking isn't about collecting contacts—it's about building meaningful professional relationships:
 
-Understanding company culture is crucial for long-term success:
+- Offer value before asking for favors
+- Follow up consistently but not aggressively
+- Attend industry events and webinars
+- Join professional associations in your field
+- Engage meaningfully with your network's content
 
-- **Read employee reviews** on platforms like Glassdoor
-- **Follow company social media** to understand their values
-- **Connect with current employees** to get insider perspectives
-- **Ask culture-specific questions** during interviews
+## Chapter 3: Multi-Platform Job Search Strategy
 
-## Conclusion
+### Platform-Specific Strategies
 
-Job searching in 2024 requires a multi-faceted approach combining traditional methods with modern digital strategies. Focus on building genuine relationships, showcasing your unique value proposition, and maintaining persistence throughout the process.
+**LinkedIn Jobs:**
+- Set up job alerts for your target roles
+- Use the "Easy Apply" feature strategically
+- Research hiring managers before applying
 
-Remember, the right opportunity is out there – it's about positioning yourself to find and secure it.
-    `,
+**Company Career Pages:**
+- Apply directly for better visibility
+- Sign up for job alerts from target companies
+- Research company culture and values
+
+**Industry-Specific Job Boards:**
+- Tech: AngelList, Stack Overflow Jobs
+- Marketing: MarketingJobs, MarketingHire
+- Healthcare: HealthJobsNationwide, Health eCareers
+
+## Chapter 4: Interview Excellence
+
+### Preparation Strategies
+
+**Research Phase:**
+- Study the company's recent news and initiatives
+- Understand their products, services, and market position
+- Review the interviewer's background on LinkedIn
+- Prepare 5-7 thoughtful questions about the role
+
+**Practice Phase:**
+- Record yourself answering common questions
+- Practice the STAR method for behavioral questions
+- Prepare specific examples that demonstrate your skills
+- Practice virtual interview technology if applicable
+
+### Common Interview Questions and Strategic Responses
+
+**"Tell me about yourself"**
+Structure: Current role → Relevant experience → Why you're interested in this opportunity
+
+**"Why do you want to work here?"**
+Connect your values and career goals to the company's mission and growth opportunities.
+
+## Chapter 5: Salary Negotiation Mastery
+
+### Research and Preparation
+
+Before any negotiation:
+- Research salary ranges on Glassdoor, PayScale, and Salary.com
+- Consider total compensation, not just base salary
+- Document your achievements and unique value
+- Practice your negotiation conversation
+
+### Negotiation Best Practices
+
+- Express enthusiasm for the role first
+- Present data to support your request
+- Be prepared to discuss non-salary benefits
+- Maintain a collaborative tone throughout
+- Get any agreement in writing
+
+## Chapter 6: Personal Branding and Online Presence
+
+### Building Your Professional Brand
+
+Your personal brand is what people say about you when you're not in the room:
+
+- Define your unique value proposition
+- Create consistent messaging across platforms
+- Share industry insights and thought leadership
+- Showcase your expertise through content creation
+- Maintain professionalism in all online interactions
+
+## Conclusion: Your Job Search Action Plan
+
+Success in job searching comes from consistent action and strategic thinking. Create a weekly routine that includes:
+
+- Applying to 5-10 quality positions
+- Reaching out to 3-5 new professional connections
+- Updating your LinkedIn with relevant content
+- Following up on existing applications
+- Continuing skill development in your field
+
+Remember: Job searching is a marathon, not a sprint. Stay persistent, track your activities, and adjust your strategy based on feedback and results.
+
+The right opportunity is waiting for the prepared candidate. Start implementing these strategies today, and you'll be well-positioned to land your dream job in 2024.`,
     author: "Career Expert Team",
     publishedAt: "2024-01-15",
-    readTime: "8 min read",
+    readTime: "12 min read",
     tags: ["Job Search", "Career Tips", "Resume", "Interview", "Networking"],
-    keywords: ["job search 2024", "resume optimization", "interview tips", "career advice", "job hunting strategies", "ATS optimization"],
-    metaDescription: "Complete guide to job searching in 2024 with expert tips on resume optimization, networking, interviews, and leveraging modern job search platforms."
+    keywords: ["job search 2024", "resume optimization", "interview tips", "career advice", "job hunting strategies", "ATS optimization", "LinkedIn profile", "salary negotiation", "professional networking"],
+    metaDescription: "Complete guide to job searching in 2024 with expert tips on resume optimization, networking, interviews, and leveraging modern job search platforms for career success."
   },
   {
     id: "2",
     slug: "remote-work-opportunities-guide",
     title: "Remote Work Opportunities: How to Find and Secure Your Dream Remote Job",
     excerpt: "Learn how to navigate the remote job market, identify legitimate opportunities, and position yourself as an ideal remote worker candidate.",
+    featuredImage: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158",
+    imageAlt: "Woman in white shirt using laptop for remote work",
     content: `
 # Remote Work Opportunities: How to Find and Secure Your Dream Remote Job
 
@@ -198,6 +279,8 @@ The key to remote job search success is persistence, proper preparation, and pre
     slug: "salary-negotiation-strategies-2024",
     title: "Salary Negotiation Strategies: Get the Compensation You Deserve",
     excerpt: "Master the art of salary negotiation with proven strategies, market research techniques, and confident communication approaches.",
+    featuredImage: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
+    imageAlt: "Person using MacBook Pro for salary research and negotiation",
     content: `
 # Salary Negotiation Strategies: Get the Compensation You Deserve
 
@@ -323,6 +406,8 @@ The key is to approach negotiations as collaborative problem-solving sessions wh
     slug: "linkedin-profile-optimization-guide",
     title: "LinkedIn Profile Optimization: Stand Out to Recruiters and Employers",
     excerpt: "Transform your LinkedIn profile into a powerful career tool with expert tips on headlines, summaries, and networking strategies.",
+    featuredImage: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+    imageAlt: "Gray laptop computer displaying professional networking interface",
     content: `
 # LinkedIn Profile Optimization: Stand Out to Recruiters and Employers
 
@@ -399,6 +484,8 @@ A well-optimized LinkedIn profile is essential in today's job market. Regular up
     slug: "remote-work-productivity-tips",
     title: "Remote Work Productivity: 15 Proven Strategies for Success",
     excerpt: "Discover essential productivity strategies, tools, and techniques to excel in remote work environments and maintain work-life balance.",
+    featuredImage: "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
+    imageAlt: "Gray and black laptop computer on surface for remote productivity",
     content: `
 # Remote Work Productivity: 15 Proven Strategies for Success
 
@@ -477,6 +564,8 @@ Remote work success requires intentional strategies and consistent habits. Focus
     slug: "interview-preparation-checklist",
     title: "Complete Interview Preparation Checklist: Land Your Dream Job",
     excerpt: "Comprehensive interview preparation guide covering research, questions, attire, and follow-up strategies for interview success.",
+    featuredImage: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7",
+    imageAlt: "Colorful software code on computer monitor for tech interview preparation",
     content: `
 # Complete Interview Preparation Checklist: Land Your Dream Job
 
@@ -571,6 +660,8 @@ Thorough interview preparation demonstrates professionalism and genuine interest
     slug: "career-change-strategies-guide",
     title: "Career Change at Any Age: Strategic Steps to Pivot Successfully",
     excerpt: "Navigate career transitions with confidence using proven strategies for skill assessment, industry research, and network building.",
+    featuredImage: "https://images.unsplash.com/photo-1518770660439-4636190af475",
+    imageAlt: "Macro photography of black circuit board representing career technology transition",
     content: `
 # Career Change at Any Age: Strategic Steps to Pivot Successfully
 
@@ -662,6 +753,8 @@ Career changes require courage, planning, and persistence. By following these st
     slug: "freelancing-getting-started-guide",
     title: "Freelancing Success: Complete Guide to Starting Your Independent Career",
     excerpt: "Launch your freelance career with expert advice on client acquisition, pricing strategies, and building a sustainable business.",
+    featuredImage: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6",
+    imageAlt: "Monitor showing Java programming for freelance development work",
     content: `
 # Freelancing Success: Complete Guide to Starting Your Independent Career
 
@@ -767,6 +860,8 @@ Successful freelancing combines professional expertise with business skills. Foc
     slug: "tech-industry-job-search-guide",
     title: "Breaking Into Tech: Complete Guide for Career Switchers and New Graduates",
     excerpt: "Navigate the competitive tech industry with insider tips on skill development, portfolio building, and landing your first tech role.",
+    featuredImage: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e",
+    imageAlt: "White robot near brown wall representing AI and technology careers",
     content: `
 # Breaking Into Tech: Complete Guide for Career Switchers and New Graduates
 
@@ -883,6 +978,8 @@ Breaking into tech requires dedication, continuous learning, and strategic netwo
     slug: "work-life-balance-strategies",
     title: "Achieving Work-Life Balance: Sustainable Strategies for Modern Professionals",
     excerpt: "Practical strategies for maintaining healthy boundaries, managing stress, and creating fulfillment in both career and personal life.",
+    featuredImage: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5",
+    imageAlt: "Matrix movie still representing digital work-life balance concepts",
     content: `
 # Achieving Work-Life Balance: Sustainable Strategies for Modern Professionals
 
@@ -1000,6 +1097,8 @@ Work-life balance is not a destination but an ongoing practice requiring constan
     slug: "networking-strategies-professionals",
     title: "Professional Networking: Build Meaningful Connections That Advance Your Career",
     excerpt: "Master networking strategies that go beyond collecting business cards to build authentic relationships that drive career growth.",
+    featuredImage: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+    imageAlt: "Laptop computer displaying networking and professional connections interface",
     content: `
 # Professional Networking: Build Meaningful Connections That Advance Your Career
 
