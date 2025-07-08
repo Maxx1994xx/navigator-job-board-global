@@ -153,11 +153,15 @@ const Blog = () => {
                 { name: 'Remote Work', count: 3, icon: '🏠' },
                 { name: 'Salary Negotiation', count: 2, icon: '💰' }
               ].map((category) => (
-                <div key={category.name} className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 transition-colors cursor-pointer">
+                <Link 
+                  key={category.name}
+                  to={`/blog/category/${category.name.toLowerCase().replace(/\s+/g, '-')}`}
+                  className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 transition-colors"
+                >
                   <div className="text-2xl mb-2">{category.icon}</div>
                   <h3 className="font-semibold text-gray-900">{category.name}</h3>
                   <p className="text-sm text-gray-500">{category.count} articles</p>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
