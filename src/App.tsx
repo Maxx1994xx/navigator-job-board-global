@@ -29,6 +29,7 @@ const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminJobsManagement = lazy(() => import("./pages/AdminJobsManagement"));
 const AdminUsersManagement = lazy(() => import("./pages/AdminUsersManagement"));
+const AdminBlogsManagement = lazy(() => import("./pages/AdminBlogsManagement"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 // Optimize QueryClient for better performance
@@ -81,6 +82,11 @@ const App = () => (
                 <Route path="/admin/users" element={
                   <AdminProtectedRoute>
                     <AdminUsersManagement />
+                  </AdminProtectedRoute>
+                } />
+                <Route path="/admin/blogs" element={
+                  <AdminProtectedRoute>
+                    <AdminBlogsManagement />
                   </AdminProtectedRoute>
                 } />
                 <Route path="*" element={<NotFound />} />

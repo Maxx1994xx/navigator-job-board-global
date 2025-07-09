@@ -1,13 +1,80 @@
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, Clock, ArrowRight } from 'lucide-react';
-import { blogPosts } from '@/data/blogData';
+import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 
+interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  category: string;
+  author: string;
+  image_url?: string;
+  tags: string[];
+  reading_time: number;
+  created_at: string;
+  is_published: boolean;
+}
+
 const Blog = () => {
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchBlogPosts();
+  }, []);
+
+  const fetchBlogPosts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('blogs')
+        .select('*')
+        .eq('is_published', true)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setBlogPosts(data || []);
+    } catch (error) {
+      console.error('Error fetching blog posts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  if (loading) {
+    return (
+      <>
+        <SEO 
+          title="Career Blog - Expert Job Search Tips & Career Advice | Online Career Navigator"
+          description="Get expert career advice, job search tips, salary negotiation strategies, and remote work guidance. Stay updated with the latest career trends and opportunities."
+        />
+        <div className="min-h-screen bg-gray-50">
+          <Header />
+          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div className="flex items-center justify-center min-h-[400px]">
+              <div className="text-lg">Loading blog posts...</div>
+            </div>
+          </main>
+          <Footer />
+        </div>
+      </>
+    );
+  }
   return (
     <>
       <SEO 
@@ -36,12 +103,12 @@ const Blog = () => {
               <Card className="overflow-hidden hover:shadow-lg transition-shadow">
                 <div className="md:flex">
                   <div className="md:w-1/3 relative overflow-hidden">
-                    <img 
-                      src={blogPosts[0].featuredImage} 
-                      alt={blogPosts[0].imageAlt}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
+                     <img 
+                       src={blogPosts[0].image_url || 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop'} 
+                       alt={blogPosts[0].title}
+                       className="w-full h-full object-cover"
+                       loading="lazy"
+                     />
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-500/80 to-purple-600/80 p-8 flex items-center justify-center">
                       <div className="text-white text-center">
                         <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -54,14 +121,14 @@ const Blog = () => {
                   <div className="md:w-2/3 p-8">
                     <CardHeader className="p-0 mb-4">
                       <div className="flex items-center space-x-4 text-sm text-gray-500 mb-3">
-                        <div className="flex items-center space-x-1">
-                          <Calendar className="w-4 h-4" />
-                          <span>{new Date(blogPosts[0].publishedAt).toLocaleDateString()}</span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <Clock className="w-4 h-4" />
-                          <span>{blogPosts[0].readTime}</span>
-                        </div>
+                         <div className="flex items-center space-x-1">
+                           <Calendar className="w-4 h-4" />
+                           <span>{formatDate(blogPosts[0].created_at)}</span>
+                         </div>
+                         <div className="flex items-center space-x-1">
+                           <Clock className="w-4 h-4" />
+                           <span>{blogPosts[0].reading_time} min read</span>
+                         </div>
                       </div>
                       <h3 className="text-2xl font-bold text-gray-900 mb-3 hover:text-blue-600 transition-colors">
                         <Link to={`/blog/${blogPosts[0].slug}`}>
@@ -100,13 +167,13 @@ const Blog = () => {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {blogPosts.map((post) => (
                 <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-shadow group">
-                  <div className="h-48 relative overflow-hidden">
-                    <img 
-                      src={post.featuredImage} 
-                      alt={post.imageAlt}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      loading="lazy"
-                    />
+                   <div className="h-48 relative overflow-hidden">
+                     <img 
+                       src={post.image_url || 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop'} 
+                       alt={post.title}
+                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                       loading="lazy"
+                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                     <div className="absolute bottom-4 left-4 right-4">
                       <div className="flex flex-wrap gap-1">
@@ -121,14 +188,14 @@ const Blog = () => {
                   
                   <CardHeader>
                     <div className="flex items-center space-x-4 text-sm text-gray-500 mb-3">
-                      <div className="flex items-center space-x-1">
-                        <Calendar className="w-4 h-4" />
-                        <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <Clock className="w-4 h-4" />
-                        <span>{post.readTime}</span>
-                      </div>
+                       <div className="flex items-center space-x-1">
+                         <Calendar className="w-4 h-4" />
+                         <span>{formatDate(post.created_at)}</span>
+                       </div>
+                       <div className="flex items-center space-x-1">
+                         <Clock className="w-4 h-4" />
+                         <span>{post.reading_time} min read</span>
+                       </div>
                     </div>
                     <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2">
                       <Link to={`/blog/${post.slug}`}>

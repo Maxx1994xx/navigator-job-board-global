@@ -1,27 +1,90 @@
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar, Clock, ArrowLeft, ArrowRight, Share2, BookmarkPlus } from 'lucide-react';
-import { getBlogPostBySlug, getRelatedPosts } from '@/data/blogData';
+import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 
+interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  html_content?: string;
+  category: string;
+  author: string;
+  image_url?: string;
+  seo_title?: string;
+  seo_description?: string;
+  tags: string[];
+  reading_time: number;
+  created_at: string;
+}
+
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
+  const [post, setPost] = useState<BlogPost | null>(null);
+  const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
   
-  if (!slug) {
-    return <Navigate to="/blog" replace />;
+  useEffect(() => {
+    if (slug) {
+      fetchPost();
+    }
+  }, [slug]);
+
+  const fetchPost = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('blogs')
+        .select('*')
+        .eq('slug', slug)
+        .eq('is_published', true)
+        .single();
+
+      if (error) throw error;
+      
+      setPost(data);
+      
+      // Fetch related posts
+      const { data: related } = await supabase
+        .from('blogs')
+        .select('*')
+        .eq('category', data.category)
+        .neq('id', data.id)
+        .eq('is_published', true)
+        .limit(3);
+      
+      setRelatedPosts(related || []);
+    } catch (error) {
+      console.error('Error fetching post:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-lg">Loading...</div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
   }
 
-  const post = getBlogPostBySlug(slug);
-  
   if (!post) {
     return <Navigate to="/blog" replace />;
   }
-
-  const relatedPosts = getRelatedPosts(post.id);
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -35,22 +98,28 @@ const BlogPost = () => {
         console.log('Error sharing:', error);
       }
     } else {
-      // Fallback to copying URL
       navigator.clipboard.writeText(window.location.href);
     }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
   };
 
   return (
     <>
       <SEO 
-        title={`${post.title} | Online Career Navigator Blog`}
-        description={post.metaDescription}
+        title={post.seo_title || `${post.title} | Online Career Navigator Blog`}
+        description={post.seo_description || post.excerpt}
       />
       <div className="min-h-screen bg-gray-50">
         <Header />
         
         <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          {/* Back to Blog */}
           <div className="mb-8">
             <Link 
               to="/blog"
@@ -61,13 +130,11 @@ const BlogPost = () => {
             </Link>
           </div>
 
-          {/* Article Header */}
           <article className="bg-white rounded-lg shadow-sm overflow-hidden">
-            {/* Featured Image */}
             <div className="h-64 md:h-80 overflow-hidden">
               <img 
-                src={post.featuredImage} 
-                alt={post.imageAlt}
+                src={post.image_url || 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop'} 
+                alt={post.title}
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
@@ -75,8 +142,9 @@ const BlogPost = () => {
             
             <div className="p-8 lg:p-12">
               <div className="flex flex-wrap gap-2 mb-6">
+                <Badge variant="secondary">{post.category}</Badge>
                 {post.tags.map((tag) => (
-                  <Badge key={tag} variant="secondary">
+                  <Badge key={tag} variant="outline">
                     {tag}
                   </Badge>
                 ))}
@@ -90,11 +158,11 @@ const BlogPost = () => {
                 <div className="flex items-center space-x-6 text-sm text-gray-600">
                   <div className="flex items-center space-x-2">
                     <Calendar className="w-4 h-4" />
-                    <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+                    <span>{formatDate(post.created_at)}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Clock className="w-4 h-4" />
-                    <span>{post.readTime}</span>
+                    <span>{post.reading_time} min read</span>
                   </div>
                   <span>By {post.author}</span>
                 </div>
@@ -109,18 +177,9 @@ const BlogPost = () => {
                     <Share2 className="w-4 h-4" />
                     <span>Share</span>
                   </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    className="flex items-center space-x-2"
-                  >
-                    <BookmarkPlus className="w-4 h-4" />
-                    <span>Save</span>
-                  </Button>
                 </div>
               </div>
 
-              {/* Article Content */}
               <div className="prose prose-lg max-w-none">
                 <div className="text-xl text-gray-600 mb-8 leading-relaxed font-medium">
                   {post.excerpt}
@@ -129,35 +188,13 @@ const BlogPost = () => {
                 <div 
                   className="blog-content text-gray-800 leading-relaxed"
                   dangerouslySetInnerHTML={{ 
-                    __html: post.content
-                      .replace(/\n/g, '<br />')
-                      .replace(/# (.*?)(<br \/>|$)/g, '<h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">$1</h2>')
-                      .replace(/## (.*?)(<br \/>|$)/g, '<h3 class="text-xl font-semibold text-gray-900 mt-6 mb-3">$1</h3>')
-                      .replace(/### (.*?)(<br \/>|$)/g, '<h4 class="text-lg font-semibold text-gray-900 mt-4 mb-2">$1</h4>')
-                      .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900">$1</strong>')
-                      .replace(/- \*\*(.*?)\*\*/g, '<li class="mb-2"><strong class="font-semibold text-gray-900">$1</strong>')
-                      .replace(/- (.*?)(<br \/>|$)/g, '<li class="mb-1">$1</li>')
-                      .replace(/(<li.*?>.*?<\/li>)/g, '<ul class="list-disc list-inside mb-4 space-y-1">$1</ul>')
-                      .replace(/<\/ul><br \/><ul[^>]*>/g, '')
+                    __html: post.html_content || post.content
                   }}
                 />
-              </div>
-
-              {/* Keywords */}
-              <div className="mt-12 pt-8 border-t border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Related Keywords</h3>
-                <div className="flex flex-wrap gap-2">
-                  {post.keywords.map((keyword) => (
-                    <Badge key={keyword} variant="outline" className="text-sm">
-                      {keyword}
-                    </Badge>
-                  ))}
-                </div>
               </div>
             </div>
           </article>
 
-          {/* Related Posts */}
           {relatedPosts.length > 0 && (
             <div className="mt-16">
               <h2 className="text-2xl font-bold text-gray-900 mb-8">Related Articles</h2>
@@ -166,8 +203,8 @@ const BlogPost = () => {
                   <Card key={relatedPost.id} className="hover:shadow-lg transition-shadow group overflow-hidden">
                     <div className="h-32 relative overflow-hidden">
                       <img 
-                        src={relatedPost.featuredImage} 
-                        alt={relatedPost.imageAlt}
+                        src={relatedPost.image_url || 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop'} 
+                        alt={relatedPost.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         loading="lazy"
                       />
@@ -182,7 +219,7 @@ const BlogPost = () => {
                         {relatedPost.excerpt}
                       </p>
                       <div className="flex items-center justify-between text-xs text-gray-500">
-                        <span>{relatedPost.readTime}</span>
+                        <span>{relatedPost.reading_time} min read</span>
                         <Link 
                           to={`/blog/${relatedPost.slug}`}
                           className="inline-flex items-center text-blue-600 hover:text-blue-700 transition-colors"
@@ -197,28 +234,6 @@ const BlogPost = () => {
               </div>
             </div>
           )}
-
-          {/* Call to Action */}
-          <div className="mt-16 bg-blue-50 rounded-lg p-8 text-center">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Ready to Take the Next Step in Your Career?
-            </h3>
-            <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-              Explore thousands of job opportunities and find the perfect position that matches your skills and aspirations.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg">
-                <Link to="/jobs">
-                  Browse Jobs
-                </Link>
-              </Button>
-              <Button variant="outline" size="lg" asChild>
-                <Link to="/blog">
-                  More Career Tips
-                </Link>
-              </Button>
-            </div>
-          </div>
         </main>
         
         <Footer />

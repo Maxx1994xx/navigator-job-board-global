@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { Users, Briefcase, Plus, TrendingUp } from 'lucide-react';
+import { Users, Briefcase, Plus, TrendingUp, FileText } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import AdminLayout from '@/components/AdminLayout';
 
@@ -157,6 +157,25 @@ const AdminDashboard = () => {
           </CardContent>
         </Card>
 
+        <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleNavigate('/admin/blogs')}>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5" />
+              Manage Blogs
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-gray-600 mb-4">Create, edit, and manage blog posts with rich content.</p>
+            <div className="flex justify-between text-sm">
+              <span>SEO Optimized</span>
+              <span>Rich Editor</span>
+            </div>
+            <Button className="mt-4 w-full" variant="outline">
+              Go to Blogs
+            </Button>
+          </CardContent>
+        </Card>
+
         <Card className="cursor-pointer hover:shadow-md transition-shadow">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -177,9 +196,9 @@ const AdminDashboard = () => {
                 className="w-full" 
                 size="sm" 
                 variant="outline"
-                onClick={() => handleNavigate('/admin/users')}
+                onClick={() => handleNavigate('/admin/blogs')}
               >
-                Add New User
+                Create New Blog
               </Button>
               <Button 
                 className="w-full" 
