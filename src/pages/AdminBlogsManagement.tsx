@@ -136,31 +136,20 @@ const AdminBlogsManagement: React.FC = () => {
     }));
   };
 
-      const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        toast({
-          title: "Error",
-          description: "User not authenticated. Please log in.",
-          variant: "destructive"
-        });
-        return;
-      }
-
       const blogData = {
         ...formData,
-        tags: formData.tags.length > 0 ? formData.tags : [],
-        created_by: user.id, // Set created_by to the authenticated user's ID
+        tags: formData.tags.length > 0 ? formData.tags : []
       };
 
       if (editingBlog) {
         const { error } = await supabase
-          .from("blogs")
+          .from('blogs')
           .update(blogData)
-          .eq("id", editingBlog.id);
+          .eq('id', editingBlog.id);
 
         if (error) throw error;
         toast({
@@ -169,7 +158,7 @@ const AdminBlogsManagement: React.FC = () => {
         });
       } else {
         const { error } = await supabase
-          .from("blogs")
+          .from('blogs')
           .insert([blogData]);
 
         if (error) throw error;
@@ -184,7 +173,7 @@ const AdminBlogsManagement: React.FC = () => {
       setEditingBlog(null);
       fetchBlogs();
     } catch (error) {
-      console.error("Error saving blog:", error);
+      console.error('Error saving blog:', error);
       toast({
         title: "Error",
         description: "Failed to save blog",

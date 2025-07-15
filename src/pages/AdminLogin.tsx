@@ -52,51 +52,58 @@ const AdminLogin = () => {
       return;
     }
 
-    // Try to sign in with email and password using Supabase Auth
-    const { data, error: authError } = await supabase.auth.signInWithPassword({
-      email: usernameOrEmail,
-      password: password,
+    // Try username first
+    let { data: creds, error: rpcError } = await supabase.rpc('verify_admin_credentials', {
+      p_username: usernameOrEmail,
+      p_password: password,
     });
 
-    if (authError) {
-      setError(authError.message);
+    // If nothing found and it looks like email, try by email->username lookup
+    if ((!creds || creds.length === 0) && usernameOrEmail.includes('@')) {
+      const { data: userRow } = await supabase
+        .from('admin_users')
+        .select('username')
+        .eq('email', usernameOrEmail)
+        .maybeSingle();
+      if (userRow?.username) {
+        ({ data: creds, error: rpcError } = await supabase.rpc('verify_admin_credentials', {
+          p_username: userRow.username,
+          p_password: password,
+        }));
+      }
+    }
+
+    if (rpcError) {
+      // Unexpected backend/RPC error
+      setError("Unexpected error. Please try again.");
+      toast({
+        title: "Login failed",
+        description: "Unexpected server error during login.",
+        variant: "destructive",
+      });
       setIsLoading(false);
       return;
     }
 
-    if (!data.user) {
-      setError("Login failed. No user data returned.");
+    if (!creds || creds.length === 0) {
+      setError('Invalid username/email or password.');
       setIsLoading(false);
-      return;
-    }
-
-    // Verify if the authenticated user is an admin by checking the admin_users table
-    const { data: adminUser, error: adminError } = await supabase
-      .from("admin_users")
-      .select("id, username, email, full_name")
-      .eq("id", data.user.id)
-      .single();
-
-    if (adminError || !adminUser) {
-      // If user is not found in admin_users, log them out from auth.users
-      await supabase.auth.signOut();
-      setError("You are not authorized to access the admin panel.");
-      setIsLoading(false);
+      // Inputs stay as entered so user can fix and submit again!
       return;
     }
 
     // Login success: store admin info locally
     const admin = {
-      id: adminUser.id,
-      username: adminUser.username,
-      email: adminUser.email,
-      full_name: adminUser.full_name,
+      id: creds[0].admin_id,
+      username: creds[0].username,
+      email: creds[0].email,
+      full_name: creds[0].full_name,
     };
     localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(admin));
     setIsLoading(false);
 
     // Redirect: force full page reload for state sync
-    window.location.replace("/admin/dashboard");
+    window.location.replace('/admin/dashboard');
   };
 
   return (
