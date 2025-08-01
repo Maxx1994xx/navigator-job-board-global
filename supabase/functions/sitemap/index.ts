@@ -20,59 +20,118 @@ serve(async (req) => {
     )
 
     // Fetch all active jobs
-    const { data: jobs, error } = await supabaseClient
+    const { data: jobs, error: jobsError } = await supabaseClient
       .from('jobs')
       .select('id, updated_at')
       .eq('status', 'active')
       .eq('is_active', true)
 
-    if (error) {
-      console.error('Error fetching jobs:', error)
-      throw error
+    if (jobsError) {
+      console.error('Error fetching jobs:', jobsError)
+      throw jobsError
+    }
+
+    // Fetch all published blogs
+    const { data: blogs, error: blogsError } = await supabaseClient
+      .from('blogs')
+      .select('id, slug, updated_at, category')
+      .eq('status', 'published')
+
+    if (blogsError) {
+      console.error('Error fetching blogs:', blogsError)
+      throw blogsError
     }
 
     const baseUrl = 'https://www.onlinecareernavigator.com'
     const currentDate = new Date().toISOString().split('T')[0]
 
-    // Static pages
-    const staticPages = [
-      { url: '/', priority: '1.0', changefreq: 'daily' },
-      { url: '/about', priority: '0.7', changefreq: 'monthly' },
-      { url: '/contact', priority: '0.7', changefreq: 'monthly' },
-      { url: '/jobs', priority: '0.9', changefreq: 'daily' },
-      { url: '/privacy', priority: '0.5', changefreq: 'yearly' },
-      { url: '/terms', priority: '0.5', changefreq: 'yearly' },
-      { url: '/cookie-policy', priority: '0.5', changefreq: 'yearly' },
+    // Homepage - Highest Priority
+    const homePage = {
+      url: '/',
+      priority: '1.0',
+      changefreq: 'daily',
+      lastmod: currentDate
+    }
+
+    // Main Section Pages - High Priority
+    const mainPages = [
+      { url: '/jobs', priority: '0.9', changefreq: 'daily', lastmod: currentDate },
+      { url: '/blog', priority: '0.8', changefreq: 'daily', lastmod: currentDate },
+      { url: '/about', priority: '0.7', changefreq: 'monthly', lastmod: currentDate },
+      { url: '/contact', priority: '0.7', changefreq: 'monthly', lastmod: currentDate },
     ]
+
+    // Legal Pages - Low Priority
+    const legalPages = [
+      { url: '/privacy', priority: '0.3', changefreq: 'yearly', lastmod: currentDate },
+      { url: '/terms', priority: '0.3', changefreq: 'yearly', lastmod: currentDate },
+      { url: '/cookie-policy', priority: '0.3', changefreq: 'yearly', lastmod: currentDate },
+    ]
+
+    // Blog Category Pages - Medium Priority
+    const blogCategories = blogs && blogs.length > 0
+      ? [...new Set(blogs.map(blog => blog.category))]
+          .filter(Boolean)
+          .map(category => ({
+            url: `/blog/category/${encodeURIComponent(category.toLowerCase())}`,
+            priority: '0.6',
+            changefreq: 'weekly',
+            lastmod: currentDate
+          }))
+      : []
 
     let sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 `
 
-    // Add static pages
-    staticPages.forEach(page => {
+    // Helper function to add URL to sitemap
+    const addUrl = (page) => {
       sitemapXml += `  <url>
     <loc>${baseUrl}${page.url}</loc>
-    <lastmod>${currentDate}</lastmod>
+    <lastmod>${page.lastmod}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
   </url>
 `
-    })
+    }
 
-    // Add job pages
+    // 1. HOMEPAGE - Highest Priority
+    addUrl(homePage)
+
+    // 2. MAIN SECTION PAGES - High Priority
+    mainPages.forEach(addUrl)
+
+    // 3. BLOG CATEGORY PAGES - Medium-High Priority
+    blogCategories.forEach(addUrl)
+
+    // 4. INDIVIDUAL JOB PAGES - Medium Priority
     if (jobs && jobs.length > 0) {
       jobs.forEach(job => {
         const lastmod = new Date(job.updated_at).toISOString().split('T')[0]
-        sitemapXml += `  <url>
-    <loc>${baseUrl}/job/${job.id}</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-`
+        addUrl({
+          url: `/job/${job.id}`,
+          lastmod: lastmod,
+          changefreq: 'weekly',
+          priority: '0.6'
+        })
       })
     }
+
+    // 5. INDIVIDUAL BLOG POSTS - Medium Priority
+    if (blogs && blogs.length > 0) {
+      blogs.forEach(blog => {
+        const lastmod = new Date(blog.updated_at).toISOString().split('T')[0]
+        addUrl({
+          url: `/blog/${blog.slug}`,
+          lastmod: lastmod,
+          changefreq: 'weekly',
+          priority: '0.5'
+        })
+      })
+    }
+
+    // 6. LEGAL PAGES - Lowest Priority
+    legalPages.forEach(addUrl)
 
     sitemapXml += `
 </urlset>`
