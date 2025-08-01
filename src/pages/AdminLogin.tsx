@@ -34,9 +34,6 @@ const AdminLogin = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // No automatic redirects; let the user stay here until a real login
-
-  // Helper: try username, then email
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -45,65 +42,77 @@ const AdminLogin = () => {
     // Clean out all old admin/auth state before login
     cleanupAuthState();
 
-    let usernameOrEmail = identifier.trim();
+    const usernameOrEmail = identifier.trim();
     if (!usernameOrEmail || !password) {
       setError('Please enter a username/email and password.');
       setIsLoading(false);
       return;
     }
 
-    // Try username first
-    let { data: creds, error: rpcError } = await supabase.rpc('verify_admin_credentials', {
-      p_username: usernameOrEmail,
-      p_password: password,
-    });
-
-    // If nothing found and it looks like email, try by email->username lookup
-    if ((!creds || creds.length === 0) && usernameOrEmail.includes('@')) {
-      const { data: userRow } = await supabase
-        .from('admin_users')
-        .select('username')
-        .eq('email', usernameOrEmail)
-        .maybeSingle();
-      if (userRow?.username) {
-        ({ data: creds, error: rpcError } = await supabase.rpc('verify_admin_credentials', {
-          p_username: userRow.username,
-          p_password: password,
-        }));
-      }
+    // Check for hardcoded admin credentials first
+    if (usernameOrEmail === 'admin' && password === 'Pimple1234@') {
+      const admin = {
+        id: 'hardcoded-id-admin',
+        username: 'admin',
+        email: 'abdul@onlinecareernavigator.com',
+        full_name: 'Abdul Moeed',
+      };
+      localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(admin));
+      setIsLoading(false);
+      window.location.replace('/admin/dashboard');
+      return;
     }
 
-    if (rpcError) {
-      // Unexpected backend/RPC error
-      setError("Unexpected error. Please try again.");
-      toast({
-        title: "Login failed",
-        description: "Unexpected server error during login.",
-        variant: "destructive",
+    try {
+      // Try username first
+      let { data: creds, error: rpcError } = await supabase.rpc('verify_admin_credentials', {
+        p_username: usernameOrEmail,
+        p_password: password,
       });
+
+      // If nothing found and it looks like email, try by email->username lookup
+      if ((!creds || creds.length === 0) && usernameOrEmail.includes('@')) {
+        const { data: userRow } = await supabase
+          .from('admin_users')
+          .select('username')
+          .eq('email', usernameOrEmail)
+          .maybeSingle();
+        if (userRow?.username) {
+          ({ data: creds, error: rpcError } = await supabase.rpc('verify_admin_credentials', {
+            p_username: userRow.username,
+            p_password: password,
+          }));
+        }
+      }
+
+      if (rpcError) {
+        console.error('RPC Error:', rpcError);
+        setError('Server error. Please try again.');
+        setIsLoading(false);
+        return;
+      }
+
+      if (!creds || creds.length === 0) {
+        setError('Invalid username/email or password.');
+        setIsLoading(false);
+        return;
+      }
+
+      // Login success: store admin info locally
+      const admin = {
+        id: creds[0].admin_id,
+        username: creds[0].username,
+        email: creds[0].email,
+        full_name: creds[0].full_name,
+      };
+      localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(admin));
       setIsLoading(false);
-      return;
-    }
-
-    if (!creds || creds.length === 0) {
-      setError('Invalid username/email or password.');
+      window.location.replace('/admin/dashboard');
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('An unexpected error occurred. Please try again.');
       setIsLoading(false);
-      // Inputs stay as entered so user can fix and submit again!
-      return;
     }
-
-    // Login success: store admin info locally
-    const admin = {
-      id: creds[0].admin_id,
-      username: creds[0].username,
-      email: creds[0].email,
-      full_name: creds[0].full_name,
-    };
-    localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(admin));
-    setIsLoading(false);
-
-    // Redirect: force full page reload for state sync
-    window.location.replace('/admin/dashboard');
   };
 
   return (

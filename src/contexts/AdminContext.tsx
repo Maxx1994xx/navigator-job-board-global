@@ -34,56 +34,14 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     // Check if admin info exists in localStorage
     const storedAdmin = localStorage.getItem('adminUser');
     if (storedAdmin) {
-      setAdminUser(JSON.parse(storedAdmin));
-      setLoading(false);
-      return;
-    }
-
-    // Check current session and verify if user is admin
-    const checkAdminSession = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        
-        if (session?.user) {
-          // Verify if this user exists in admin_users table
-          const { data: adminData, error } = await supabase
-            .from('admin_users')
-            .select('id, username, email, full_name')
-            .eq('id', session.user.id)
-            .single();
-
-          if (adminData && !error) {
-            setAdminUser(adminData);
-          }
-        }
+        setAdminUser(JSON.parse(storedAdmin));
       } catch (error) {
-        console.error('Error checking admin session:', error);
-      } finally {
-        setLoading(false);
+        console.error('Error parsing stored admin data:', error);
+        localStorage.removeItem('adminUser');
       }
-    };
-
-    checkAdminSession();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_OUT') {
-        setAdminUser(null);
-      } else if (event === 'SIGNED_IN' && session?.user) {
-        // Verify admin status when signing in
-        const { data: adminData, error } = await supabase
-          .from('admin_users')
-          .select('id, username, email, full_name')
-          .eq('id', session.user.id)
-          .single();
-
-        if (adminData && !error) {
-          setAdminUser(adminData);
-        }
-      }
-    });
-
-    return () => subscription.unsubscribe();
+    }
+    setLoading(false);
   }, []);
 
   const signIn = async (username: string, password: string) => {
