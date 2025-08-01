@@ -35,7 +35,7 @@ serve(async (req) => {
     const { data: blogs, error: blogsError } = await supabaseClient
       .from('blogs')
       .select('id, slug, updated_at, category')
-      .eq('status', 'published')
+      .eq('is_published', true)
 
     if (blogsError) {
       console.error('Error fetching blogs:', blogsError)
