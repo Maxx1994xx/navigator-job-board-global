@@ -22,9 +22,9 @@ serve(async (req) => {
     // Fetch all active jobs
     const { data: jobs, error: jobsError } = await supabaseClient
       .from('jobs')
-      .select('id, updated_at, title, company')
+      .select('id, updated_at')
+      .eq('status', 'active')
       .eq('is_active', true)
-      .not('status', 'eq', 'inactive')
 
     if (jobsError) {
       console.error('Error fetching jobs:', jobsError)
@@ -82,7 +82,6 @@ serve(async (req) => {
 
     let sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- HOMEPAGE -->
 `
 
     // Helper function to add URL to sitemap
@@ -100,24 +99,13 @@ serve(async (req) => {
     addUrl(homePage)
 
     // 2. MAIN SECTION PAGES - High Priority
-    sitemapXml += `
-  <!-- MAIN SECTION PAGES -->
-`
     mainPages.forEach(addUrl)
 
     // 3. BLOG CATEGORY PAGES - Medium-High Priority
-    if (blogCategories.length > 0) {
-      sitemapXml += `
-  <!-- BLOG CATEGORY PAGES -->
-`
-      blogCategories.forEach(addUrl)
-    }
+    blogCategories.forEach(addUrl)
 
     // 4. INDIVIDUAL JOB PAGES - Medium Priority
     if (jobs && jobs.length > 0) {
-      sitemapXml += `
-  <!-- INDIVIDUAL JOB PAGES (${jobs.length} jobs) -->
-`
       jobs.forEach(job => {
         const lastmod = new Date(job.updated_at).toISOString().split('T')[0]
         addUrl({
@@ -131,9 +119,6 @@ serve(async (req) => {
 
     // 5. INDIVIDUAL BLOG POSTS - Medium Priority
     if (blogs && blogs.length > 0) {
-      sitemapXml += `
-  <!-- INDIVIDUAL BLOG POSTS (${blogs.length} posts) -->
-`
       blogs.forEach(blog => {
         const lastmod = new Date(blog.updated_at).toISOString().split('T')[0]
         addUrl({
@@ -146,9 +131,6 @@ serve(async (req) => {
     }
 
     // 6. LEGAL PAGES - Lowest Priority
-    sitemapXml += `
-  <!-- LEGAL PAGES -->
-`
     legalPages.forEach(addUrl)
 
     sitemapXml += `
