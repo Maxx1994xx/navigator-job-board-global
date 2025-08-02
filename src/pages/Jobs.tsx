@@ -129,121 +129,119 @@ const Jobs = () => {
       />
       <Header />
       
-      {/* Search Header */}
-      <section className="bg-white shadow-sm border-b">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-col lg:flex-row gap-4">
-            {/* Main Search */}
-            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                <Input
-                  placeholder="Job title, keywords, or company"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 h-12 text-base"
-                />
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+              Find Your Dream Job
+            </h1>
+            <p className="text-xl text-blue-100 max-w-3xl mx-auto">
+              Discover thousands of job opportunities from top companies worldwide
+            </p>
+          </div>
+
+          {/* Search Filters */}
+          <Card className="max-w-4xl mx-auto">
+            <CardContent className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <div className="relative">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Input
+                    placeholder="Job title or keywords"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+                
+                <div className="relative">
+                  <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Input
+                    placeholder="Location"
+                    value={locationFilter}
+                    onChange={(e) => setLocationFilter(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+
+                <Select value={typeFilter} onValueChange={setTypeFilter}>
+                  <SelectTrigger>
+                    <Briefcase className="h-4 w-4 mr-2" />
+                    <SelectValue placeholder="Job Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Full-time">Full-time</SelectItem>
+                    <SelectItem value="Part-time">Part-time</SelectItem>
+                    <SelectItem value="Contract">Contract</SelectItem>
+                    <SelectItem value="Internship">Internship</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                  <SelectTrigger>
+                    <Filter className="h-4 w-4 mr-2" />
+                    <SelectValue placeholder="Category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Technology">Technology</SelectItem>
+                    <SelectItem value="Marketing">Marketing</SelectItem>
+                    <SelectItem value="Sales">Sales</SelectItem>
+                    <SelectItem value="Design">Design</SelectItem>
+                    <SelectItem value="Finance">Finance</SelectItem>
+                    <SelectItem value="Healthcare">Healthcare</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               
-              <div className="relative">
-                <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                <Input
-                  placeholder="City, state, zip code, or country"
-                  value={locationFilter}
-                  onChange={(e) => setLocationFilter(e.target.value)}
-                  className="pl-10 h-12 text-base"
-                />
-              </div>
-            </div>
-
-            {/* Filters */}
-            <div className="flex gap-3">
-              <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger className="h-12 w-32">
-                  <SelectValue placeholder="Job Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">All Types</SelectItem>
-                  <SelectItem value="Full-time">Full-time</SelectItem>
-                  <SelectItem value="Part-time">Part-time</SelectItem>
-                  <SelectItem value="Contract">Contract</SelectItem>
-                  <SelectItem value="Internship">Internship</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                <SelectTrigger className="h-12 w-32">
-                  <SelectValue placeholder="Category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">All Categories</SelectItem>
-                  <SelectItem value="Technology">Technology</SelectItem>
-                  <SelectItem value="Marketing">Marketing</SelectItem>
-                  <SelectItem value="Sales">Sales</SelectItem>
-                  <SelectItem value="Design">Design</SelectItem>
-                  <SelectItem value="Finance">Finance</SelectItem>
-                  <SelectItem value="Healthcare">Healthcare</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          {/* Results Summary */}
-          <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
-            <div className="flex items-center gap-4">
-              <p className="text-sm text-gray-600">
-                <span className="font-semibold">{filteredJobs.length}</span> jobs found
-              </p>
-              {(searchTerm || locationFilter || typeFilter || categoryFilter) && (
-                <Button variant="ghost" size="sm" onClick={clearFilters} className="text-blue-600">
-                  Clear all filters
+              <div className="flex justify-between items-center">
+                <p className="text-sm text-gray-600">
+                  {filteredJobs.length} jobs found
+                </p>
+                <Button variant="outline" onClick={clearFilters}>
+                  Clear Filters
                 </Button>
-              )}
-            </div>
-          </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
       {/* Jobs List */}
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {loading ? (
-          <div className="space-y-4">
-            {Array(8).fill(0).map((_, index) => (
-              <JobCardSkeleton key={index} />
-            ))}
-          </div>
-        ) : filteredJobs.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="bg-white rounded-lg shadow-sm p-12">
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {loading ? (
+            <div className="grid gap-6">
+              {Array(6).fill(0).map((_, index) => (
+                <JobCardSkeleton key={index} />
+              ))}
+            </div>
+          ) : filteredJobs.length === 0 ? (
+            <div className="text-center py-12">
               <Briefcase className="h-16 w-16 text-gray-300 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-gray-700 mb-2">No jobs found</h3>
-              <p className="text-gray-500 mb-6">
-                Try adjusting your search terms or filters to find more opportunities
-              </p>
-              <Button onClick={clearFilters} variant="outline">
-                Clear all filters
-              </Button>
+              <p className="text-gray-500">Try adjusting your search criteria</p>
             </div>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {filteredJobs.map((job) => (
-              <OptimizedJobCard
-                key={job.id}
-                id={job.id}
-                title={job.title}
-                company={job.company}
-                location={job.location}
-                type={job.type}
-                category={job.category}
-                description={job.description}
-                salary={job.salary}
-                postedDate={formatPostedDate(job.created_at)}
-              />
-            ))}
-          </div>
-        )}
-      </main>
+          ) : (
+            <div className="grid gap-6">
+              {filteredJobs.map((job) => (
+                <OptimizedJobCard
+                  key={job.id}
+                  id={job.id}
+                  title={job.title}
+                  company={job.company}
+                  location={job.location}
+                  type={job.type}
+                  category={job.category}
+                  description={job.description}
+                  salary={job.salary}
+                  postedDate={formatPostedDate(job.created_at)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
 
       <Footer />
     </div>
