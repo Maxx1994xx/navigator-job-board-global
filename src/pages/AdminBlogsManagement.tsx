@@ -119,11 +119,13 @@ const AdminBlogsManagement: React.FC = () => {
   };
 
   const generateSlug = (title: string) => {
+    if (!title) return '';
     return title
       .toLowerCase()
       .replace(/[^a-z0-9 -]/g, '')
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '')
       .trim();
   };
 
@@ -139,10 +141,60 @@ const AdminBlogsManagement: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Validation
+    if (!formData.title.trim()) {
+      toast({
+        title: "Error",
+        description: "Title is required",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!formData.excerpt.trim()) {
+      toast({
+        title: "Error",
+        description: "Excerpt is required",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!formData.content.trim()) {
+      toast({
+        title: "Error",
+        description: "Content is required",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!formData.category) {
+      toast({
+        title: "Error",
+        description: "Category is required",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Ensure slug is generated
+    const finalSlug = formData.slug || generateSlug(formData.title);
+    if (!finalSlug) {
+      toast({
+        title: "Error",
+        description: "Unable to generate URL slug from title",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     try {
       const blogData = {
         ...formData,
-        tags: formData.tags.length > 0 ? formData.tags : []
+        slug: finalSlug,
+        tags: formData.tags.length > 0 ? formData.tags : [],
+        html_content: formData.content // Store the rich text content as HTML
       };
 
       if (editingBlog) {
@@ -176,7 +228,7 @@ const AdminBlogsManagement: React.FC = () => {
       console.error('Error saving blog:', error);
       toast({
         title: "Error",
-        description: "Failed to save blog",
+        description: error instanceof Error ? error.message : "Failed to save blog",
         variant: "destructive"
       });
     }
