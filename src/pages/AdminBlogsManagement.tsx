@@ -226,9 +226,10 @@ const AdminBlogsManagement: React.FC = () => {
       fetchBlogs();
     } catch (error) {
       console.error('Error saving blog:', error);
+      console.error('Error details:', JSON.stringify(error, null, 2));
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to save blog",
+        description: error instanceof Error ? error.message : "Failed to save blog. Please try again.",
         variant: "destructive"
       });
     }
