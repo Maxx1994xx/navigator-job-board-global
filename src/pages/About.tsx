@@ -1,12 +1,18 @@
 
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import SEO from '@/components/SEO';
 import { Card, CardContent } from '@/components/ui/card';
 import { Users, Globe, Target, Award } from 'lucide-react';
 
 const About = () => {
   return (
     <div className="min-h-screen bg-gray-50">
+      <SEO 
+        title="About Us - Online Career Navigator | Connecting Talent with Opportunities"
+        description="Learn about Online Career Navigator's mission to connect professionals with exceptional career opportunities across Gulf countries, USA, and UK. Quality-first job search platform."
+        keywords="about us, career platform, job search, Gulf jobs, USA jobs, UK jobs, career opportunities, professional recruitment"
+      />
       <Header />
       
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

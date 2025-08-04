@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import SEO from '@/components/SEO';
 import { supabase } from '@/integrations/supabase/client';
 
 interface Job {
@@ -98,6 +99,12 @@ const JobDetail = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <SEO 
+        title={`${job.title} at ${job.company} - ${job.location} | Online Career Navigator`}
+        description={`${job.title} position at ${job.company} in ${job.location}. ${job.type} role in ${job.category}. Apply now through Online Career Navigator.`}
+        keywords={`${job.title}, ${job.company}, ${job.location}, ${job.category}, ${job.type}, job opportunity, career`}
+        type="article"
+      />
       <Header />
       
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

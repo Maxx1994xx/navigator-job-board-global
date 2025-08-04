@@ -168,8 +168,10 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <SEO 
-        title="Online Career Navigator - Find Jobs in Gulf, USA & UK"
-        description="Discover job opportunities across Gulf countries, USA, and UK. Navigate your career journey with Online Career Navigator - your trusted job search partner."
+        title="Online Career Navigator - Find Jobs in Gulf, USA & UK | Premier Job Search Platform"
+        description="Discover thousands of verified job opportunities across Gulf countries (UAE, Saudi Arabia, Qatar, Kuwait), USA, and UK. Connect with top employers and advance your career with our premium job search platform."
+        keywords="jobs in gulf, jobs in UAE, jobs in Saudi Arabia, jobs in USA, jobs in UK, career opportunities, job search, employment, recruitment, premium jobs"
+        image="https://onlinecareernavigator.com/placeholder.svg"
       />
       <Header />
       

@@ -1,11 +1,17 @@
 
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import SEO from '@/components/SEO';
 import { Card, CardContent } from '@/components/ui/card';
 
 const Privacy = () => {
   return (
     <div className="min-h-screen bg-gray-50">
+      <SEO 
+        title="Privacy Policy - Online Career Navigator | Data Protection & Privacy"
+        description="Learn how Online Career Navigator protects your personal information and privacy. Comprehensive privacy policy covering data collection, usage, and your rights."
+        keywords="privacy policy, data protection, personal information, privacy rights, GDPR, data security"
+      />
       <Header />
       
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

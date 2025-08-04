@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import SEO from '@/components/SEO';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,6 +38,11 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <SEO 
+        title="Contact Us - Online Career Navigator | Get in Touch"
+        description="Contact Online Career Navigator for job search assistance, career guidance, or business inquiries. Serving Gulf countries, USA, and UK. 24-48 hour response time."
+        keywords="contact, job search help, career assistance, support, Gulf jobs, USA jobs, UK jobs, career guidance"
+      />
       <Header />
       
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

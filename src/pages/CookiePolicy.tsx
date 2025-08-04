@@ -1,11 +1,17 @@
 
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import SEO from '@/components/SEO';
 import { Card, CardContent } from '@/components/ui/card';
 
 const CookiePolicy = () => {
   return (
     <div className="min-h-screen bg-gray-50">
+      <SEO 
+        title="Cookie Policy - Online Career Navigator | Cookie Usage & Settings"
+        description="Learn about Online Career Navigator's cookie policy, including how we use cookies, third-party cookies, and how to control your cookie preferences."
+        keywords="cookie policy, cookies, website tracking, privacy settings, analytics cookies, advertising cookies"
+      />
       <Header />
       
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

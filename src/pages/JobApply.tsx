@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { Timer } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Job {
@@ -103,6 +104,12 @@ const JobApply = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <SEO 
+        title={`Apply for ${job.title} at ${job.company} | Online Career Navigator`}
+        description={`Apply for ${job.title} position at ${job.company} in ${job.location}. Submit your application through Online Career Navigator for this ${job.type} opportunity.`}
+        keywords={`apply for job, ${job.title}, ${job.company}, ${job.location}, job application, career opportunity`}
+        type="article"
+      />
       <Header />
       <div className="max-w-2xl mx-auto px-4 py-10">
         <Card>
