@@ -29,37 +29,46 @@ const SEO = ({ title, description, keywords, image, type = 'website' }: SEOProps
 
     // Update meta description if provided
     if (description) {
-      const metaDescription = document.querySelector('meta[name="description"]') as HTMLMetaElement;
+      let metaDescription = document.querySelector('meta[name="description"]') as HTMLMetaElement;
       if (metaDescription) {
         metaDescription.content = description;
+      } else {
+        metaDescription = document.createElement('meta');
+        metaDescription.name = 'description';
+        metaDescription.content = description;
+        document.head.appendChild(metaDescription);
       }
     }
 
     // Update meta keywords if provided
     if (keywords) {
       let metaKeywords = document.querySelector('meta[name="keywords"]') as HTMLMetaElement;
-      if (!metaKeywords) {
+      if (metaKeywords) {
+        metaKeywords.content = keywords;
+      } else {
         metaKeywords = document.createElement('meta');
         metaKeywords.name = 'keywords';
+        metaKeywords.content = keywords;
         document.head.appendChild(metaKeywords);
       }
-      metaKeywords.content = keywords;
     }
 
-    // Update Open Graph tags
+    // Update Open Graph and Twitter tags
     const updateOrCreateMeta = (property: string, content: string, isProperty = true) => {
       const selector = isProperty ? `meta[property="${property}"]` : `meta[name="${property}"]`;
       let meta = document.querySelector(selector) as HTMLMetaElement;
-      if (!meta) {
+      if (meta) {
+        meta.content = content;
+      } else {
         meta = document.createElement('meta');
         if (isProperty) {
           meta.setAttribute('property', property);
         } else {
           meta.setAttribute('name', property);
         }
+        meta.content = content;
         document.head.appendChild(meta);
       }
-      meta.content = content;
     };
 
     if (title) {
