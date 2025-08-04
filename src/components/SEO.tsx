@@ -24,19 +24,24 @@ const SEO = ({ title, description, keywords, image, type = 'website' }: SEOProps
 
     // Update title if provided
     if (title) {
+      console.log('SEO: Updating title to:', title);
       document.title = title;
+      console.log('SEO: Document title is now:', document.title);
     }
 
     // Update meta description if provided
     if (description) {
+      console.log('SEO: Updating description to:', description);
       let metaDescription = document.querySelector('meta[name="description"]') as HTMLMetaElement;
       if (metaDescription) {
         metaDescription.content = description;
+        console.log('SEO: Updated existing meta description:', metaDescription.content);
       } else {
         metaDescription = document.createElement('meta');
         metaDescription.name = 'description';
         metaDescription.content = description;
         document.head.appendChild(metaDescription);
+        console.log('SEO: Created new meta description:', metaDescription.content);
       }
     }
 
