@@ -15,6 +15,8 @@ const SEO = ({ title, description, keywords, image, type = 'website' }: SEOProps
   console.log('SEO Component rendered with:', { title, description, keywords, path: location.pathname });
 
   useEffect(() => {
+    console.log('SEO useEffect running with:', { title, description, path: location.pathname });
+    
     // Update canonical URL based on current path
     const baseUrl = 'https://onlinecareernavigator.com';
     const canonicalUrl = `${baseUrl}${location.pathname}${location.search}`;
@@ -24,11 +26,17 @@ const SEO = ({ title, description, keywords, image, type = 'website' }: SEOProps
       canonicalLink.href = canonicalUrl;
     }
 
-    // Update title if provided
+    // Update title if provided - force it to update
     if (title) {
       console.log('SEO: Updating title to:', title);
       document.title = title;
       console.log('SEO: Document title is now:', document.title);
+      
+      // Also update the title meta tag if it exists
+      let titleMeta = document.querySelector('title');
+      if (titleMeta) {
+        titleMeta.textContent = title;
+      }
     }
 
       // Update meta description if provided
