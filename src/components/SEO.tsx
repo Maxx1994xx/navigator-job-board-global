@@ -11,25 +11,25 @@ interface SEOProps {
 
 const SEO = ({ title, description, keywords, image, type = 'website' }: SEOProps) => {
   const location = useLocation();
+  
+  console.log('SEO Component rendered with:', { title, description, keywords, path: location.pathname });
 
   useEffect(() => {
-    // Small delay to ensure DOM is ready
-    const timeoutId = setTimeout(() => {
-      // Update canonical URL based on current path
-      const baseUrl = 'https://onlinecareernavigator.com';
-      const canonicalUrl = `${baseUrl}${location.pathname}${location.search}`;
-      
-      const canonicalLink = document.getElementById('canonical-url') as HTMLLinkElement;
-      if (canonicalLink) {
-        canonicalLink.href = canonicalUrl;
-      }
+    // Update canonical URL based on current path
+    const baseUrl = 'https://onlinecareernavigator.com';
+    const canonicalUrl = `${baseUrl}${location.pathname}${location.search}`;
+    
+    const canonicalLink = document.getElementById('canonical-url') as HTMLLinkElement;
+    if (canonicalLink) {
+      canonicalLink.href = canonicalUrl;
+    }
 
-      // Update title if provided
-      if (title) {
-        console.log('SEO: Updating title to:', title);
-        document.title = title;
-        console.log('SEO: Document title is now:', document.title);
-      }
+    // Update title if provided
+    if (title) {
+      console.log('SEO: Updating title to:', title);
+      document.title = title;
+      console.log('SEO: Document title is now:', document.title);
+    }
 
       // Update meta description if provided
       if (description) {
@@ -96,9 +96,6 @@ const SEO = ({ title, description, keywords, image, type = 'website' }: SEOProps
         updateOrCreateMeta('og:image', image);
         updateOrCreateMeta('twitter:image', image, false);
       }
-    }, 0);
-
-    return () => clearTimeout(timeoutId);
   }, [location.pathname, location.search, title, description, keywords, image, type]);
 
   return null;
