@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
 
 interface SEOProps {
@@ -12,101 +13,34 @@ interface SEOProps {
 const SEO = ({ title, description, keywords, image, type = 'website' }: SEOProps) => {
   const location = useLocation();
   
-  console.log('SEO Component rendered with:', { title, description, keywords, path: location.pathname });
+  // Update canonical URL based on current path
+  const baseUrl = 'https://onlinecareernavigator.com';
+  const canonicalUrl = `${baseUrl}${location.pathname}${location.search}`;
 
-  useEffect(() => {
-    console.log('SEO useEffect running with:', { title, description, path: location.pathname });
-    
-    // Update canonical URL based on current path
-    const baseUrl = 'https://onlinecareernavigator.com';
-    const canonicalUrl = `${baseUrl}${location.pathname}${location.search}`;
-    
-    const canonicalLink = document.getElementById('canonical-url') as HTMLLinkElement;
-    if (canonicalLink) {
-      canonicalLink.href = canonicalUrl;
-    }
-
-    // Update title if provided - force it to update
-    if (title) {
-      console.log('SEO: Updating title to:', title);
-      document.title = title;
-      console.log('SEO: Document title is now:', document.title);
+  return (
+    <Helmet>
+      {/* Standard metadata tags */}
+      {title && <title>{title}</title>}
+      {description && <meta name="description" content={description} />}
+      {keywords && <meta name="keywords" content={keywords} />}
       
-      // Also update the title meta tag if it exists
-      let titleMeta = document.querySelector('title');
-      if (titleMeta) {
-        titleMeta.textContent = title;
-      }
-    }
-
-      // Update meta description if provided
-      if (description) {
-        console.log('SEO: Updating description to:', description);
-        let metaDescription = document.querySelector('meta[name="description"]') as HTMLMetaElement;
-        if (metaDescription) {
-          metaDescription.content = description;
-          console.log('SEO: Updated existing meta description:', metaDescription.content);
-        } else {
-          metaDescription = document.createElement('meta');
-          metaDescription.name = 'description';
-          metaDescription.content = description;
-          document.head.appendChild(metaDescription);
-          console.log('SEO: Created new meta description:', metaDescription.content);
-        }
-      }
-
-      // Update meta keywords if provided
-      if (keywords) {
-        let metaKeywords = document.querySelector('meta[name="keywords"]') as HTMLMetaElement;
-        if (metaKeywords) {
-          metaKeywords.content = keywords;
-        } else {
-          metaKeywords = document.createElement('meta');
-          metaKeywords.name = 'keywords';
-          metaKeywords.content = keywords;
-          document.head.appendChild(metaKeywords);
-        }
-      }
-
-      // Update Open Graph and Twitter tags
-      const updateOrCreateMeta = (property: string, content: string, isProperty = true) => {
-        const selector = isProperty ? `meta[property="${property}"]` : `meta[name="${property}"]`;
-        let meta = document.querySelector(selector) as HTMLMetaElement;
-        if (meta) {
-          meta.content = content;
-        } else {
-          meta = document.createElement('meta');
-          if (isProperty) {
-            meta.setAttribute('property', property);
-          } else {
-            meta.setAttribute('name', property);
-          }
-          meta.content = content;
-          document.head.appendChild(meta);
-        }
-      };
-
-      if (title) {
-        updateOrCreateMeta('og:title', title);
-        updateOrCreateMeta('twitter:title', title, false);
-      }
-
-      if (description) {
-        updateOrCreateMeta('og:description', description);
-        updateOrCreateMeta('twitter:description', description, false);
-      }
-
-      updateOrCreateMeta('og:url', canonicalUrl);
-      updateOrCreateMeta('og:type', type);
-      updateOrCreateMeta('twitter:card', 'summary_large_image', false);
-
-      if (image) {
-        updateOrCreateMeta('og:image', image);
-        updateOrCreateMeta('twitter:image', image, false);
-      }
-  }, [location.pathname, location.search, title, description, keywords, image, type]);
-
-  return null;
+      {/* Canonical URL */}
+      <link rel="canonical" href={canonicalUrl} />
+      
+      {/* Open Graph tags */}
+      {title && <meta property="og:title" content={title} />}
+      {description && <meta property="og:description" content={description} />}
+      <meta property="og:url" content={canonicalUrl} />
+      <meta property="og:type" content={type} />
+      {image && <meta property="og:image" content={image} />}
+      
+      {/* Twitter Card tags */}
+      <meta name="twitter:card" content="summary_large_image" />
+      {title && <meta name="twitter:title" content={title} />}
+      {description && <meta name="twitter:description" content={description} />}
+      {image && <meta name="twitter:image" content={image} />}
+    </Helmet>
+  );
 };
 
 export default SEO;
