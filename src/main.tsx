@@ -1,14 +1,25 @@
 
 import React from 'react';
-import { createRoot } from 'react-dom/client';
+import { createRoot, hydrateRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import App from './App.tsx';
 import './index.css';
 
-createRoot(document.getElementById("root")!).render(
+const root = document.getElementById("root")!;
+const app = (
   <React.StrictMode>
     <HelmetProvider>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </HelmetProvider>
   </React.StrictMode>
 );
+
+// Use hydration for SSR in production
+if (import.meta.env.PROD) {
+  hydrateRoot(root, app);
+} else {
+  createRoot(root).render(app);
+}

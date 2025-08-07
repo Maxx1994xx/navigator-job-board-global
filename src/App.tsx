@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { AdminProvider } from "./contexts/AdminContext";
 import ScrollToTop from "./components/ScrollToTop";
@@ -51,49 +51,47 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <BrowserRouter>
-            <ScrollToTop />
-            <Suspense fallback={<LoadingSpinner size="large" />}>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/jobs" element={<Jobs />} />
-                <Route path="/job/:id" element={<JobDetail />} />
-                <Route path="/job/:id/apply" element={<JobApply />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/privacy" element={<Privacy />} />
-                <Route path="/terms" element={<Terms />} />
-                <Route path="/cookie-policy" element={<CookiePolicy />} />
-                <Route path="/blog" element={<Blog />} />
-                <Route path="/blog/category/:category" element={<BlogCategory />} />
-                <Route path="/blog/:slug" element={<BlogPost />} />
-                
-                <Route path="/admin/login" element={<AdminLogin />} />
-                <Route path="/admin/dashboard" element={
-                  <AdminProtectedRoute>
-                    <AdminDashboard />
-                  </AdminProtectedRoute>
-                } />
-                <Route path="/admin/jobs" element={
-                  <AdminProtectedRoute>
-                    <AdminJobsManagement />
-                  </AdminProtectedRoute>
-                } />
-                <Route path="/admin/users" element={
-                  <AdminProtectedRoute>
-                    <AdminUsersManagement />
-                  </AdminProtectedRoute>
-                } />
-                <Route path="/admin/blogs" element={
-                  <AdminProtectedRoute>
-                    <AdminBlogsManagement />
-                  </AdminProtectedRoute>
-                } />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
-            <CookieBanner />
-          </BrowserRouter>
+          <ScrollToTop />
+          <Suspense fallback={<LoadingSpinner size="large" />}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/jobs" element={<Jobs />} />
+              <Route path="/job/:id" element={<JobDetail />} />
+              <Route path="/job/:id/apply" element={<JobApply />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/cookie-policy" element={<CookiePolicy />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/category/:category" element={<BlogCategory />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
+              
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin/dashboard" element={
+                <AdminProtectedRoute>
+                  <AdminDashboard />
+                </AdminProtectedRoute>
+              } />
+              <Route path="/admin/jobs" element={
+                <AdminProtectedRoute>
+                  <AdminJobsManagement />
+                </AdminProtectedRoute>
+              } />
+              <Route path="/admin/users" element={
+                <AdminProtectedRoute>
+                  <AdminUsersManagement />
+                </AdminProtectedRoute>
+              } />
+              <Route path="/admin/blogs" element={
+                <AdminProtectedRoute>
+                  <AdminBlogsManagement />
+                </AdminProtectedRoute>
+              } />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+          <CookieBanner />
         </TooltipProvider>
       </AdminProvider>
     </AuthProvider>
