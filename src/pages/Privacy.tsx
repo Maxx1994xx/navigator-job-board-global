@@ -125,6 +125,11 @@ const Privacy = () => {
               <p>Email: privacy@onlinecareernavigator.com</p>
               <p>Website: onlinecareernavigator.com</p>
             </div>
+            <p className="text-gray-700 mt-6">
+              <em>
+                This Site is affiliated with Monumetric (dba for The Blogger Network, LLC) for the purposes of placing advertising on the Site, and Monumetric will collect and use certain data for advertising purposes. To learn more about Monumetric’s data usage, click here: <a target="_blank" href="http://www.monumetric.com/publisher-advertising-privacy" rel="noopener noreferrer">Publisher Advertising Privacy</a>
+              </em>
+            </p>
           </CardContent>
         </Card>
       </div>
