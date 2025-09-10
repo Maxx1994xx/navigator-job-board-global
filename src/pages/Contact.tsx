@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
@@ -51,7 +52,7 @@ const Contact = () => {
           <h1 className="text-4xl font-bold text-gray-900 mb-6">Contact Us</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Have questions about our services or need assistance with your job search? 
-            We're here to help you navigate your career journey.
+            We're here to help you navigate your career journey. Explore our <Link to="/jobs" className="text-blue-600 hover:text-blue-800 underline transition-colors">job listings</Link>, read our <Link to="/blog" className="text-blue-600 hover:text-blue-800 underline transition-colors">career advice</Link>, or learn <Link to="/about" className="text-blue-600 hover:text-blue-800 underline transition-colors">about our mission</Link>.
           </p>
         </div>
 
@@ -101,7 +102,7 @@ const Contact = () => {
             <Card>
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Connect With Us</h3>
-                <p className="text-gray-700 mb-4">Follow us on social media for job updates and career tips:</p>
+                <p className="text-gray-700 mb-4">Follow us on social media for job updates and career tips. Also check our <Link to="/privacy" className="text-blue-600 hover:text-blue-800 underline transition-colors">privacy policy</Link> and <Link to="/terms" className="text-blue-600 hover:text-blue-800 underline transition-colors">terms of service</Link>:</p>
                 <div className="flex space-x-4">
                   <a 
                     href="https://www.youtube.com/@OnlineCareerNavigator" 
@@ -218,7 +219,7 @@ const Contact = () => {
                     </h3>
                     <p className="text-gray-700">
                       Simply click on any job listing to view the full details and application instructions. 
-                      You can apply directly through the contact email provided for each position.
+                      You can apply directly through the contact email provided for each position. <Link to="/jobs" className="text-blue-600 hover:text-blue-800 underline transition-colors">Browse all available positions</Link> or read our <Link to="/blog" className="text-blue-600 hover:text-blue-800 underline transition-colors">application tips</Link>.
                     </p>
                   </div>
                   
@@ -248,7 +249,7 @@ const Contact = () => {
                     </h3>
                     <p className="text-gray-700">
                       No, our platform is completely free for job seekers. We never charge individuals 
-                      for accessing job listings or applying for positions.
+                      for accessing job listings or applying for positions. Learn more <Link to="/about" className="text-blue-600 hover:text-blue-800 underline transition-colors">about our services</Link> and review our <Link to="/terms" className="text-blue-600 hover:text-blue-800 underline transition-colors">terms of service</Link> for complete details.
                     </p>
                   </div>
                 </div>

@@ -1,4 +1,5 @@
 
+import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
@@ -24,7 +25,9 @@ const Terms = () => {
           <CardContent className="p-8 prose prose-gray max-w-none">
             <p className="text-lg text-gray-700 mb-6">
               Welcome to Online Career Navigator. These Terms of Service govern your use of our website 
-              and services. By accessing or using our platform, you agree to be bound by these terms.
+              and services. By accessing or using our platform, you agree to be bound by these terms. 
+              Please also review our <Link to="/privacy" className="text-blue-600 hover:text-blue-800 underline transition-colors">Privacy Policy</Link>. 
+              For questions, visit our <Link to="/contact" className="text-blue-600 hover:text-blue-800 underline transition-colors">Contact page</Link> or explore our <Link to="/about" className="text-blue-600 hover:text-blue-800 underline transition-colors">About section</Link>.
             </p>
 
             <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Acceptance of Terms</h2>
@@ -125,12 +128,20 @@ const Terms = () => {
 
             <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Contact Information</h2>
             <p className="text-gray-700">
-              If you have any questions about these Terms of Service, please contact us at:
+              If you have any questions about these Terms of Service, please <Link to="/contact" className="text-blue-600 hover:text-blue-800 underline transition-colors">contact us</Link> or email us at:
             </p>
             <div className="mt-4 p-4 bg-gray-100 rounded-lg">
               <p className="font-semibold">Online Career Navigator</p>
               <p>Email: legal@onlinecareernavigator.com</p>
               <p>Website: onlinecareernavigator.com</p>
+            </div>
+            <div className="mt-4 text-center">
+              <p className="text-gray-600">
+                <Link to="/" className="text-blue-600 hover:text-blue-800 underline transition-colors">Return to Homepage</Link> | 
+                <Link to="/privacy" className="text-blue-600 hover:text-blue-800 underline transition-colors ml-2">Privacy Policy</Link> | 
+                <Link to="/about" className="text-blue-600 hover:text-blue-800 underline transition-colors ml-2">About Us</Link> | 
+                <Link to="/jobs" className="text-blue-600 hover:text-blue-800 underline transition-colors ml-2">Browse Jobs</Link>
+              </p>
             </div>
           </CardContent>
         </Card>

@@ -1,4 +1,5 @@
 
+import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
@@ -21,7 +22,7 @@ const About = () => {
           <h1 className="text-4xl font-bold text-gray-900 mb-6">About Online Career Navigator</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             We're dedicated to connecting talented professionals with exceptional career opportunities 
-            across Gulf countries, USA, and UK. Your career journey is our priority.
+            across Gulf countries, USA, and UK. Your career journey is our priority. Explore our <Link to="/jobs" className="text-blue-600 hover:text-blue-800 underline transition-colors">job listings</Link>, read our <Link to="/blog" className="text-blue-600 hover:text-blue-800 underline transition-colors">career guidance blog</Link>, or <Link to="/contact" className="text-blue-600 hover:text-blue-800 underline transition-colors">get in touch</Link> with our team.
           </p>
         </div>
 
@@ -37,7 +38,7 @@ const About = () => {
             <p className="text-gray-700 leading-relaxed">
               Our platform serves as a comprehensive career hub, specializing in opportunities across some of 
               the world's most dynamic job markets including the Gulf Cooperation Council (GCC) countries, 
-              United States, and United Kingdom.
+              United States, and United Kingdom. Browse <Link to="/jobs?category=Technology" className="text-blue-600 hover:text-blue-800 underline transition-colors">technology positions</Link>, <Link to="/jobs?category=Healthcare" className="text-blue-600 hover:text-blue-800 underline transition-colors">healthcare roles</Link>, or <Link to="/jobs?category=Finance" className="text-blue-600 hover:text-blue-800 underline transition-colors">finance opportunities</Link> across these regions.
             </p>
           </CardContent>
         </Card>
@@ -114,7 +115,7 @@ const About = () => {
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Regional Expertise</h3>
                 <p className="text-gray-700">
                   Our deep understanding of Gulf, American, and British job markets helps you navigate 
-                  different employment landscapes effectively.
+                  different employment landscapes effectively. Explore opportunities in <Link to="/jobs?country=UAE" className="text-blue-600 hover:text-blue-800 underline transition-colors">UAE</Link>, <Link to="/jobs?country=USA" className="text-blue-600 hover:text-blue-800 underline transition-colors">USA</Link>, or <Link to="/jobs?country=UK" className="text-blue-600 hover:text-blue-800 underline transition-colors">UK</Link>. For market insights, visit <a href="https://www.indeed.com/career-guide" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline transition-colors">Indeed Career Guide</a> and <a href="https://www.monster.com/career-advice" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline transition-colors">Monster Career Advice</a>.
                 </p>
               </div>
               
@@ -142,7 +143,8 @@ const About = () => {
           <CardContent className="p-8 text-center">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">Ready to Start Your Journey?</h2>
             <p className="text-gray-700 mb-6">
-              Join thousands of professionals who have found their dream jobs through Online Career Navigator.
+              Join thousands of professionals who have found their dream jobs through Online Career Navigator. 
+              Read our <Link to="/blog" className="text-blue-600 hover:text-blue-800 underline transition-colors">career success stories</Link> and get <Link to="/contact" className="text-blue-600 hover:text-blue-800 underline transition-colors">personalized support</Link> from our team.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 

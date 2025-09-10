@@ -1,4 +1,5 @@
 
+import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
@@ -25,7 +26,8 @@ const Privacy = () => {
             <p className="text-lg text-gray-700 mb-6">
               At Online Career Navigator, we are committed to protecting your privacy and ensuring the security 
               of your personal information. This Privacy Policy explains how we collect, use, and safeguard 
-              your information when you use our website.
+              your information when you use our website. Please also review our <Link to="/terms" className="text-blue-600 hover:text-blue-800 underline transition-colors">Terms of Service</Link>. 
+              For questions, visit our <Link to="/contact" className="text-blue-600 hover:text-blue-800 underline transition-colors">Contact page</Link> or learn <Link to="/about" className="text-blue-600 hover:text-blue-800 underline transition-colors">about our company</Link>.
             </p>
 
             <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Information We Collect</h2>
@@ -118,12 +120,20 @@ const Privacy = () => {
 
             <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Contact Us</h2>
             <p className="text-gray-700">
-              If you have any questions about this Privacy Policy or our data practices, please contact us at:
+              If you have any questions about this Privacy Policy or our data practices, please <Link to="/contact" className="text-blue-600 hover:text-blue-800 underline transition-colors">contact us</Link> or email us at:
             </p>
             <div className="mt-4 p-4 bg-gray-100 rounded-lg">
               <p className="font-semibold">Online Career Navigator</p>
               <p>Email: privacy@onlinecareernavigator.com</p>
               <p>Website: onlinecareernavigator.com</p>
+            </div>
+            <div className="mt-4 text-center">
+              <p className="text-gray-600">
+                <Link to="/" className="text-blue-600 hover:text-blue-800 underline transition-colors">Return to Homepage</Link> | 
+                <Link to="/terms" className="text-blue-600 hover:text-blue-800 underline transition-colors ml-2">Terms of Service</Link> | 
+                <Link to="/about" className="text-blue-600 hover:text-blue-800 underline transition-colors ml-2">About Us</Link> | 
+                <Link to="/jobs" className="text-blue-600 hover:text-blue-800 underline transition-colors ml-2">Browse Jobs</Link>
+              </p>
             </div>
             <p className="text-gray-700 mt-6">
               <em>

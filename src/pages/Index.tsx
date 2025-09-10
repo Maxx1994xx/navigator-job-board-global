@@ -184,7 +184,7 @@ const Index = () => {
             </h1>
             <p className="text-xl md:text-2xl text-blue-100 mb-8 max-w-4xl mx-auto leading-relaxed">
               Discover thousands of premium career opportunities across Gulf countries, USA, and UK. 
-              Connect with top employers and take your career to new heights.
+              Connect with top employers and take your career to new heights. <Link to="/about" className="text-blue-200 hover:text-white underline transition-colors">Learn more about our mission</Link> or explore our <Link to="/blog" className="text-blue-200 hover:text-white underline transition-colors">career guidance blog</Link>.
             </p>
             <div className="flex flex-wrap justify-center gap-4 mb-12">
               <Badge variant="secondary" className="px-4 py-2 text-lg">
@@ -286,7 +286,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Professionals Choose Us</h2>
-            <p className="text-xl text-gray-600">Experience the difference with our premium job search platform</p>
+            <p className="text-xl text-gray-600">Experience the difference with our premium job search platform. <Link to="/about" className="text-blue-600 hover:text-blue-800 underline transition-colors">Read our full story</Link> and discover what makes us different.</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -368,7 +368,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">Success Stories</h2>
-            <p className="text-xl text-gray-600">Hear from professionals who found their dream careers</p>
+            <p className="text-xl text-gray-600">Hear from professionals who found their dream careers. Need career tips? Check out our <Link to="/blog" className="text-blue-600 hover:text-blue-800 underline transition-colors">expert blog articles</Link> or <Link to="/contact" className="text-blue-600 hover:text-blue-800 underline transition-colors">get personalized guidance</Link>.</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -476,7 +476,8 @@ const Index = () => {
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Find Your Dream Job?</h2>
           <p className="text-xl text-blue-100 mb-8 leading-relaxed">
-            Join thousands of professionals who have successfully launched their careers with Online Career Navigator.
+            Join thousands of professionals who have successfully launched their careers with Online Career Navigator. 
+            Explore our <Link to="/blog" className="text-blue-200 hover:text-white underline transition-colors">career resources</Link>, learn <Link to="/about" className="text-blue-200 hover:text-white underline transition-colors">about our services</Link>, or <Link to="/contact" className="text-blue-200 hover:text-white underline transition-colors">contact our career experts</Link>. For additional guidance, visit <a href="https://www.linkedin.com/advice/career-advice" target="_blank" rel="noopener noreferrer" className="text-blue-200 hover:text-white underline transition-colors">LinkedIn Career Advice</a> and <a href="https://www.glassdoor.com/blog/guide/" target="_blank" rel="noopener noreferrer" className="text-blue-200 hover:text-white underline transition-colors">Glassdoor Career Guide</a>.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/jobs">

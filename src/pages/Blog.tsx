@@ -92,7 +92,7 @@ const Blog = () => {
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Stay ahead in your career with our comprehensive guides, industry insights, 
-              and proven strategies for job search success.
+              and proven strategies for job search success. Browse our <Link to="/jobs" className="text-blue-600 hover:text-blue-800 underline transition-colors">latest job opportunities</Link>, learn <Link to="/about" className="text-blue-600 hover:text-blue-800 underline transition-colors">about our platform</Link>, or <Link to="/contact" className="text-blue-600 hover:text-blue-800 underline transition-colors">connect with career experts</Link>.
             </p>
           </div>
 
@@ -227,6 +227,7 @@ const Blog = () => {
           {/* Categories Section */}
           <div className="bg-white rounded-lg p-8 shadow-sm">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Explore by Category</h2>
+            <p className="text-gray-600 mb-6">Browse our career resources by topic, or visit external career resources like <a href="https://www.harvard.edu/career-guide/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline transition-colors">Harvard Career Guide</a>, <a href="https://www.themuse.com/advice" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline transition-colors">The Muse Career Advice</a>, and <a href="https://www.careerbuilder.com/advice" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline transition-colors">CareerBuilder Advice</a>.</p>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
               {[
                 { name: 'Job Search', count: 5, icon: '🔍' },
@@ -244,6 +245,9 @@ const Blog = () => {
                   <p className="text-sm text-gray-500">{category.count} articles</p>
                 </Link>
               ))}
+            </div>
+            <div className="mt-6 text-center">
+              <p className="text-gray-600">Looking for opportunities? <Link to="/jobs" className="text-blue-600 hover:text-blue-800 underline transition-colors">Browse our job listings</Link> or <Link to="/contact" className="text-blue-600 hover:text-blue-800 underline transition-colors">get career consultation</Link>.</p>
             </div>
           </div>
         </main>
