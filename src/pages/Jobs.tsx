@@ -11,28 +11,16 @@ import Footer from '@/components/Footer';
 import OptimizedJobCard from '@/components/OptimizedJobCard';
 import JobCardSkeleton from '@/components/JobCardSkeleton';
 import SEO from '@/components/SEO';
-import { supabase } from '@/integrations/supabase/client';
-
-interface Job {
-  id: string;
-  title: string;
-  company: string;
-  location: string;
-  type: string;
-  category: string;
-  description: string;
-  salary?: string;
-  created_at: string;
-}
+import { useJobs, type Job } from '@/hooks/useJobs';
 
 const Jobs = () => {
   const [searchParams] = useSearchParams();
-  const [jobs, setJobs] = useState<Job[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
-  const [loading, setLoading] = useState(true);
+  
+  const { data: jobs = [], isLoading: loading } = useJobs();
 
   // Initialize filters from URL parameters
   useEffect(() => {
@@ -47,30 +35,6 @@ const Jobs = () => {
     if (type) setTypeFilter(type);
   }, [searchParams]);
 
-  const fetchJobs = useCallback(async () => {
-    setLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from('jobs')
-        .select('*')
-        .eq('status', 'active')
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error('Error fetching jobs:', error);
-      } else {
-        setJobs(data || []);
-      }
-    } catch (error) {
-      console.error('Error fetching jobs:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchJobs();
-  }, [fetchJobs]);
 
   const filteredJobs = useMemo(() => {
     let filtered = jobs;

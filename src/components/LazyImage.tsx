@@ -22,7 +22,7 @@ const LazyImage = ({ src, alt, className = '', placeholder, width, height }: Laz
           observer.disconnect();
         }
       },
-      { threshold: 0.1, rootMargin: '50px' }
+      { threshold: 0.1, rootMargin: '20px' }
     );
 
     if (imgRef.current) {

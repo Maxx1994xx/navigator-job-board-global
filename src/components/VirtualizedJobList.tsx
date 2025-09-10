@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { FixedSizeList as List } from 'react-window';
 import JobCard from './JobCard'; 
-import { Job } from '@/types/job';
+import { type Job } from '@/hooks/useJobs';
 
 interface VirtualizedJobListProps {
   jobs: Job[];

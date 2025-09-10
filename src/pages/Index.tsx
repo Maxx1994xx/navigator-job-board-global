@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, MapPin, Users, Briefcase, TrendingUp, Globe, Award, Clock, Star, CheckCircle, ArrowRight, Target, Zap, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -10,26 +10,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import JobCard from '@/components/JobCard';
 import SEO from '@/components/SEO';
-import { supabase } from '@/integrations/supabase/client';
-
-interface Job {
-  id: string;
-  job_id?: string;
-  title: string;
-  company: string;
-  location: string;
-  type: string;
-  category: string;
-  salary?: string;
-  description: string;
-  requirements: string[];
-  benefits: string[];
-  created_at: string;
-  postedDate: string;
-  contactEmail?: string;
-  country?: string;
-  is_featured?: boolean;
-}
+import { useJobs, useFeaturedJobs } from '@/hooks/useJobs';
 
 interface CategoryCount {
   category: string;
@@ -41,11 +22,10 @@ const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [featuredJobs, setFeaturedJobs] = useState<Job[]>([]);
-  const [categoryStats, setCategoryStats] = useState<CategoryCount[]>([]);
-  const [countryStats, setCountryStats] = useState<{ [key: string]: number }>({});
-  const [totalJobs, setTotalJobs] = useState(0);
   const navigate = useNavigate();
+  
+  const { data: allJobs = [], isLoading: jobsLoading } = useJobs();
+  const { data: featuredJobs = [] } = useFeaturedJobs();
 
   const countries = ['UAE', 'Saudi Arabia', 'Qatar', 'Kuwait', 'USA', 'UK', 'Bahrain', 'Oman'];
   const categories = ['Technology', 'Sales', 'Healthcare', 'Finance', 'Marketing', 'Design'];
@@ -59,60 +39,27 @@ const Index = () => {
     'Design': '🎨'
   };
 
-  useEffect(() => {
-    fetchJobData();
-  }, []);
+  const categoryStats = useMemo(() => {
+    const categoryCounts: { [key: string]: number } = {};
+    allJobs.forEach(job => {
+      categoryCounts[job.category] = (categoryCounts[job.category] || 0) + 1;
+    });
 
-  const fetchJobData = async () => {
-    try {
-      // Fetch all active jobs
-      const { data: allJobs, error: allJobsError } = await supabase
-        .from('jobs')
-        .select('*')
-        .eq('is_active', true);
+    return categories.map(category => ({
+      category,
+      count: categoryCounts[category] || 0,
+      icon: categoryIcons[category] || '📋'
+    }));
+  }, [allJobs]);
 
-      if (allJobsError) throw allJobsError;
-
-      // Transform jobs data
-      const transformedJobs = (allJobs || []).map(job => ({
-        ...job,
-        postedDate: new Date(job.created_at).toLocaleDateString(),
-        contactEmail: 'hr@' + job.company.toLowerCase().replace(/\s+/g, '') + '.com',
-        country: job.location.split(',').pop()?.trim() || job.location,
-      }));
-
-      setTotalJobs(transformedJobs.length);
-
-      // Get featured jobs (limit to 6)
-      const featured = transformedJobs.filter(job => job.is_featured).slice(0, 6);
-      setFeaturedJobs(featured);
-
-      // Calculate category statistics
-      const categoryCounts: { [key: string]: number } = {};
-      transformedJobs.forEach(job => {
-        categoryCounts[job.category] = (categoryCounts[job.category] || 0) + 1;
-      });
-
-      const categoryData = categories.map(category => ({
-        category,
-        count: categoryCounts[category] || 0,
-        icon: categoryIcons[category] || '📋'
-      }));
-
-      setCategoryStats(categoryData);
-
-      // Calculate country statistics
-      const countryCounts: { [key: string]: number } = {};
-      transformedJobs.forEach(job => {
-        countryCounts[job.country] = (countryCounts[job.country] || 0) + 1;
-      });
-
-      setCountryStats(countryCounts);
-
-    } catch (error) {
-      console.error('Error fetching job data:', error);
-    }
-  };
+  const countryStats = useMemo(() => {
+    const countryCounts: { [key: string]: number } = {};
+    allJobs.forEach(job => {
+      const country = job.location.split(',').pop()?.trim() || job.location;
+      countryCounts[country] = (countryCounts[country] || 0) + 1;
+    });
+    return countryCounts;
+  }, [allJobs]);
 
   const handleSearch = () => {
     const params = new URLSearchParams();
@@ -258,7 +205,7 @@ const Index = () => {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div className="p-6">
-              <div className="text-5xl font-bold text-blue-600 mb-3">{totalJobs.toLocaleString()}+</div>
+              <div className="text-5xl font-bold text-blue-600 mb-3">{allJobs.length.toLocaleString()}+</div>
               <div className="text-gray-600 text-lg">Active Job Listings</div>
               <Briefcase className="w-8 h-8 text-blue-500 mx-auto mt-4" />
             </div>
@@ -340,7 +287,11 @@ const Index = () => {
           {featuredJobs.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
               {featuredJobs.map(job => (
-                <JobCard key={job.id} {...job} />
+                <JobCard 
+                  key={job.id} 
+                  {...job} 
+                  postedDate={new Date(job.created_at).toLocaleDateString()}
+                />
               ))}
             </div>
           ) : (
