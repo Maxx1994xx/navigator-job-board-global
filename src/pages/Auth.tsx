@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/contexts/AuthContext';
+import SEO from '@/components/SEO';
 
 const Auth = () => {
   const { user, signIn, loading } = useAuth();
@@ -60,8 +61,14 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-16">
-      <Card className="w-full max-w-md">
+    <>
+      <SEO 
+        title="Login - Online Career Navigator | Access Your Account"
+        description="Login to your Online Career Navigator account to access personalized job recommendations and manage your career profile."
+        noIndex={true}
+      />
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center py-16">
+        <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl text-center">Login</CardTitle>
         </CardHeader>
@@ -101,6 +108,7 @@ const Auth = () => {
         </CardContent>
       </Card>
     </div>
+    </>
   );
 };
 

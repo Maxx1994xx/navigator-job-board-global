@@ -81,6 +81,19 @@ const BlogCategory = () => {
       <SEO 
         title={`${categoryName} Articles | Online Career Navigator Blog`}
         description={`Expert ${categoryName.toLowerCase()} advice and tips. Browse our comprehensive collection of career guidance articles.`}
+        keywords={`${categoryName.toLowerCase()}, career advice, job search tips, professional development, career guidance`}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": `${categoryName} Articles`,
+          "description": `Expert ${categoryName.toLowerCase()} advice and tips. Browse our comprehensive collection of career guidance articles.`,
+          "url": `https://onlinecareernavigator.com/blog/category/${category}`,
+          "mainEntity": {
+            "@type": "ItemList",
+            "name": `${categoryName} Blog Posts`,
+            "numberOfItems": posts.length
+          }
+        }}
       />
       <div className="min-h-screen bg-gray-50">
         <Header />

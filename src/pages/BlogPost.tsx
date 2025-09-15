@@ -115,6 +115,36 @@ const BlogPost = () => {
       <SEO 
         title={post.seo_title || `${post.title} | Online Career Navigator Blog`}
         description={post.seo_description || post.excerpt}
+        type="article"
+        image={post.image_url}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": post.title,
+          "description": post.excerpt,
+          "author": {
+            "@type": "Person",
+            "name": post.author
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Online Career Navigator",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://onlinecareernavigator.com/placeholder.svg"
+            }
+          },
+          "datePublished": post.created_at,
+          "dateModified": post.created_at,
+          "articleSection": post.category,
+          "wordCount": Math.ceil(post.content.length / 5),
+          "timeRequired": `PT${post.reading_time}M`,
+          "image": post.image_url,
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": `https://onlinecareernavigator.com/blog/${post.slug}`
+          }
+        }}
       />
       <div className="min-h-screen bg-gray-50">
         <Header />

@@ -90,6 +90,19 @@ const Jobs = () => {
       <SEO 
         title="Find Jobs in Gulf, USA & UK - Online Career Navigator"
         description="Browse thousands of job opportunities across Gulf countries, USA, and UK. Filter by location, category, and job type to find your perfect career match."
+        keywords="job search, jobs in gulf, jobs in USA, jobs in UK, employment opportunities, career search, job listings"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "Job Search - Online Career Navigator",
+          "description": "Browse thousands of job opportunities across Gulf countries, USA, and UK. Filter by location, category, and job type to find your perfect career match.",
+          "url": "https://onlinecareernavigator.com/jobs",
+          "mainEntity": {
+            "@type": "ItemList",
+            "name": "Job Listings",
+            "numberOfItems": jobs.length
+          }
+        }}
       />
       <Header />
       

@@ -119,6 +119,23 @@ const Index = () => {
         description="Discover thousands of verified job opportunities across Gulf countries (UAE, Saudi Arabia, Qatar, Kuwait), USA, and UK. Connect with top employers and advance your career with our premium job search platform."
         keywords="jobs in gulf, jobs in UAE, jobs in Saudi Arabia, jobs in USA, jobs in UK, career opportunities, job search, employment, recruitment, premium jobs"
         image="https://onlinecareernavigator.com/placeholder.svg"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "Online Career Navigator",
+          "url": "https://onlinecareernavigator.com",
+          "description": "Discover thousands of verified job opportunities across Gulf countries (UAE, Saudi Arabia, Qatar, Kuwait), USA, and UK. Connect with top employers and advance your career with our premium job search platform.",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://onlinecareernavigator.com/jobs?search={search_term_string}",
+            "query-input": "required name=search_term_string"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Online Career Navigator",
+            "url": "https://onlinecareernavigator.com"
+          }
+        }}
       />
       <Header />
       

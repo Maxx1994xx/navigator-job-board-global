@@ -104,6 +104,31 @@ const JobDetail = () => {
         description={`${job.title} position at ${job.company} in ${job.location}. ${job.type} role in ${job.category}. Apply now through Online Career Navigator.`}
         keywords={`${job.title}, ${job.company}, ${job.location}, ${job.category}, ${job.type}, job opportunity, career`}
         type="article"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "JobPosting",
+          "title": job.title,
+          "description": job.description,
+          "hiringOrganization": {
+            "@type": "Organization",
+            "name": job.company
+          },
+          "jobLocation": {
+            "@type": "Place",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": job.location
+            }
+          },
+          "employmentType": job.type,
+          "industry": job.category,
+          "datePosted": new Date().toISOString(),
+          "validThrough": new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          "applicationContact": {
+            "@type": "ContactPoint",
+            "url": `https://onlinecareernavigator.com/job/${job.id}/apply`
+          }
+        }}
       />
       <Header />
       
