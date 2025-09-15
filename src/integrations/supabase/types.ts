@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -38,6 +38,39 @@ export type Database = {
           id?: string
           updated_at?: string
           username?: string
+        }
+        Relationships: []
+      }
+      ads: {
+        Row: {
+          ad_code: string
+          ad_type: string
+          created_at: string
+          created_by: string | null
+          id: string
+          is_active: boolean
+          placement: string
+          updated_at: string
+        }
+        Insert: {
+          ad_code: string
+          ad_type: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          placement: string
+          updated_at?: string
+        }
+        Update: {
+          ad_code?: string
+          ad_type?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          placement?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -260,10 +293,10 @@ export type Database = {
       get_job_stats: {
         Args: Record<PropertyKey, never>
         Returns: {
-          total_jobs: number
           active_jobs: number
           draft_jobs: number
           inactive_jobs: number
+          total_jobs: number
         }[]
       }
       get_user_role: {
@@ -273,19 +306,19 @@ export type Database = {
       get_user_stats: {
         Args: Record<PropertyKey, never>
         Returns: {
-          total_users: number
           active_users: number
           inactive_users: number
           suspended_users: number
+          total_users: number
         }[]
       }
       verify_admin_credentials: {
-        Args: { p_username: string; p_password: string }
+        Args: { p_password: string; p_username: string }
         Returns: {
           admin_id: string
-          username: string
           email: string
           full_name: string
+          username: string
         }[]
       }
     }
