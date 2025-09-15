@@ -8,7 +8,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import AdSenseAd from '@/components/AdSenseAd';
 import JobCard from '@/components/JobCard';
 import SEO from '@/components/SEO';
 import { useJobs, useFeaturedJobs } from '@/hooks/useJobs';
@@ -302,28 +301,16 @@ const Index = () => {
             <p className="text-xl text-gray-600">Hand-picked premium positions from top employers</p>
           </div>
           
-          {/* Display Ad - Top of Featured Jobs */}
-          <div className="mb-12">
-            <AdSenseAd placement="Homepage Featured Jobs Top" className="max-w-4xl mx-auto" />
-          </div>
-          
           {featuredJobs.length > 0 ? (
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                {featuredJobs.map(job => (
-                  <JobCard 
-                    key={job.id} 
-                    {...job} 
-                    postedDate={new Date(job.created_at).toLocaleDateString()}
-                  />
-                ))}
-              </div>
-              
-              {/* Display Ad - Bottom of Featured Jobs */}
-              <div className="mb-12">
-                <AdSenseAd placement="Homepage Featured Jobs Bottom" className="max-w-4xl mx-auto" />
-              </div>
-            </>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+              {featuredJobs.map(job => (
+                <JobCard 
+                  key={job.id} 
+                  {...job} 
+                  postedDate={new Date(job.created_at).toLocaleDateString()}
+                />
+              ))}
+            </div>
           ) : (
             <div className="text-center py-12">
               <p className="text-gray-600 text-lg mb-4">No featured jobs available at the moment.</p>
