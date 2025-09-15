@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,6 +11,7 @@ import OptimizedJobCard from '@/components/OptimizedJobCard';
 import JobCardSkeleton from '@/components/JobCardSkeleton';
 import SEO from '@/components/SEO';
 import { useJobs, type Job } from '@/hooks/useJobs';
+import AdSenseAd from '@/components/AdSenseAd';
 
 const Jobs = () => {
   const [searchParams] = useSearchParams();
@@ -34,7 +34,6 @@ const Jobs = () => {
     if (category) setCategoryFilter(category);
     if (type) setTypeFilter(type);
   }, [searchParams]);
-
 
   const filteredJobs = useMemo(() => {
     let filtered = jobs;
@@ -186,37 +185,51 @@ const Jobs = () => {
 
       {/* Jobs List */}
       <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {loading ? (
-            <div className="grid gap-6">
-              {Array(6).fill(0).map((_, index) => (
-                <JobCardSkeleton key={index} />
-              ))}
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <div className="lg:col-span-3">
+              {loading ? (
+                <div className="grid gap-6">
+                  {Array(6).fill(0).map((_, index) => (
+                    <JobCardSkeleton key={index} />
+                  ))}
+                </div>
+              ) : filteredJobs.length === 0 ? (
+                <div className="text-center py-12">
+                  <Briefcase className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-gray-700 mb-2">No jobs found</h3>
+                  <p className="text-gray-500">Try adjusting your search criteria</p>
+                </div>
+              ) : (
+                <div className="grid gap-6">
+                  {filteredJobs.map((job, index) => (
+                    <React.Fragment key={job.id}>
+                      <OptimizedJobCard
+                        id={job.id}
+                        title={job.title}
+                        company={job.company}
+                        location={job.location}
+                        type={job.type}
+                        category={job.category}
+                        description={job.description}
+                        salary={job.salary}
+                        postedDate={formatPostedDate(job.created_at)}
+                      />
+                      {/* In-Feed Ad after every 5th job */}
+                      {(index + 1) % 5 === 0 && (
+                        <AdSenseAd placement="Jobs List In-Feed" className="my-4" />
+                      )}
+                    </React.Fragment>
+                  ))}
+                </div>
+              )}
             </div>
-          ) : filteredJobs.length === 0 ? (
-            <div className="text-center py-12">
-              <Briefcase className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-700 mb-2">No jobs found</h3>
-              <p className="text-gray-500">Try adjusting your search criteria</p>
+            
+            {/* Sidebar Ad */}
+            <div className="lg:col-span-1">
+              <AdSenseAd placement="Jobs Page Sidebar" className="sticky top-4" />
             </div>
-          ) : (
-            <div className="grid gap-6">
-              {filteredJobs.map((job) => (
-                <OptimizedJobCard
-                  key={job.id}
-                  id={job.id}
-                  title={job.title}
-                  company={job.company}
-                  location={job.location}
-                  type={job.type}
-                  category={job.category}
-                  description={job.description}
-                  salary={job.salary}
-                  postedDate={formatPostedDate(job.created_at)}
-                />
-              ))}
-            </div>
-          )}
+          </div>
         </div>
       </section>
 

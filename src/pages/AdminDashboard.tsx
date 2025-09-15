@@ -176,6 +176,25 @@ const AdminDashboard = () => {
           </CardContent>
         </Card>
 
+        <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleNavigate('/admin/ads')}>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <span className="h-5 w-5 text-orange-500">📺</span>
+              Manage Ads
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-gray-600 mb-4">Configure and manage Google AdSense ad placements.</p>
+            <div className="flex justify-between text-sm">
+              <span>Active Ads</span>
+              <span>Placements</span>
+            </div>
+            <Button className="mt-4 w-full" variant="outline">
+              Go to Ads
+            </Button>
+          </CardContent>
+        </Card>
+
         <Card className="cursor-pointer hover:shadow-md transition-shadow">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
