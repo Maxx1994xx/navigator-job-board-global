@@ -188,7 +188,7 @@ const Jobs = () => {
       {/* AdSense Ad - After Search */}
       <div className="bg-gray-50 py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AdSenseAd className="text-center" />
+          <AdSenseAd format="square" className="text-center" />
         </div>
       </div>
 
@@ -225,7 +225,7 @@ const Jobs = () => {
                   {/* AdSense Ad - Every 5 jobs */}
                   {(index + 1) % 5 === 0 && (
                     <div className="my-8">
-                      <AdSenseAd className="text-center" />
+                      <AdSenseAd format="square" className="text-center" />
                     </div>
                   )}
                 </React.Fragment>

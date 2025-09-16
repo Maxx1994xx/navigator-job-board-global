@@ -106,7 +106,7 @@ const About = () => {
 
         {/* AdSense Ad - After Values */}
         <div className="mb-8">
-          <AdSenseAd className="text-center" />
+          <AdSenseAd format="square" className="text-center" />
         </div>
 
         {/* What We Offer */}

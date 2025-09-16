@@ -213,7 +213,7 @@ const BlogPost = () => {
 
               {/* AdSense Ad - After Title */}
               <div className="mb-8">
-                <AdSenseAd className="text-center" />
+                <AdSenseAd format="square" className="text-center" />
               </div>
 
               <div className="prose prose-lg max-w-none">
@@ -223,7 +223,7 @@ const BlogPost = () => {
                 
                 {/* AdSense Ad - Middle of Content */}
                 <div className="not-prose my-8">
-                  <AdSenseAd className="text-center" />
+                  <AdSenseAd format="horizontal" className="text-center" />
                 </div>
                 
                 <div 
@@ -238,7 +238,7 @@ const BlogPost = () => {
 
           {/* AdSense Ad - After Article */}
           <div className="mt-12">
-            <AdSenseAd className="text-center" />
+            <AdSenseAd format="square" className="text-center" />
           </div>
 
           {relatedPosts.length > 0 && (

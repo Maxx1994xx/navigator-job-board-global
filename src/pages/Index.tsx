@@ -280,7 +280,7 @@ const Index = () => {
       {/* AdSense Ad - After Benefits */}
       <div className="bg-white py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AdSenseAd className="text-center" />
+          <AdSenseAd format="square" className="text-center" />
         </div>
       </div>
 
@@ -349,7 +349,7 @@ const Index = () => {
       {/* AdSense Ad - After Featured Jobs */}
       <div className="bg-gray-100 py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AdSenseAd className="text-center" />
+          <AdSenseAd format="square" className="text-center" />
         </div>
       </div>
 

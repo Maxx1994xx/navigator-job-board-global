@@ -169,7 +169,7 @@ const Blog = () => {
 
           {/* AdSense Ad - After Featured */}
           <div className="mb-12">
-            <AdSenseAd className="text-center" />
+            <AdSenseAd format="square" className="text-center" />
           </div>
 
           {/* All Posts Grid */}
@@ -237,7 +237,7 @@ const Blog = () => {
 
           {/* AdSense Ad - Before Categories */}
           <div className="mb-8">
-            <AdSenseAd className="text-center" />
+            <AdSenseAd format="square" className="text-center" />
           </div>
 
           {/* Categories Section */}

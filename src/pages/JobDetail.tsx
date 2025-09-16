@@ -195,7 +195,7 @@ const JobDetail = () => {
 
         {/* AdSense Ad - After Job Header */}
         <div className="mb-8">
-          <AdSenseAd className="text-center" />
+          <AdSenseAd format="square" className="text-center" />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -280,7 +280,7 @@ const JobDetail = () => {
 
             {/* AdSense Ad - Sidebar */}
             <div className="mb-6">
-              <AdSenseAd />
+              <AdSenseAd format="vertical" />
             </div>
 
             {/* Company Info */}
