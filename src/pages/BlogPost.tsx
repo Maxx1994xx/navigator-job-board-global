@@ -8,6 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
+import AdSenseAd from '@/components/AdSenseAd';
 
 interface BlogPost {
   id: string;
@@ -210,9 +211,19 @@ const BlogPost = () => {
                 </div>
               </div>
 
+              {/* AdSense Ad - After Title */}
+              <div className="mb-8">
+                <AdSenseAd className="text-center" />
+              </div>
+
               <div className="prose prose-lg max-w-none">
                 <div className="text-xl text-gray-600 mb-8 leading-relaxed font-medium">
                   {post.excerpt}
+                </div>
+                
+                {/* AdSense Ad - Middle of Content */}
+                <div className="not-prose my-8">
+                  <AdSenseAd className="text-center" />
                 </div>
                 
                 <div 
@@ -224,6 +235,11 @@ const BlogPost = () => {
               </div>
             </div>
           </article>
+
+          {/* AdSense Ad - After Article */}
+          <div className="mt-12">
+            <AdSenseAd className="text-center" />
+          </div>
 
           {relatedPosts.length > 0 && (
             <div className="mt-16">

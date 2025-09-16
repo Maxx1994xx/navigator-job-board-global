@@ -11,6 +11,7 @@ import Footer from '@/components/Footer';
 import OptimizedJobCard from '@/components/OptimizedJobCard';
 import JobCardSkeleton from '@/components/JobCardSkeleton';
 import SEO from '@/components/SEO';
+import AdSenseAd from '@/components/AdSenseAd';
 import { useJobs, type Job } from '@/hooks/useJobs';
 
 const Jobs = () => {
@@ -184,6 +185,13 @@ const Jobs = () => {
         </div>
       </section>
 
+      {/* AdSense Ad - After Search */}
+      <div className="bg-gray-50 py-6">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <AdSenseAd className="text-center" />
+        </div>
+      </div>
+
       {/* Jobs List */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -201,19 +209,26 @@ const Jobs = () => {
             </div>
           ) : (
             <div className="grid gap-6">
-              {filteredJobs.map((job) => (
-                <OptimizedJobCard
-                  key={job.id}
-                  id={job.id}
-                  title={job.title}
-                  company={job.company}
-                  location={job.location}
-                  type={job.type}
-                  category={job.category}
-                  description={job.description}
-                  salary={job.salary}
-                  postedDate={formatPostedDate(job.created_at)}
-                />
+              {filteredJobs.map((job, index) => (
+                <React.Fragment key={job.id}>
+                  <OptimizedJobCard
+                    id={job.id}
+                    title={job.title}
+                    company={job.company}
+                    location={job.location}
+                    type={job.type}
+                    category={job.category}
+                    description={job.description}
+                    salary={job.salary}
+                    postedDate={formatPostedDate(job.created_at)}
+                  />
+                  {/* AdSense Ad - Every 5 jobs */}
+                  {(index + 1) % 5 === 0 && (
+                    <div className="my-8">
+                      <AdSenseAd className="text-center" />
+                    </div>
+                  )}
+                </React.Fragment>
               ))}
             </div>
           )}

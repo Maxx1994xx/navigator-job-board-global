@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
+import AdSenseAd from '@/components/AdSenseAd';
 
 interface BlogPost {
   id: string;
@@ -96,6 +97,11 @@ const Blog = () => {
             </p>
           </div>
 
+          {/* AdSense Ad - After Hero */}
+          <div className="mb-12">
+            <AdSenseAd className="text-center" />
+          </div>
+
           {/* Featured Post */}
           {blogPosts.length > 0 && (
             <div className="mb-16">
@@ -161,6 +167,11 @@ const Blog = () => {
             </div>
           )}
 
+          {/* AdSense Ad - After Featured */}
+          <div className="mb-12">
+            <AdSenseAd className="text-center" />
+          </div>
+
           {/* All Posts Grid */}
           <div className="mb-12">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Latest Articles</h2>
@@ -222,6 +233,11 @@ const Blog = () => {
                 </Card>
               ))}
             </div>
+          </div>
+
+          {/* AdSense Ad - Before Categories */}
+          <div className="mb-8">
+            <AdSenseAd className="text-center" />
           </div>
 
           {/* Categories Section */}
