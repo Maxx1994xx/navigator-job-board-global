@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
-import AdSenseAd from '@/components/AdSenseAd';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -55,11 +54,6 @@ const Contact = () => {
             Have questions about our services or need assistance with your job search? 
             We're here to help you navigate your career journey. Explore our <Link to="/jobs" className="text-blue-600 hover:text-blue-800 underline transition-colors">job listings</Link>, read our <Link to="/blog" className="text-blue-600 hover:text-blue-800 underline transition-colors">career advice</Link>, or learn <Link to="/about" className="text-blue-600 hover:text-blue-800 underline transition-colors">about our mission</Link>.
           </p>
-        </div>
-
-        {/* AdSense Ad - After Header */}
-        <div className="mb-8">
-          <AdSenseAd className="text-center" />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
