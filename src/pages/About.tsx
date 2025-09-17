@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
-import AdBanner from '@/components/AdBanner';
-import InContentAd from '@/components/InContentAd';
+import AdSenseAd from '@/components/AdSenseAd';
 import { Card, CardContent } from '@/components/ui/card';
 import { Users, Globe, Target, Award } from 'lucide-react';
 
@@ -28,8 +27,10 @@ const About = () => {
           </p>
         </div>
 
-        {/* AdBanner - After Hero */}
-        <InContentAd className="mb-8" />
+        {/* AdSense Ad - After Hero */}
+        <div className="mb-8">
+          <AdSenseAd className="text-center" />
+        </div>
 
         {/* Mission Section */}
         <Card className="mb-8">
@@ -103,8 +104,10 @@ const About = () => {
           </Card>
         </div>
 
-        {/* AdBanner - After Values */}
-        <InContentAd format="square" className="mb-8" />
+        {/* AdSense Ad - After Values */}
+        <div className="mb-8">
+          <AdSenseAd format="square" className="text-center" />
+        </div>
 
         {/* What We Offer */}
         <Card className="mb-8">

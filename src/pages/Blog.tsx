@@ -7,9 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
-import AdBanner from '@/components/AdBanner';
-import InContentAd from '@/components/InContentAd';
-import ScrollTriggeredAd from '@/components/ScrollTriggeredAd';
+import AdSenseAd from '@/components/AdSenseAd';
 
 interface BlogPost {
   id: string;
@@ -99,8 +97,10 @@ const Blog = () => {
             </p>
           </div>
 
-          {/* AdBanner - After Hero */}
-          <InContentAd className="mb-12" />
+          {/* AdSense Ad - After Hero */}
+          <div className="mb-12">
+            <AdSenseAd className="text-center" />
+          </div>
 
           {/* Featured Post */}
           {blogPosts.length > 0 && (
@@ -167,8 +167,10 @@ const Blog = () => {
             </div>
           )}
 
-          {/* AdBanner - After Featured */}
-          <InContentAd format="square" className="mb-12" />
+          {/* AdSense Ad - After Featured */}
+          <div className="mb-12">
+            <AdSenseAd format="square" className="text-center" />
+          </div>
 
           {/* All Posts Grid */}
           <div className="mb-12">
@@ -233,8 +235,10 @@ const Blog = () => {
             </div>
           </div>
 
-          {/* AdBanner - Before Categories */}
-          <InContentAd format="horizontal" className="mb-8" />
+          {/* AdSense Ad - Before Categories */}
+          <div className="mb-8">
+            <AdSenseAd format="square" className="text-center" />
+          </div>
 
           {/* Categories Section */}
           <div className="bg-white rounded-lg p-8 shadow-sm">
@@ -263,9 +267,6 @@ const Blog = () => {
             </div>
           </div>
         </main>
-        
-        {/* Scroll Triggered Ad */}
-        <ScrollTriggeredAd triggerPercentage={50} format="vertical" />
         
         <Footer />
       </div>

@@ -8,9 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
-import AdBanner from '@/components/AdBanner';
-import InContentAd from '@/components/InContentAd';
-import ScrollTriggeredAd from '@/components/ScrollTriggeredAd';
+import AdSenseAd from '@/components/AdSenseAd';
 import { supabase } from '@/integrations/supabase/client';
 
 interface Job {
@@ -195,8 +193,10 @@ const JobDetail = () => {
           </CardContent>
         </Card>
 
-        {/* AdBanner - After Job Header */}
-        <InContentAd format="square" className="mb-8" />
+        {/* AdSense Ad - After Job Header */}
+        <div className="mb-8">
+          <AdSenseAd format="square" className="text-center" />
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
@@ -278,10 +278,9 @@ const JobDetail = () => {
               </CardContent>
             </Card>
 
-            {/* AdBanner - Sidebar */}
+            {/* AdSense Ad - Sidebar */}
             <div className="mb-6">
-              <div className="text-xs text-gray-500 mb-2 text-center">Advertisement</div>
-              <AdBanner format="vertical" className="w-full" />
+              <AdSenseAd format="vertical" />
             </div>
 
             {/* Company Info */}
@@ -306,13 +305,7 @@ const JobDetail = () => {
             </Card>
           </div>
         </div>
-
-        {/* Additional Ad Before Footer */}
-        <InContentAd format="horizontal" className="mt-8" />
       </div>
-
-      {/* Scroll Triggered Ad */}
-      <ScrollTriggeredAd triggerPercentage={30} format="square" />
 
       <Footer />
     </div>

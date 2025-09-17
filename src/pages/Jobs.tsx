@@ -11,9 +11,7 @@ import Footer from '@/components/Footer';
 import OptimizedJobCard from '@/components/OptimizedJobCard';
 import JobCardSkeleton from '@/components/JobCardSkeleton';
 import SEO from '@/components/SEO';
-import AdBanner from '@/components/AdBanner';
-import InContentAd from '@/components/InContentAd';
-import ScrollTriggeredAd from '@/components/ScrollTriggeredAd';
+import AdSenseAd from '@/components/AdSenseAd';
 import { useJobs, type Job } from '@/hooks/useJobs';
 
 const Jobs = () => {
@@ -187,8 +185,12 @@ const Jobs = () => {
         </div>
       </section>
 
-      {/* AdBanner - After Search */}
-      <InContentAd format="square" className="bg-gray-50 py-6" />
+      {/* AdSense Ad - After Search */}
+      <div className="bg-gray-50 py-6">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <AdSenseAd format="square" className="text-center" />
+        </div>
+      </div>
 
       {/* Jobs List */}
       <section className="py-16">
@@ -220,16 +222,10 @@ const Jobs = () => {
                     salary={job.salary}
                     postedDate={formatPostedDate(job.created_at)}
                   />
-                  {/* AdBanner - Every 5 jobs */}
+                  {/* AdSense Ad - Every 5 jobs */}
                   {(index + 1) % 5 === 0 && (
                     <div className="my-8">
-                      <InContentAd format="horizontal" className="my-0" />
-                    </div>
-                  )}
-                  {/* Extra ads every 8 jobs for more impressions */}
-                  {(index + 1) % 8 === 0 && (
-                    <div className="my-6">
-                      <InContentAd format="square" className="my-0" />
+                      <AdSenseAd format="square" className="text-center" />
                     </div>
                   )}
                 </React.Fragment>
@@ -238,9 +234,6 @@ const Jobs = () => {
           )}
         </div>
       </section>
-
-      {/* Scroll Triggered Ad */}
-      <ScrollTriggeredAd triggerPercentage={40} format="vertical" />
 
       <Footer />
     </div>

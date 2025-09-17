@@ -4,8 +4,7 @@ import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
-import AdBanner from '@/components/AdBanner';
-import InContentAd from '@/components/InContentAd';
+import AdSenseAd from '@/components/AdSenseAd';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -58,8 +57,10 @@ const Contact = () => {
           </p>
         </div>
 
-        {/* AdBanner - After Header */}
-        <InContentAd className="mb-8" />
+        {/* AdSense Ad - After Header */}
+        <div className="mb-8">
+          <AdSenseAd className="text-center" />
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Contact Information */}
