@@ -10,6 +10,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import JobCard from '@/components/JobCard';
 import SEO from '@/components/SEO';
+import AdSenseAd from '@/components/AdSenseAd';
 import { useJobs, useFeaturedJobs } from '@/hooks/useJobs';
 
 interface CategoryCount {
@@ -213,6 +214,13 @@ const Index = () => {
         </div>
       </section>
 
+      {/* AdSense Ad - After Hero */}
+      <div className="bg-gray-50 py-6">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <AdSenseAd className="text-center" />
+        </div>
+      </div>
+
       {/* Statistics Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -268,6 +276,13 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* AdSense Ad - After Benefits */}
+      <div className="bg-white py-6">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <AdSenseAd format="square" className="text-center" />
+        </div>
+      </div>
 
       {/* Top Categories Section */}
       <section className="py-20 bg-gray-100">
@@ -330,6 +345,13 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* AdSense Ad - After Featured Jobs */}
+      <div className="bg-gray-100 py-6">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <AdSenseAd format="square" className="text-center" />
+        </div>
+      </div>
 
       {/* Success Stories / Testimonials */}
       <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">

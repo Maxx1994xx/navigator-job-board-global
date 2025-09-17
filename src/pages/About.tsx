@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
+import AdSenseAd from '@/components/AdSenseAd';
 import { Card, CardContent } from '@/components/ui/card';
 import { Users, Globe, Target, Award } from 'lucide-react';
 
@@ -24,6 +25,11 @@ const About = () => {
             We're dedicated to connecting talented professionals with exceptional career opportunities 
             across Gulf countries, USA, and UK. Your career journey is our priority. Explore our <Link to="/jobs" className="text-blue-600 hover:text-blue-800 underline transition-colors">job listings</Link>, read our <Link to="/blog" className="text-blue-600 hover:text-blue-800 underline transition-colors">career guidance blog</Link>, or <Link to="/contact" className="text-blue-600 hover:text-blue-800 underline transition-colors">get in touch</Link> with our team.
           </p>
+        </div>
+
+        {/* AdSense Ad - After Hero */}
+        <div className="mb-8">
+          <AdSenseAd className="text-center" />
         </div>
 
         {/* Mission Section */}
@@ -96,6 +102,11 @@ const About = () => {
               </p>
             </CardContent>
           </Card>
+        </div>
+
+        {/* AdSense Ad - After Values */}
+        <div className="mb-8">
+          <AdSenseAd format="square" className="text-center" />
         </div>
 
         {/* What We Offer */}
