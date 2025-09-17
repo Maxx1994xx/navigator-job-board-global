@@ -9,6 +9,8 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 import AdSenseAd from '@/components/AdSenseAd';
+import LazyLoadAd from '@/components/LazyLoadAd';
+import ScrollTriggeredAd from '@/components/ScrollTriggeredAd';
 import { supabase } from '@/integrations/supabase/client';
 
 interface Job {
@@ -195,7 +197,7 @@ const JobDetail = () => {
 
         {/* AdSense Ad - After Job Header */}
         <div className="mb-8">
-          <AdSenseAd format="square" className="text-center" />
+          <LazyLoadAd format="square" className="text-center" />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -280,7 +282,7 @@ const JobDetail = () => {
 
             {/* AdSense Ad - Sidebar */}
             <div className="mb-6">
-              <AdSenseAd format="vertical" />
+              <LazyLoadAd format="vertical" />
             </div>
 
             {/* Company Info */}
@@ -305,7 +307,15 @@ const JobDetail = () => {
             </Card>
           </div>
         </div>
+
+        {/* Additional Ad Before Footer */}
+        <div className="mt-8">
+          <LazyLoadAd format="horizontal" className="text-center" />
+        </div>
       </div>
+
+      {/* Scroll Triggered Ad */}
+      <ScrollTriggeredAd triggerPercentage={30} format="square" />
 
       <Footer />
     </div>

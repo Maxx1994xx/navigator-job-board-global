@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 import AdSenseAd from '@/components/AdSenseAd';
+import LazyLoadAd from '@/components/LazyLoadAd';
 import { Card, CardContent } from '@/components/ui/card';
 import { Users, Globe, Target, Award } from 'lucide-react';
 
@@ -29,7 +30,7 @@ const About = () => {
 
         {/* AdSense Ad - After Hero */}
         <div className="mb-8">
-          <AdSenseAd className="text-center" />
+          <LazyLoadAd className="text-center" />
         </div>
 
         {/* Mission Section */}
@@ -106,7 +107,7 @@ const About = () => {
 
         {/* AdSense Ad - After Values */}
         <div className="mb-8">
-          <AdSenseAd format="square" className="text-center" />
+          <LazyLoadAd format="square" className="text-center" />
         </div>
 
         {/* What We Offer */}

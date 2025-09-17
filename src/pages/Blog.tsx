@@ -8,6 +8,8 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 import AdSenseAd from '@/components/AdSenseAd';
+import LazyLoadAd from '@/components/LazyLoadAd';
+import ScrollTriggeredAd from '@/components/ScrollTriggeredAd';
 
 interface BlogPost {
   id: string;
@@ -99,7 +101,7 @@ const Blog = () => {
 
           {/* AdSense Ad - After Hero */}
           <div className="mb-12">
-            <AdSenseAd className="text-center" />
+            <LazyLoadAd className="text-center" />
           </div>
 
           {/* Featured Post */}
@@ -169,7 +171,7 @@ const Blog = () => {
 
           {/* AdSense Ad - After Featured */}
           <div className="mb-12">
-            <AdSenseAd format="square" className="text-center" />
+            <LazyLoadAd format="square" className="text-center" />
           </div>
 
           {/* All Posts Grid */}
@@ -237,7 +239,7 @@ const Blog = () => {
 
           {/* AdSense Ad - Before Categories */}
           <div className="mb-8">
-            <AdSenseAd format="square" className="text-center" />
+            <LazyLoadAd format="horizontal" className="text-center" />
           </div>
 
           {/* Categories Section */}
@@ -267,6 +269,9 @@ const Blog = () => {
             </div>
           </div>
         </main>
+        
+        {/* Scroll Triggered Ad */}
+        <ScrollTriggeredAd triggerPercentage={50} format="vertical" />
         
         <Footer />
       </div>

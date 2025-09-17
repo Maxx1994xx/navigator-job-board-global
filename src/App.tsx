@@ -11,6 +11,8 @@ import ScrollToTop from "./components/ScrollToTop";
 import CookieBanner from "./components/CookieBanner";
 import AdminProtectedRoute from "./components/AdminProtectedRoute";
 import LoadingSpinner from "./components/LoadingSpinner";
+import NavigationInterceptor from "./components/NavigationInterceptor";
+import StickyAd from "./components/StickyAd";
 
 // Lazy load all page components for better performance
 const Index = lazy(() => import("./pages/Index"));
@@ -53,6 +55,8 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <ScrollToTop />
+            <NavigationInterceptor />
+            <StickyAd position="bottom" format="horizontal" />
             <Suspense fallback={<LoadingSpinner size="large" />}>
               <Routes>
                 <Route path="/" element={<Index />} />
