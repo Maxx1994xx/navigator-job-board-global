@@ -8,8 +8,8 @@ import { Separator } from '@/components/ui/separator';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
-import AdSenseAd from '@/components/AdSenseAd';
-import LazyLoadAd from '@/components/LazyLoadAd';
+import AdBanner from '@/components/AdBanner';
+import InContentAd from '@/components/InContentAd';
 import ScrollTriggeredAd from '@/components/ScrollTriggeredAd';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -195,10 +195,8 @@ const JobDetail = () => {
           </CardContent>
         </Card>
 
-        {/* AdSense Ad - After Job Header */}
-        <div className="mb-8">
-          <LazyLoadAd format="square" className="text-center" />
-        </div>
+        {/* AdBanner - After Job Header */}
+        <InContentAd format="square" className="mb-8" />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
@@ -280,9 +278,10 @@ const JobDetail = () => {
               </CardContent>
             </Card>
 
-            {/* AdSense Ad - Sidebar */}
+            {/* AdBanner - Sidebar */}
             <div className="mb-6">
-              <LazyLoadAd format="vertical" />
+              <div className="text-xs text-gray-500 mb-2 text-center">Advertisement</div>
+              <AdBanner format="vertical" className="w-full" />
             </div>
 
             {/* Company Info */}
@@ -309,9 +308,7 @@ const JobDetail = () => {
         </div>
 
         {/* Additional Ad Before Footer */}
-        <div className="mt-8">
-          <LazyLoadAd format="horizontal" className="text-center" />
-        </div>
+        <InContentAd format="horizontal" className="mt-8" />
       </div>
 
       {/* Scroll Triggered Ad */}

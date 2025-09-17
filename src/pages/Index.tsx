@@ -10,8 +10,8 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import JobCard from '@/components/JobCard';
 import SEO from '@/components/SEO';
-import AdSenseAd from '@/components/AdSenseAd';
-import LazyLoadAd from '@/components/LazyLoadAd';
+import AdBanner from '@/components/AdBanner';
+import InContentAd from '@/components/InContentAd';
 import ScrollTriggeredAd from '@/components/ScrollTriggeredAd';
 import { useJobs, useFeaturedJobs } from '@/hooks/useJobs';
 
@@ -216,12 +216,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* AdSense Ad - After Hero */}
-      <div className="bg-gray-50 py-6">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <LazyLoadAd className="text-center" />
-        </div>
-      </div>
+      {/* AdBanner - After Hero */}
+      <InContentAd format="horizontal" className="bg-gray-50 py-6" />
 
       {/* Statistics Section */}
       <section className="py-20 bg-white">
@@ -279,12 +275,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* AdSense Ad - After Benefits */}
-      <div className="bg-white py-6">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <LazyLoadAd format="square" className="text-center" />
-        </div>
-      </div>
+      {/* AdBanner - After Benefits */}
+      <InContentAd format="square" className="bg-white py-6" />
 
       {/* Top Categories Section */}
       <section className="py-20 bg-gray-100">
@@ -348,22 +340,14 @@ const Index = () => {
         </div>
       </section>
 
-      {/* AdSense Ad - After Featured Jobs */}
-      <div className="bg-gray-100 py-6">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <LazyLoadAd format="square" className="text-center" />
-        </div>
-      </div>
+      {/* AdBanner - After Featured Jobs */}
+      <InContentAd format="square" className="bg-gray-100 py-6" />
 
       {/* Scroll Triggered Ad */}
       <ScrollTriggeredAd triggerPercentage={60} format="vertical" />
 
       {/* Additional Ad Before Testimonials */}
-      <div className="bg-white py-6">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <LazyLoadAd format="horizontal" className="text-center" />
-        </div>
-      </div>
+      <InContentAd format="horizontal" className="bg-white py-6" />
 
       {/* Success Stories / Testimonials */}
       <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">

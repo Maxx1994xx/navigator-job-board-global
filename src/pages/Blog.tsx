@@ -7,8 +7,8 @@ import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
-import AdSenseAd from '@/components/AdSenseAd';
-import LazyLoadAd from '@/components/LazyLoadAd';
+import AdBanner from '@/components/AdBanner';
+import InContentAd from '@/components/InContentAd';
 import ScrollTriggeredAd from '@/components/ScrollTriggeredAd';
 
 interface BlogPost {
@@ -99,10 +99,8 @@ const Blog = () => {
             </p>
           </div>
 
-          {/* AdSense Ad - After Hero */}
-          <div className="mb-12">
-            <LazyLoadAd className="text-center" />
-          </div>
+          {/* AdBanner - After Hero */}
+          <InContentAd className="mb-12" />
 
           {/* Featured Post */}
           {blogPosts.length > 0 && (
@@ -169,10 +167,8 @@ const Blog = () => {
             </div>
           )}
 
-          {/* AdSense Ad - After Featured */}
-          <div className="mb-12">
-            <LazyLoadAd format="square" className="text-center" />
-          </div>
+          {/* AdBanner - After Featured */}
+          <InContentAd format="square" className="mb-12" />
 
           {/* All Posts Grid */}
           <div className="mb-12">
@@ -237,10 +233,8 @@ const Blog = () => {
             </div>
           </div>
 
-          {/* AdSense Ad - Before Categories */}
-          <div className="mb-8">
-            <LazyLoadAd format="horizontal" className="text-center" />
-          </div>
+          {/* AdBanner - Before Categories */}
+          <InContentAd format="horizontal" className="mb-8" />
 
           {/* Categories Section */}
           <div className="bg-white rounded-lg p-8 shadow-sm">

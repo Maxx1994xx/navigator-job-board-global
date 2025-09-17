@@ -13,6 +13,8 @@ import AdminProtectedRoute from "./components/AdminProtectedRoute";
 import LoadingSpinner from "./components/LoadingSpinner";
 import NavigationInterceptor from "./components/NavigationInterceptor";
 import StickyAd from "./components/StickyAd";
+import VerticalAdSidebar from "./components/VerticalAdSidebar";
+import FloatingAdSpaces from "./components/FloatingAdSpaces";
 
 // Lazy load all page components for better performance
 const Index = lazy(() => import("./pages/Index"));
@@ -56,6 +58,8 @@ const App = () => (
           <BrowserRouter>
             <ScrollToTop />
             <NavigationInterceptor />
+            <VerticalAdSidebar position="right" />
+            <FloatingAdSpaces />
             <StickyAd position="bottom" format="horizontal" />
             <Suspense fallback={<LoadingSpinner size="large" />}>
               <Routes>
