@@ -8,6 +8,7 @@ import { Timer } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
+import AdSenseAd from "@/components/AdSenseAd";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Job {
@@ -111,8 +112,17 @@ const JobApply = () => {
         type="article"
       />
       <Header />
-      <div className="max-w-2xl mx-auto px-4 py-10">
-        <Card>
+      <div className="flex justify-center gap-8 px-4 py-10 max-w-7xl mx-auto">
+        {/* Left Vertical Ad */}
+        <div className="hidden xl:block w-48 flex-shrink-0">
+          <div className="sticky top-24">
+            <AdSenseAd format="vertical" className="w-48" />
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 max-w-2xl">
+          <Card>
           <CardContent className="p-8">
             <h1 className="text-2xl font-bold mb-2">{job.title}</h1>
             <div className="flex flex-wrap gap-3 text-gray-600 mb-2">
@@ -173,6 +183,14 @@ const JobApply = () => {
             </div>
           </CardContent>
         </Card>
+        </div>
+
+        {/* Right Vertical Ad */}
+        <div className="hidden xl:block w-48 flex-shrink-0">
+          <div className="sticky top-24">
+            <AdSenseAd format="vertical" className="w-48" />
+          </div>
+        </div>
       </div>
       <Footer />
     </div>
