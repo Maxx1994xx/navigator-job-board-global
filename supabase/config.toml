@@ -2,6 +2,3 @@ project_id = "zmrfykssfejouiqrzbcj"
 
 [functions.sitemap]
 verify_jwt = false
-
-[functions.fetch-job-boards]
-verify_jwt = false

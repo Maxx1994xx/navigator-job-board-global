@@ -12,7 +12,6 @@ import { Plus, Edit, Trash2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import AdminLayout from '@/components/AdminLayout';
-import JobBoardFetcher from '@/components/JobBoardFetcher';
 
 // Country and currency pairings
 const COUNTRY_CURRENCY_LIST = [
@@ -532,8 +531,6 @@ const AdminJobsManagement = () => {
             </DialogContent>
           </Dialog>
         </div>
-
-        <JobBoardFetcher onJobsAdded={fetchJobs} />
 
         <Card>
           <CardHeader>
