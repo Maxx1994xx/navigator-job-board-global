@@ -8,7 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { AdminProvider } from "./contexts/AdminContext";
 import ScrollToTop from "./components/ScrollToTop";
-import CookieBanner from "./components/CookieBanner";
+
 import AdminProtectedRoute from "./components/AdminProtectedRoute";
 import LoadingSpinner from "./components/LoadingSpinner";
 
@@ -92,7 +92,7 @@ const App = () => (
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
-            <CookieBanner />
+            
           </BrowserRouter>
         </TooltipProvider>
       </AdminProvider>
