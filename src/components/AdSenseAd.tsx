@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 
 declare global {
   interface Window {
@@ -14,12 +13,6 @@ interface AdSenseAdProps {
 }
 
 const AdSenseAd: React.FC<AdSenseAdProps> = ({ className = "", style, format = 'horizontal' }) => {
-  const location = useLocation();
-  
-  // Don't show ads on admin pages
-  if (location.pathname.startsWith('/admin')) {
-    return null;
-  }
   useEffect(() => {
     try {
       // Load AdSense script if not already loaded
