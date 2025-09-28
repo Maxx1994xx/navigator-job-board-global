@@ -34,7 +34,7 @@ const OptimizedJobCard = memo(({
     : description;
 
   return (
-    <Card className="hover:shadow-lg transition-shadow duration-200 border-l-4 border-l-blue-500">
+    <Card className="hover:shadow-lg transition-shadow duration-200 border-l-4 border-l-blue-500 w-full max-w-full overflow-hidden">
       <CardContent className="p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
           <div className="flex-1 min-w-0">

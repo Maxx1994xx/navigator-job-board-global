@@ -87,7 +87,7 @@ const Jobs = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
       <SEO 
         title="Find Jobs in Gulf, USA & UK - Online Career Navigator"
         description="Browse thousands of job opportunities across Gulf countries, USA, and UK. Filter by location, category, and job type to find your perfect career match."
@@ -120,56 +120,60 @@ const Jobs = () => {
           </div>
 
           {/* Search Filters */}
-          <Card className="max-w-4xl mx-auto">
+          <Card className="max-w-4xl mx-auto overflow-hidden">
             <CardContent className="p-4 sm:p-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <div className="relative w-full">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400 z-10" />
                   <Input
                     placeholder="Job title or keywords"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 w-full"
                   />
                 </div>
                 
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <div className="relative w-full">
+                  <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400 z-10" />
                   <Input
                     placeholder="Location"
                     value={locationFilter}
                     onChange={(e) => setLocationFilter(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 w-full"
                   />
                 </div>
 
-                <Select value={typeFilter} onValueChange={setTypeFilter}>
-                  <SelectTrigger>
-                    <Briefcase className="h-4 w-4 mr-2" />
-                    <SelectValue placeholder="Job Type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Full-time">Full-time</SelectItem>
-                    <SelectItem value="Part-time">Part-time</SelectItem>
-                    <SelectItem value="Contract">Contract</SelectItem>
-                    <SelectItem value="Internship">Internship</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div className="w-full">
+                  <Select value={typeFilter} onValueChange={setTypeFilter}>
+                    <SelectTrigger className="w-full">
+                      <Briefcase className="h-4 w-4 mr-2 flex-shrink-0" />
+                      <SelectValue placeholder="Job Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Full-time">Full-time</SelectItem>
+                      <SelectItem value="Part-time">Part-time</SelectItem>
+                      <SelectItem value="Contract">Contract</SelectItem>
+                      <SelectItem value="Internship">Internship</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                  <SelectTrigger>
-                    <Filter className="h-4 w-4 mr-2" />
-                    <SelectValue placeholder="Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Technology">Technology</SelectItem>
-                    <SelectItem value="Marketing">Marketing</SelectItem>
-                    <SelectItem value="Sales">Sales</SelectItem>
-                    <SelectItem value="Design">Design</SelectItem>
-                    <SelectItem value="Finance">Finance</SelectItem>
-                    <SelectItem value="Healthcare">Healthcare</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div className="w-full">
+                  <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                    <SelectTrigger className="w-full">
+                      <Filter className="h-4 w-4 mr-2 flex-shrink-0" />
+                      <SelectValue placeholder="Category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Technology">Technology</SelectItem>
+                      <SelectItem value="Marketing">Marketing</SelectItem>
+                      <SelectItem value="Sales">Sales</SelectItem>
+                      <SelectItem value="Design">Design</SelectItem>
+                      <SelectItem value="Finance">Finance</SelectItem>
+                      <SelectItem value="Healthcare">Healthcare</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
               
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
@@ -208,9 +212,9 @@ const Jobs = () => {
               <p className="text-gray-500">Try adjusting your search criteria</p>
             </div>
           ) : (
-            <div className="grid gap-6">
+            <div className="space-y-6">
               {filteredJobs.map((job, index) => (
-                <React.Fragment key={job.id}>
+                <div key={job.id}>
                   <OptimizedJobCard
                     id={job.id}
                     title={job.title}
@@ -228,7 +232,7 @@ const Jobs = () => {
                       <AdSenseAd format="square" className="text-center" />
                     </div>
                   )}
-                </React.Fragment>
+                </div>
               ))}
             </div>
           )}
