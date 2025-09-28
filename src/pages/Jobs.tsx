@@ -108,21 +108,21 @@ const Jobs = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 text-white py-16">
+      <section className="bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 text-white py-8 sm:py-12 lg:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+          <div className="text-center mb-8 sm:mb-12">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">
               Find Your Dream Job
             </h1>
-            <p className="text-xl text-blue-100 max-w-3xl mx-auto">
+            <p className="text-lg sm:text-xl text-blue-100 max-w-3xl mx-auto px-4">
               Discover thousands of job opportunities from top companies worldwide
             </p>
           </div>
 
           {/* Search Filters */}
           <Card className="max-w-4xl mx-auto">
-            <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+            <CardContent className="p-4 sm:p-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4">
                 <div className="relative">
                   <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                   <Input
@@ -172,11 +172,11 @@ const Jobs = () => {
                 </Select>
               </div>
               
-              <div className="flex justify-between items-center">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                 <p className="text-sm text-gray-600">
                   {filteredJobs.length} jobs found
                 </p>
-                <Button variant="outline" onClick={clearFilters}>
+                <Button variant="outline" onClick={clearFilters} className="w-full sm:w-auto">
                   Clear Filters
                 </Button>
               </div>
@@ -193,7 +193,7 @@ const Jobs = () => {
       </div>
 
       {/* Jobs List */}
-      <section className="py-16">
+      <section className="py-8 sm:py-12 lg:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {loading ? (
             <div className="grid gap-6">
