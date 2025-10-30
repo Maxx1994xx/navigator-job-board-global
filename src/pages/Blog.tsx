@@ -7,7 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
-import AdSenseAd from '@/components/AdSenseAd';
+import EzoicAd from '@/components/EzoicAd';
 
 interface BlogPost {
   id: string;
@@ -99,7 +99,7 @@ const Blog = () => {
 
           {/* AdSense Ad - After Hero */}
           <div className="mb-12">
-            <AdSenseAd className="text-center" />
+            <EzoicAd placementId={102} className="text-center" />
           </div>
 
           {/* Featured Post */}
@@ -169,7 +169,7 @@ const Blog = () => {
 
           {/* AdSense Ad - After Featured */}
           <div className="mb-12">
-            <AdSenseAd format="square" className="text-center" />
+            <EzoicAd placementId={111} className="text-center" />
           </div>
 
           {/* All Posts Grid */}
@@ -237,7 +237,7 @@ const Blog = () => {
 
           {/* AdSense Ad - Before Categories */}
           <div className="mb-8">
-            <AdSenseAd format="square" className="text-center" />
+            <EzoicAd placementId={103} className="text-center" />
           </div>
 
           {/* Categories Section */}

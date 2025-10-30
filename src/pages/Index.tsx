@@ -10,7 +10,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import JobCard from '@/components/JobCard';
 import SEO from '@/components/SEO';
-import AdSenseAd from '@/components/AdSenseAd';
+import EzoicAd from '@/components/EzoicAd';
 import { useJobs, useFeaturedJobs } from '@/hooks/useJobs';
 
 interface CategoryCount {
@@ -217,7 +217,7 @@ const Index = () => {
       {/* AdSense Ad - After Hero */}
       <div className="bg-gray-50 py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AdSenseAd className="text-center" />
+          <EzoicAd placementId={102} className="text-center" />
         </div>
       </div>
 
@@ -280,7 +280,7 @@ const Index = () => {
       {/* AdSense Ad - After Benefits */}
       <div className="bg-white py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AdSenseAd format="square" className="text-center" />
+          <EzoicAd placementId={111} className="text-center" />
         </div>
       </div>
 
@@ -349,7 +349,7 @@ const Index = () => {
       {/* AdSense Ad - After Featured Jobs */}
       <div className="bg-gray-100 py-6">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AdSenseAd format="square" className="text-center" />
+          <EzoicAd placementId={103} className="text-center" />
         </div>
       </div>
 

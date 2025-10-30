@@ -8,7 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
-import AdSenseAd from '@/components/AdSenseAd';
+import EzoicAd from '@/components/EzoicAd';
 
 interface BlogPost {
   id: string;
@@ -213,7 +213,7 @@ const BlogPost = () => {
 
               {/* AdSense Ad - After Title */}
               <div className="mb-8">
-                <AdSenseAd format="square" className="text-center" />
+                <EzoicAd placementId={104} className="text-center" />
               </div>
 
               <div className="prose prose-lg max-w-none">
@@ -223,7 +223,7 @@ const BlogPost = () => {
                 
                 {/* AdSense Ad - Middle of Content */}
                 <div className="not-prose my-8">
-                  <AdSenseAd format="horizontal" className="text-center" />
+                  <EzoicAd placementId={109} className="text-center" />
                 </div>
                 
                 <div 
@@ -238,7 +238,7 @@ const BlogPost = () => {
 
           {/* AdSense Ad - After Article */}
           <div className="mt-12">
-            <AdSenseAd format="square" className="text-center" />
+            <EzoicAd placementId={103} className="text-center" />
           </div>
 
           {relatedPosts.length > 0 && (

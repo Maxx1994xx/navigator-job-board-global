@@ -8,7 +8,7 @@ import { Timer } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
-import AdSenseAd from "@/components/AdSenseAd";
+import EzoicAd from "@/components/EzoicAd";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Job {
@@ -116,7 +116,7 @@ const JobApply = () => {
         {/* Left Vertical Ad */}
         <div className="hidden xl:block w-48 flex-shrink-0">
           <div className="sticky top-24">
-            <AdSenseAd format="vertical" className="w-48" />
+            <EzoicAd placementId={107} className="w-48" />
           </div>
         </div>
 
@@ -188,7 +188,7 @@ const JobApply = () => {
         {/* Right Vertical Ad */}
         <div className="hidden xl:block w-48 flex-shrink-0">
           <div className="sticky top-24">
-            <AdSenseAd format="vertical" className="w-48" />
+            <EzoicAd placementId={108} className="w-48" />
           </div>
         </div>
       </div>
