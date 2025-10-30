@@ -8,7 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
-import EzoicAd from '@/components/EzoicAd';
+import AdSenseAd from '@/components/AdSenseAd';
 import { supabase } from '@/integrations/supabase/client';
 
 interface Job {
@@ -195,7 +195,7 @@ const JobDetail = () => {
 
         {/* AdSense Ad - After Job Header */}
         <div className="mb-8">
-          <EzoicAd placementId={102} className="text-center" />
+          <AdSenseAd format="square" className="text-center" />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -280,7 +280,7 @@ const JobDetail = () => {
 
             {/* AdSense Ad - Sidebar */}
             <div className="mb-6">
-              <EzoicAd placementId={104} />
+              <AdSenseAd format="vertical" />
             </div>
 
             {/* Company Info */}
